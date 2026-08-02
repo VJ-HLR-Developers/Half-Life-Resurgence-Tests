@@ -83,7 +83,7 @@ function ENT:OnCollisionPersist(data, phys)
 		timer.Simple(SoundDuration(snd) *1.5, function()
 			if IsValid(fakeEnt) then
 				VJ.EmitSound(fakeEnt, "vj_hlr/src/npc/ministrider/flechette_explode" .. math.random(1, 3) .. ".wav", 95)
-				ParticleEffect("hunter_projectile_explosion_1", data.HitPos, Angle(0, 0, 0), nil)
+				ParticleEffect("hunter_projectile_explosion_1", data.HitPos, Angle(), nil)
 				VJ.ApplyRadiusDamage(IsValid(self) && self or IsValid(owner) && owner or fakeEnt, IsValid(owner) && owner or IsValid(self) && self or fakeEnt, data.HitPos, 128, 12, bit.bor(DMG_BLAST, DMG_DISSOLVE), true, true)
 				util.Decal("Scorch", data.HitPos +data.HitNormal, data.HitPos -data.HitNormal)
 				fakeEnt:Remove()

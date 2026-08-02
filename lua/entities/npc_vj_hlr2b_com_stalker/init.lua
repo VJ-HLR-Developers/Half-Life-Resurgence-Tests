@@ -26,7 +26,7 @@ ENT.HasExtraMeleeAttackSounds = true
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Bip01 Head",
 	FirstP_Offset = Vector(1, 0, 1),
 }

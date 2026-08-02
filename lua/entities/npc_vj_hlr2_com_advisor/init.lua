@@ -46,7 +46,7 @@ ENT.ConstantlyFaceEnemy_MinDistance = 7500
 
 ENT.ControllerParams = {
     CameraMode = 1,
-    ThirdP_Offset = Vector(0, 0, 0),
+    ThirdP_Offset = Vector(),
     FirstP_Bone = "advisor.camera",
     FirstP_Offset = Vector(8, 0, 4),
 }
@@ -182,8 +182,8 @@ function ENT:ShieldCode(bEnable)
 	end
 	self.BloodParticle = {"vj_blood_impact_yellow"}
 	self:StopParticles()
-	ParticleEffect("vj_aurora_shockwave", self:GetPos() + self:OBBCenter(), Angle(0, 0, 0), nil)
-	ParticleEffect("electrical_arc_01_system", self:GetPos() + self:OBBCenter(), Angle(0, 0, 0), nil)
+	ParticleEffect("vj_aurora_shockwave", self:GetPos() + self:OBBCenter(), Angle(), nil)
+	ParticleEffect("electrical_arc_01_system", self:GetPos() + self:OBBCenter(), Angle(), nil)
 	VJ.CreateSound(self, "ambient/energy/whiteflash.wav", 120)
 	for _, v in ipairs(ents.FindInSphere(self:GetPos(), 8000)) do
 		if VJ.IsProp(v) && self:Visible(v) then
@@ -372,8 +372,8 @@ function ENT:CreateAlly()
 		ally:GetActiveWeapon():Equip(ally)
 	end
 
-	ParticleEffect("vj_aurora_shockwave", ally:GetPos(), Angle(0, 0, 0), nil)
-	ParticleEffect("electrical_arc_01_system", ally:GetPos(), Angle(0, 0, 0), nil)
+	ParticleEffect("vj_aurora_shockwave", ally:GetPos(), Angle(), nil)
+	ParticleEffect("electrical_arc_01_system", ally:GetPos(), Angle(), nil)
 	VJ.EmitSound(ally, "ambient/energy/whiteflash.wav", 90)
 	return ally
 end
@@ -382,8 +382,8 @@ function ENT:OnThinkActive()
 	if self.Dead then return end
 	for _, v in pairs(ents.FindInSphere(self:GetPos(), 300)) do
 		if string.find(v:GetClass(), "rocket") or string.find(v:GetClass(), "missile") then
-			ParticleEffect("vj_aurora_shockwave", v:GetPos(), Angle(0, 0, 0), nil)
-			ParticleEffect("electrical_arc_01_system", v:GetPos(), Angle(0, 0, 0), nil)
+			ParticleEffect("vj_aurora_shockwave", v:GetPos(), Angle(), nil)
+			ParticleEffect("electrical_arc_01_system", v:GetPos(), Angle(), nil)
 			VJ.EmitSound(v, "ambient/energy/whiteflash.wav", 90)
 			SafeRemoveEntity(v)
 		end

@@ -38,7 +38,7 @@ function ENT:HandleGibOnDeath(dmginfo, hitgroup)
 	timer.Simple(0.89999995708466, function()
 		if IsValid(self) then
 			VJ.EmitSound(self, "npc/antlion/antlion_burst" .. math.random(1, 2) .. ".wav", 75, 100)
-			ParticleEffect("vj_acid_impact3", self:GetPos(), Angle(0, 0, 0), nil)
+			ParticleEffect("vj_acid_impact3", self:GetPos(), Angle(), nil)
 			VJ.ApplyRadiusDamage(self, self, self:GetPos(), 160, 50, DMG_ACID, true, false, {Force = 50})
 
 			local head = self:GetPos() +self:GetForward() *50 +self:GetRight() *0 +self:GetUp() *30

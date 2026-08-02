@@ -38,7 +38,7 @@ ENT.AnimTbl_Death = ACT_DIESIMPLE
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "MiniStrider.body_joint",
 	FirstP_Offset = Vector(18, 0, -5),
 }
@@ -398,7 +398,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-local defAng = Angle(0, 0, 0)
+local defAng = Angle()
 local angY45 = Angle(0, 45, 0)
 local angYN45 = Angle(0, -45, 0)
 local angY90 = Angle(0, 90, 0)

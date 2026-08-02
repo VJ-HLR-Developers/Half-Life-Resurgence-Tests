@@ -89,7 +89,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnDestroy(data, phys)
 	for i = 1, 5 do
-		ParticleEffect("vj_aurora_shockwave", self:GetPos(), Angle(0, 0, 0), nil)
-		ParticleEffect("electrical_arc_01_system", self:GetPos(), Angle(0, 0, 0), nil)
+		ParticleEffect("vj_aurora_shockwave", self:GetPos(), Angle(), nil)
+		ParticleEffect("electrical_arc_01_system", self:GetPos(), Angle(), nil)
 	end
 end

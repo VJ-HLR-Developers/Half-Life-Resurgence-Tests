@@ -15,7 +15,7 @@ ENT.Immune_Toxic = true
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Bullsquid.Head_Bone1",
 	FirstP_Offset = Vector(8, 0, 5),
 }

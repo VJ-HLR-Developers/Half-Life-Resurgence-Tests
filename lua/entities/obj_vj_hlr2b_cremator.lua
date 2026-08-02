@@ -40,5 +40,5 @@ function ENT:OnThink()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnDestroy(data, phys)
-	ParticleEffect("vj_hlr_cremator_projectile_impact", data.HitPos, Angle(0, 0, 0))
+	ParticleEffect("vj_hlr_cremator_projectile_impact", data.HitPos, Angle())
 end

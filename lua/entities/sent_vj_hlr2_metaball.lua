@@ -12,7 +12,7 @@ ENT.Author 			= ""
 ENT.Contact 		= "http://steamcommunity.com/groups/vrejgaming"
 
 local BLOB_HEIGHTVEC = Vector(0, 0, 8)
-local BLOB_VEC0 = Vector(0, 0, 0)
+local BLOB_VEC0 = Vector()
 ---------------------------------------------------------------------------------------------------------------------------------------------
 if CLIENT then
 	VJ.AddKillIcon("sent_vj_hlr2_metaball", ENT.PrintName)
@@ -38,7 +38,7 @@ function ENT:Initialize()
 
 	self.Scale = math.Rand(0.8, 1)
 	self.MoveType = 0
-	self.LastPosition = Vector(0, 0, 0)
+	self.LastPosition = Vector()
 	self.SinePhase = 0
 	self.SineFrequency = 0
 	self.SineAmplitude = 0
@@ -54,7 +54,7 @@ function ENT:Initialize()
 		phys:EnableGravity(false)
 	end
 
-	local rAng = Angle(0, 0, 0)
+	local rAng = Angle()
 	rAng.y = math.Rand(0, 360)
 	self:SetAngles(rAng)
 end
@@ -74,7 +74,7 @@ function ENT:Think()
 		-- self:MoveTowardsTargetEntity(187, self:GetOwner():GetEnemy())
 	-- end
 	-- util.ParticleTracerEx("Weapon_Combine_Ion_Cannon_Beam", self:GetPos(), self.LastPosition, false, self:EntIndex(), 0)
-	-- VJ.DEBUG_TempEnt(self.LastPosition, Angle(0, 0, 0), Color(145, 255, 0), 5)
+	-- VJ.DEBUG_TempEnt(self.LastPosition, Angle(), Color(145, 255, 0), 5)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:ModifyVelocityForSurface(flInterval, flSpeed)

@@ -50,7 +50,7 @@ ENT.ConstantlyFaceEnemy_MinDistance = 5000
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Combine_Strider.Neck_Bone",
 	FirstP_Offset = Vector(8, 0, -60),
 }

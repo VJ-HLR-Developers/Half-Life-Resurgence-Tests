@@ -94,8 +94,8 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Init" then
-		ParticleEffect("explosion_turret_break", self:GetPos(), Angle(0, 0, 0), nil)
-		ParticleEffect("electrical_arc_01_system", self:GetPos(), Angle(0, 0, 0), nil)
+		ParticleEffect("explosion_turret_break", self:GetPos(), Angle(), nil)
+		ParticleEffect("electrical_arc_01_system", self:GetPos(), Angle(), nil)
 		util.BlastDamage(self, self, self:GetPos(), 80, 20)
 	end
 end

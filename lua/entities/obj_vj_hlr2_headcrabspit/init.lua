@@ -39,7 +39,7 @@ function ENT:OnDealDamage(data, phys, hitEnts)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnDestroy(data, phys)
-	ParticleEffect("vj_blood_impact_yellow", data.HitPos, Angle(0, 0, 0))
+	ParticleEffect("vj_blood_impact_yellow", data.HitPos, Angle())
 	local tr = util.TraceLine({
 		start = data.HitPos,
 		endpos = data.HitPos -Vector(0, 0, 30),
@@ -47,6 +47,6 @@ function ENT:OnDestroy(data, phys)
 		mask = CONTENTS_SOLID
 	})
 	if tr.HitWorld && (tr.HitNormal == Vector(0.0, 0.0, 1.0)) then // (tr.Fraction <= 0.405)
-		ParticleEffect("vj_blood_pool_yellow_tiny", tr.HitPos, Angle(0, 0, 0))
+		ParticleEffect("vj_blood_pool_yellow_tiny", tr.HitPos, Angle())
 	end
 end

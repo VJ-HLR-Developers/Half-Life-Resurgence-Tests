@@ -146,7 +146,7 @@ ENT.MainSoundPitch = 100
 -- Specific kill sounds
 local sdKilledEnemyPlayer = {"vo/citadel/br_mock01.wav", "vo/citadel/br_mock04.wav", "vo/citadel/br_mock07.wav"}
 ---------------------------------------------------------------------------------------------------------------------------------------------
-local defAng = Angle(0, 0, 0)
+local defAng = Angle()
 --
 function ENT:Init()
 	local myPos = self:GetPos()

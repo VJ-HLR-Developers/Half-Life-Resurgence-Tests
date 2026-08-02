@@ -315,7 +315,7 @@ function ENT:OnInput(key, activator, caller, data)
 					proj.Activated = true
 					proj.Hooks = {}
 					proj.FilterEnts = {proj, proj:GetOwner()}
-					phys:SetVelocity(Vector(0, 0, 0))
+					phys:SetVelocity(Vector())
 					phys:ApplyForceCenter(Vector(0, 0, 1500))
 					for i = 1, math.random(6, 10) do
 						proj.SoundTbl_Idle = nil
@@ -327,8 +327,8 @@ function ENT:OnInput(key, activator, caller, data)
 									if IsValid(proj) then
 										proj:SpawnRope(i)
 										if i == 10 then
-											phys:SetVelocity(Vector(0, 0, 0))
-											phys:SetAngleVelocity(Vector(0, 0, 0))
+											phys:SetVelocity(Vector())
+											phys:SetAngleVelocity(Vector())
 										end
 									end
 								end)
@@ -410,7 +410,7 @@ function ENT:OnInput(key, activator, caller, data)
 					phys:EnableMotion(false)
 					ropeObj.IdleLoop:Stop()
 					VJ.EmitSound(ropeObj, "weapons/tripwire/hook.wav", 70)
-					constraint.Elastic(ropeObj:GetOwner(), ropeObj, 0, 0, Vector(0, 0, 0), Vector(0, 0, 0), 150, 24, 0.1, "cable/physbeam", 1, false )
+					constraint.Elastic(ropeObj:GetOwner(), ropeObj, 0, 0, Vector(), Vector(), 150, 24, 0.1, "cable/physbeam", 1, false )
 				end
 			end
 			function ropeObj:OnRemove()
@@ -457,7 +457,7 @@ function ENT:OnInput(key, activator, caller, data)
 				proj:PlaySound("OnCollide")
 			end
 		end
-		local defAngle = Angle(0, 0, 0)
+		local defAngle = Angle()
 		function proj:OnDestroy()
 			local myPos = proj:GetPos()
 
@@ -507,7 +507,7 @@ function ENT:OnInput(key, activator, caller, data)
 		proj.RadiusDamageUseRealisticRadius = true
 		proj.RadiusDamageType = DMG_POISON
 		proj.RadiusDamageForce = 5
-		local defAngle = Angle(0, 0, 0)
+		local defAngle = Angle()
 		function proj:OnDestroy()
 			local myPos = proj:GetPos()
 			VJ.EmitSound(proj, "npc/antlion/antlion_shoot3.wav", 75)

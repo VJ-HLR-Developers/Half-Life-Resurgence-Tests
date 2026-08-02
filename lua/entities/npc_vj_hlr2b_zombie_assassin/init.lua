@@ -13,7 +13,7 @@ ENT.VJ_NPC_Class = {"CLASS_ZOMBIE"}
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Bip01 Head",
 	FirstP_Offset = Vector(3, 0, 0),
 }

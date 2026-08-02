@@ -39,7 +39,7 @@ ENT.DeathCorpseCollisionType = COLLISION_GROUP_NONE
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Chopper.Blade_Hull",
 	FirstP_Offset = Vector(140, 0, -45),
 }
@@ -86,7 +86,7 @@ function ENT:Init()
 	self.NextFireT = 0
 	self.NextBombT = 0
 	self.CarpetBombing = false
-	self.CarpetBombPos = Vector(0, 0, 0)
+	self.CarpetBombPos = Vector()
 	self.NextCarpetBombT = 0
 	self.NextDropCarpetT = 0
 
@@ -260,7 +260,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 				bomb:Spawn()
 				local phys = bomb:GetPhysicsObject()
 				if IsValid(phys) then
-					phys:SetVelocity(((tr.Entity:GetPos() +(tr.Entity:GetRight() *math.Rand(-400, 400))) -bomb:LocalToWorld(Vector(0, 0, 0))))
+					phys:SetVelocity(((tr.Entity:GetPos() +(tr.Entity:GetRight() *math.Rand(-400, 400))) -bomb:LocalToWorld(Vector())))
 				end
 				constraint.NoCollide(bomb, self, 0, 0)
 				self.NextBombT = CurTime() +math.Rand(2, 4)
@@ -330,16 +330,16 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, corpse)
 	VJ.EmitSound(self, "vj_base/ambience/explosion3.wav", 100, 100)
 	util.BlastDamage(self, self, corpse:GetPos(), 200, 40)
 	util.ScreenShake(corpse:GetPos(), 100, 200, 1, 2500)
-	if self.HasGibOnDeathEffects then ParticleEffect("vj_explosion2", corpse:GetPos(), Angle(0, 0, 0), nil) end
+	if self.HasGibOnDeathEffects then ParticleEffect("vj_explosion2", corpse:GetPos(), Angle(), nil) end
 
 	if math.random(1, 3) == 1 then
 		self:CreateExtraDeathCorpse("prop_ragdoll", "models/combine_soldier.mdl", {Pos = corpse:GetPos()+corpse:GetUp()*90+corpse:GetRight()*-30, Vel = Vector(math.Rand(-600, 600), math.Rand(-600, 600), 500)}, function(extraent) extraent:Ignite(math.Rand(8, 10), 0); extraent:SetColor(Color(90, 90, 90)) end)
 	end
 
 	if self.HasGibOnDeathEffects then
-		ParticleEffect("vj_explosion3", corpse:GetPos(), Angle(0, 0, 0), nil)
-		ParticleEffect("vj_explosion2", corpse:GetPos() +corpse:GetForward()*-130, Angle(0, 0, 0), nil)
-		ParticleEffect("vj_explosion2", corpse:GetPos() +corpse:GetForward()*130, Angle(0, 0, 0), nil)
+		ParticleEffect("vj_explosion3", corpse:GetPos(), Angle(), nil)
+		ParticleEffect("vj_explosion2", corpse:GetPos() +corpse:GetForward()*-130, Angle(), nil)
+		ParticleEffect("vj_explosion2", corpse:GetPos() +corpse:GetForward()*130, Angle(), nil)
 		ParticleEffectAttach("fire_large_01", PATTACH_POINT_FOLLOW, corpse, 8)
 		ParticleEffectAttach("smoke_burning_engine_01", PATTACH_POINT_FOLLOW, corpse, 1)
 

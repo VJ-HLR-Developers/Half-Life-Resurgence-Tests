@@ -19,7 +19,7 @@ ENT.JumpParams = {
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Antlion.Head_Bone",
 	FirstP_Offset = Vector(15, 0, 2),
 }

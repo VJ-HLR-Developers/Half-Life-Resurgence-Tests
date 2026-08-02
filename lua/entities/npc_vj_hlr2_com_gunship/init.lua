@@ -23,7 +23,7 @@ ENT.HasDeathCorpse = false
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Chopper.Blade_Hull",
 	FirstP_Offset = Vector(140, 0, -45),
 }
@@ -246,7 +246,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 			VJ.EmitSound(ent, "vj_base/ambience/explosion2.wav", 100, 100)
 			util.BlastDamage(ent, ent, pos, 200, 40)
 			util.ScreenShake(pos, 100, 200, 1, 2500)
-			ParticleEffect("vj_explosion2", pos, Angle(0, 0, 0), nil)
+			ParticleEffect("vj_explosion2", pos, Angle(), nil)
 			if math.random(1, 4) == 1 && ent:GetClass() != "prop_ragdoll" then VJ.CreateSound(ent, "npc/combine_gunship/gunship_pain.wav", 90, math.random(95, 110)) end
 		end
 

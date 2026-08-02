@@ -1,6 +1,0 @@
-ENT.Base 			= "npc_vj_hlr2_antlion"
-ENT.Type 			= "ai"
-ENT.PrintName 		= "Antlion Worker (EP2 Beta)"
-ENT.Author 			= "DrVrej"
-ENT.Contact 		= "http://steamcommunity.com/groups/vrejgaming"
-ENT.Category		= "Half-Life 2"

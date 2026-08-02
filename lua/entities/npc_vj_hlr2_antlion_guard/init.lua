@@ -12,7 +12,7 @@ ENT.VJ_ID_Boss = true
 
 ENT.ControllerParams = {
 	CameraMode = 1,
-	ThirdP_Offset = Vector(0, 0, 0),
+	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Antlion_Guard.head",
 	FirstP_Offset = Vector(5, 0, 3),
 }
@@ -452,7 +452,7 @@ function ENT:CustomOnRemove()
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-local defAng = Angle(0, 0, 0)
+local defAng = Angle()
 local angY45 = Angle(0, 45, 0)
 local angY45 = Angle(0, 45, 0)
 local angYN45 = Angle(0, -45, 0)
