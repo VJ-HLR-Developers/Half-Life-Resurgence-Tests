@@ -273,7 +273,7 @@ function ENT:StartWarpCannon(doLastPos)
 		targetPos = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 	end
 	if doLastPos then
-		targetPos = self.LastSawEnemyPosition != nil && self.LastSawEnemyPosition or self:GetPos() +self:GetForward() *800
+		targetPos = self.LastSawEnemyPosition && self.LastSawEnemyPosition or self:GetPos() +self:GetForward() *800
 	end
 	sound.EmitHint(SOUND_DANGER, targetPos, 500, SoundDuration("npc/strider/charging.wav") +1, self)
 
@@ -285,7 +285,7 @@ function ENT:StartWarpCannon(doLastPos)
 				targetPos = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 			end
 			if doLastPos then
-				targetPos = self.LastSawEnemyPosition != nil && self.LastSawEnemyPosition or self:GetPos() +self:GetForward() *800
+				targetPos = self.LastSawEnemyPosition && self.LastSawEnemyPosition or self:GetPos() +self:GetForward() *800
 			end
 			self:WarpCannon(targetPos)
 		end

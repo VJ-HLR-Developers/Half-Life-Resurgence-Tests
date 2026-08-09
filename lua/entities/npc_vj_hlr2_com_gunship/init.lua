@@ -277,7 +277,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 			self.Corpse:SetColor(self:GetColor())
 			self.Corpse:SetMaterial(self:GetMaterial())
 			self.Corpse:SetSkin(1)
-			if self.DeathCorpseSubMaterials != nil then
+			if self.DeathCorpseSubMaterials then
 				for _, x in ipairs(self.DeathCorpseSubMaterials) do
 					if self:GetSubMaterial(x) != "" then
 						self.Corpse:SetSubMaterial(x, self:GetSubMaterial(x))

@@ -341,7 +341,7 @@ function ENT:StartWarpCannon(doLastPos)
 		targetPos = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 	end
 	if doLastPos then
-		targetPos = self.EnemyData != nil && self.EnemyData.VisiblePos or self:GetPos() +self:GetForward() *1250
+		targetPos = self.EnemyData && self.EnemyData.VisiblePos or self:GetPos() +self:GetForward() *1250
 	end
 	sound.EmitHint(SOUND_DANGER, targetPos, 500, 1, self)
 
