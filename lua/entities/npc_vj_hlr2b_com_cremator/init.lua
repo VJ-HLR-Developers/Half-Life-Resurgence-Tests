@@ -94,7 +94,7 @@ function ENT:OnInput(key, activator, caller, data)
 		light:SetParent(self)
 		light:Spawn()
 		light:Activate()
-		light:Fire("TurnOn", "", 0)
+		light:Fire("TurnOn")
 		light:Fire("SetParentAttachmentMaintainOffset", "muzzle", 0)
 		self:DeleteOnRemove(light)
 		self.FireLight = light

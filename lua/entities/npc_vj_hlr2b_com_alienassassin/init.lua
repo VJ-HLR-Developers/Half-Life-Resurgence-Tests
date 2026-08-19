@@ -477,7 +477,7 @@ function ENT:OnInput(key, activator, caller, data)
 			expLight:SetParent(proj)
 			expLight:Spawn()
 			expLight:Activate()
-			expLight:Fire("TurnOn", "", 0)
+			expLight:Fire("TurnOn")
 			proj:DeleteOnRemove(expLight)
 
 			proj:DealDamage()

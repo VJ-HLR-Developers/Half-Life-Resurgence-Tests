@@ -82,12 +82,11 @@ function ENT:OnDestroy(data, phys)
 	self.ExplosionLight1:SetKeyValue("brightness", "4")
 	self.ExplosionLight1:SetKeyValue("distance", "300")
 	self.ExplosionLight1:SetLocalPos(data.HitPos)
-	self.ExplosionLight1:SetLocalAngles(self:GetAngles())
 	self.ExplosionLight1:Fire("Color", "0 31 225")
 	self.ExplosionLight1:SetParent(self)
 	self.ExplosionLight1:Spawn()
 	self.ExplosionLight1:Activate()
-	self.ExplosionLight1:Fire("TurnOn", "", 0)
+	self.ExplosionLight1:Fire("TurnOn")
 	self:DeleteOnRemove(self.ExplosionLight1)
 
 	for i = 1, math.random(3, 5) do

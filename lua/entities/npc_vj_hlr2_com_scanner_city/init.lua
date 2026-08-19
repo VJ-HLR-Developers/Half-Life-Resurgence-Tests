@@ -133,7 +133,7 @@ function ENT:Init()
 	glowLight:SetParent(self)
 	glowLight:SetOwner(self)
 	glowLight:Spawn()
-	glowLight:Fire("TurnOn", "", 0)
+	glowLight:Fire("TurnOn")
 	glowLight:Fire("SetParentAttachment", "light", 0)
 	self:DeleteOnRemove(glowLight)
 

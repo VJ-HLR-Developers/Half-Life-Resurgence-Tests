@@ -275,7 +275,7 @@ function ENT:OnAnimEvent(ev, evTime, evCycle, evType, evOptions)
 			light:Spawn()
 			light:Activate()
 			light:SetParent(self)
-			light:Fire("TurnOn", "", 0)
+			light:Fire("TurnOn")
 			light:Fire("SetParentAttachment", i == 3 && "leftclaw" or "rightclaw")
 			self:DeleteOnRemove(light)
 
@@ -358,7 +358,7 @@ function ENT:OnAnimEvent(ev, evTime, evCycle, evType, evOptions)
 		light:SetPos(self:GetPos())
 		light:Spawn()
 		light:Activate()
-		light:Fire("TurnOn", "", 0)
+		light:Fire("TurnOn")
 		SafeRemoveEntityDelayed(light, 0.15)
 	end
 end
@@ -387,7 +387,7 @@ function ENT:OnRangeAttackExecute(status, enemy, projectile)
 		light:SetPos(hitPos)
 		light:Spawn()
 		light:Activate()
-		light:Fire("TurnOn", "", 0)
+		light:Fire("TurnOn")
 		SafeRemoveEntityDelayed(light, 0.1)
 		return true
 	end

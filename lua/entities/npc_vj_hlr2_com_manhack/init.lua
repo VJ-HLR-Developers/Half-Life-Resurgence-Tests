@@ -119,7 +119,7 @@ function ENT:Init()
 	light:SetParent(self)
 	light:Spawn()
 	light:Activate()
-	light:Fire("TurnOn", "", 0)
+	light:Fire("TurnOn")
 	light:Fire("SetParentAttachment", "light")
 	self:DeleteOnRemove(light)
 end

@@ -217,8 +217,8 @@ function ENT:OnRangeAttackExecute(status, enemy, projectile)
 		FireLight1:SetParent(self)
 		FireLight1:Spawn()
 		FireLight1:Activate()
-		FireLight1:Fire("TurnOn", "", 0)
-		FireLight1:Fire("Kill", "", 0.07)
+		FireLight1:Fire("TurnOn")
+		FireLight1:Fire("Kill", nil, 0.07)
 		self:DeleteOnRemove(FireLight1)
 		return true
 	end

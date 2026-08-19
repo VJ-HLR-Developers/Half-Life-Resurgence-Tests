@@ -68,7 +68,7 @@ function ENT:Init()
 	glowFX:SetParent(self)
 	glowFX:Spawn()
 	glowFX:Activate()
-	glowFX:Fire("TurnOn", "", 0)
+	glowFX:Fire("TurnOn")
 	-- glowFX:Fire("SetParentAttachment", "2", 0)
 	self:DeleteOnRemove(glowFX)
 end

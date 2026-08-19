@@ -107,8 +107,8 @@ function ENT:BarrageFire()
 			FireLight1:Fire("Color", "0 161 255 255")
 			FireLight1:Spawn()
 			FireLight1:Activate()
-			FireLight1:Fire("TurnOn", "", 0)
-			FireLight1:Fire("Kill", "", 0.07)
+			FireLight1:Fire("TurnOn")
+			FireLight1:Fire("Kill", nil, 0.07)
 			self:DeleteOnRemove(FireLight1)
 			if i == 20 then
 				VJ.CreateSound(self, "npc/combine_gunship/attack_stop2.wav", 100)
@@ -303,12 +303,12 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 					end
 				end
 			end
-			self.Corpse:Fire("FadeAndRemove", "", 360)
+			self.Corpse:Fire("FadeAndRemove", nil, 360)
 			self.Corpse:CallOnRemove("vj_" .. self.Corpse:EntIndex(), function(ent, exttbl)
 				if !exttbl then return end
 				for _, v in ipairs(exttbl) do
 					if IsValid(v) then
-						if v:GetClass() == "prop_ragdoll" then v:Fire("FadeAndRemove", "", 0) else v:Fire("kill", "", 0) end
+						if v:GetClass() == "prop_ragdoll" then v:Fire("FadeAndRemove", nil, 0) else v:Fire("kill", nil, 0) end
 					end
 				end
 			end, self.Corpse.ChildEnts)
@@ -366,8 +366,8 @@ function ENT:WarpCannon()
 			FireLight1:SetParent(self)
 			FireLight1:Spawn()
 			FireLight1:Activate()
-			FireLight1:Fire("TurnOn", "", 0)
-			FireLight1:Fire("Kill", "", 0.1)
+			FireLight1:Fire("TurnOn")
+			FireLight1:Fire("Kill", nil, 0.1)
 			self:DeleteOnRemove(FireLight1)
 		end
 	end)
@@ -387,8 +387,8 @@ function ENT:WarpCannon()
 			FireLight1:SetParent(self)
 			FireLight1:Spawn()
 			FireLight1:Activate()
-			FireLight1:Fire("TurnOn", "", 0)
-			FireLight1:Fire("Kill", "", 0.07)
+			FireLight1:Fire("TurnOn")
+			FireLight1:Fire("Kill", nil, 0.07)
 			self:DeleteOnRemove(FireLight1)
 		end
 	end)
@@ -413,7 +413,7 @@ function ENT:StartWarpCannon()
 	muz:SetAngles(Angle(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)))
 	muz:Spawn()
 	muz:Activate()
-	muz:Fire("Kill", "", SoundDuration("npc/strider/charging.wav") +0.3)
+	muz:Fire("Kill", nil, SoundDuration("npc/strider/charging.wav") +0.3)
 
 	local pinch = ents.Create("env_sprite")
 	pinch:SetKeyValue("model", "effects/strider_pinch_dudv.vmt")
@@ -431,7 +431,7 @@ function ENT:StartWarpCannon()
 	pinch:SetAngles(Angle(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)))
 	pinch:Spawn()
 	pinch:Activate()
-	pinch:Fire("Kill", "", SoundDuration("npc/strider/charging.wav") +1)
+	pinch:Fire("Kill", nil, SoundDuration("npc/strider/charging.wav") +1)
 
 	timer.Simple(SoundDuration("npc/strider/charging.wav"), function()
 		if IsValid(self) then
