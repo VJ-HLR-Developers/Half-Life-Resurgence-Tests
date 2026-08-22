@@ -137,7 +137,6 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 		if math.random(1, (dmgtype == DMG_CLUB or dmgtype == DMG_SLASH or DMG_BLAST) && 1 or 3) == 1 then
 			ent:SetBodygroup(0, 1)
 			local crab = ents.Create("npc_vj_hlr2b_headcrab")
-			local enemy = self:GetEnemy()
 			crab:SetPos(self:EyePos())
 			crab:SetAngles(self:GetAngles())
 			crab:Spawn()

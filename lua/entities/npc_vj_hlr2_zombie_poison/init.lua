@@ -210,7 +210,6 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 	VJ.CreateSound(ent, self.SoundTbl_DeathFollow, self.DeathSoundLevel)
 	for i = 1, self.Headcrabs do
 		local crab = ents.Create(self.HeadcrabClass or "npc_vj_hlr2_headcrab_poison")
-		local enemy = self:GetEnemy()
 		crab:SetPos(self:GetAttachment(self:LookupAttachment("headcrab" .. i)).Pos or self:EyePos())
 		crab:SetAngles(self:GetAngles() +Angle(0, math.random(0, 360), 0))
 		crab.VJ_NPC_Class = self.VJ_NPC_Class
@@ -235,7 +234,6 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 		if math.random(1, (dmgtype == DMG_CLUB or dmgtype == DMG_SLASH or DMG_BLAST) && 1 or 3) == 1 then
 			ent:SetBodygroup(1, 0)
 			local crab = ents.Create(self.HeadcrabClass or "npc_vj_hlr2_headcrab_poison")
-			local enemy = self:GetEnemy()
 			crab:SetPos(self:GetAttachment(self:LookupAttachment("headcrab1")).Pos or self:EyePos())
 			crab:SetAngles(self:GetAngles())
 			crab:Spawn()

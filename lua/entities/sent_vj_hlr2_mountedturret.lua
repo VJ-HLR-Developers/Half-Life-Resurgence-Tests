@@ -175,11 +175,9 @@ function ENT:Think()
 	if curTime > self.LastShotT then
 		self.Overheat = 0
 	end
-	if curTime > self.OverheatRechargeT then
-		if turret.Loop then
-			turret:StopParticles()
-			turret.Loop:Stop()
-		end
+	if curTime > self.OverheatRechargeT && turret.Loop then
+		turret:StopParticles()
+		turret.Loop:Stop()
 	end
 	self.TargetPos = self:GetPos() +self:GetForward() *-50
 	self.HandlePos = self:GetPos() +self:GetForward() *-40 +self:GetUp() *-31
@@ -296,7 +294,6 @@ function ENT:UpdatePoseParamTracking(resetPoses)
 	local ene = operator:GetEnemy()
 	local newPitch = 0
 	local newYaw = 0
-	local newRoll = 0
 	if IsValid(ene) && !resetPoses then
 		local myEyePos = operator:EyePos()
 		local myAng = self:GetAngles()

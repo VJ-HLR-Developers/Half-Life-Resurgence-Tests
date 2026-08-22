@@ -1,3 +1,5 @@
+AddCSLuaFile()
+
 SWEP.Base 								= "weapon_vj_base"
 SWEP.PrintName							= "Dual Pistols"
 SWEP.Author 							= "Cpt. Hazama"
