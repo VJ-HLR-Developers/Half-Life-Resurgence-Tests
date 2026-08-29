@@ -5,7 +5,7 @@ ENT.Type 			= "anim"
 ENT.PrintName 		= "Mounted Turret"
 ENT.Author 			= "Cpt. Hazama"
 ENT.Contact 		= "http://steamcommunity.com/groups/vrejgaming"
-ENT.Category		= "VJ Base"
+ENT.Category		= "Half-Life Resurgence"
 
 if CLIENT then return end
 
