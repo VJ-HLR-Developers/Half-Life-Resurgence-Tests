@@ -318,7 +318,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
 	self.ConstantlyFaceEnemy = !self.CarpetBombing
-	self:SetPoseParameter("move_yaw", Lerp(FrameTime()*4, self:GetPoseParameter("move_yaw"), self:GetVelocity():GetNormal().y))
+	self:SetPoseParameter("move_yaw", Lerp(FrameTime()*4, self:GetPoseParameter("move_yaw"), self:GetVelocity():GetNormalized().y))
 
 	if timer.Exists("vj_timer_fire_" .. self:EntIndex()) then
 		self.FireLP:Play()

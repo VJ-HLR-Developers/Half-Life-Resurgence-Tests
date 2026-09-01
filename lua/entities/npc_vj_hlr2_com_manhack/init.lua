@@ -228,7 +228,7 @@ function ENT:OnTouch(ent)
 		end
 		local effectData = EffectData()
 		effectData:SetOrigin(self:GetPos())
-		effectData:SetNormal((self:GetPos() -ent:GetPos()):GetNormal())
+		effectData:SetNormal((self:GetPos() -ent:GetPos()):GetNormalized())
 		effectData:SetMagnitude(3)
 		effectData:SetScale(1)
 		util.Effect("ElectricSpark", effectData)
@@ -254,13 +254,13 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 		local attacker = dmginfo:GetInflictor() or dmginfo:GetAttacker()
 		local effectData = EffectData()
 		effectData:SetOrigin(dmginfo:GetDamagePosition())
-		effectData:SetNormal(dmginfo:GetDamageForce():GetNormal())
+		effectData:SetNormal(dmginfo:GetDamageForce():GetNormalized())
 		effectData:SetMagnitude(3)
 		effectData:SetScale(1)
 		util.Effect("ElectricSpark", effectData)
 
 		self:SetLocalVelocity(vector_origin)
-		self:SetVelocity((self:GetPos() -attacker:GetPos()):GetNormal() *(dmginfo:GetDamageForce():Length() *0.25))
+		self:SetVelocity((self:GetPos() -attacker:GetPos()):GetNormalized() *(dmginfo:GetDamageForce():Length() *0.25))
 		self.Manhack_HasHit = true
 		self.Manhack_HitID = self.Manhack_HitID +1
 		self.DisableChasingEnemy = true

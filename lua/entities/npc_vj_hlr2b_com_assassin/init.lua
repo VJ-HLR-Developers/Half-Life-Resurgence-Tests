@@ -169,9 +169,9 @@ function ENT:OnThink()
 		self:StopMoving()
 		self:SetGroundEntity(NULL)
 		if math.random(1, 2) == 1 then
-			self:SetLocalVelocity(((self:GetPos() + self:GetRight()*100) - (self:GetPos() + self:OBBCenter())):GetNormal()*200 +self:GetForward()*1 +self:GetUp()*600 + self:GetRight()*1)
+			self:SetLocalVelocity(((self:GetPos() + self:GetRight()*100) - (self:GetPos() + self:OBBCenter())):GetNormalized()*200 +self:GetForward()*1 +self:GetUp()*600 + self:GetRight()*1)
 		else
-			self:SetLocalVelocity(((self:GetPos() + self:GetRight()*-100) - (self:GetPos() + self:OBBCenter())):GetNormal()*200 +self:GetForward()*1 +self:GetUp()*600 + self:GetRight()*1)
+			self:SetLocalVelocity(((self:GetPos() + self:GetRight()*-100) - (self:GetPos() + self:OBBCenter())):GetNormalized()*200 +self:GetForward()*1 +self:GetUp()*600 + self:GetRight()*1)
 		end
 		self.AnimTbl_IdleStand = ACT_GLIDE
 		self:PlayAnim(ACT_JUMP, true, false, true, 0, {}, function(sched)

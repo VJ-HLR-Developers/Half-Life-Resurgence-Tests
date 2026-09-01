@@ -161,7 +161,7 @@ function ENT:OnThink()
 		self:StopParticles()
 	end
 	if !busy && IsValid(self:GetEnemy()) && curTime > self.Assassin_NextJumpT && self.EnemyData.Distance < 1400 && !self.VJ_IsBeingControlled && math.random(1, 30) == 1 then
-		self:ForceMoveJump(((self:GetPos() +self:GetRight() *(math.random(1, 2) == 1 && 500 or -500) +self:GetForward() *(math.random(1, 2) == 1 && 1 or -500)) -(self:GetPos() +self:OBBCenter())):GetNormal() *300 +self:GetUp() *600)
+		self:ForceMoveJump(((self:GetPos() +self:GetRight() *(math.random(1, 2) == 1 && 500 or -500) +self:GetForward() *(math.random(1, 2) == 1 && 1 or -500)) -(self:GetPos() +self:OBBCenter())):GetNormalized() *300 +self:GetUp() *600)
 		self.Assassin_NextJumpT = curTime + math.Rand(7, 11)
 	end
 end

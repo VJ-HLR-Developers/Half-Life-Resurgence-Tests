@@ -201,7 +201,7 @@ function ENT:OnThink()
 	-- self:SetPoseParameter("flex_horz", Lerp(FrameTime() *speed, self:GetPoseParameter("flex_horz"), self.PP_Horz))
 	-- self:SetPoseParameter("fin_accel", Lerp(FrameTime() *speed, self:GetPoseParameter("fin_accel"), self.PP_Accel))
 
-	local x, y, z = self:GetVelocity():GetNormal().x *35, self:GetVelocity():GetNormal().y *35, self:GetVelocity():GetNormal().z *35
+	local x, y, z = self:GetVelocity():GetNormalized().x *35, self:GetVelocity():GetNormalized().y *35, self:GetVelocity():GetNormalized().z *35
 	self:SetPoseParameter("flex_vert", Lerp(FrameTime() *speed, self:GetPoseParameter("flex_vert"), x))
 	self:SetPoseParameter("flex_horz", Lerp(FrameTime() *speed, self:GetPoseParameter("flex_horz"), y))
 	self:SetPoseParameter("fin_accel", Lerp(FrameTime() *speed, self:GetPoseParameter("fin_accel"), z))

@@ -299,7 +299,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
-	local velNorm = self:GetVelocity():GetNormal()
+	local velNorm = self:GetVelocity():GetNormalized()
 	local speed = FrameTime()*4
 	self:SetPoseParameter("tilt_x", Lerp(speed, self:GetPoseParameter("tilt_x"), velNorm.x))
 	self:SetPoseParameter("tilt_y", Lerp(speed, self:GetPoseParameter("tilt_y"), velNorm.y))
