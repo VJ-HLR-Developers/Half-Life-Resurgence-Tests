@@ -1,11 +1,11 @@
 AddCSLuaFile()
 
-ENT.Base 			= "prop_vj_animatable"
-ENT.Type 			= "anim"
-ENT.PrintName 		= "Mounted Turret"
-ENT.Author 			= "Cpt. Hazama"
-ENT.Contact 		= "http://steamcommunity.com/groups/vrejgaming"
-ENT.Category		= "Half-Life Resurgence"
+ENT.Base = "prop_vj_animatable"
+ENT.Type = "anim"
+ENT.PrintName = "Mounted Turret"
+ENT.Author = "Cpt. Hazama"
+ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
+ENT.Category = "Half-Life Resurgence"
 
 if CLIENT then return end
 

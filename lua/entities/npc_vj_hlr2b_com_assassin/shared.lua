@@ -1,9 +1,9 @@
-ENT.Base 			= "npc_vj_human_base"
-ENT.Type 			= "ai"
-ENT.PrintName 		= "Combine Assassin"
-ENT.Author 			= "Cpt. Hazama"
-ENT.Contact 		= "http://steamcommunity.com/groups/vrejgaming"
-ENT.Category		= "Half-Life Resurgence"
+ENT.Base = "npc_vj_human_base"
+ENT.Type = "ai"
+ENT.PrintName = "Combine Assassin"
+ENT.Author = "Cpt. Hazama"
+ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
+ENT.Category = "Half-Life Resurgence"
 
 function ENT:SetupDataTables()
 	self:NetworkVar("Bool", 0, "Cloaked")
