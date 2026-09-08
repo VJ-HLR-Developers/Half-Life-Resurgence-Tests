@@ -169,7 +169,7 @@ function ENT:FireFlechette()
 			local vel = self:RangeAttackProjVel(proj)
 			phys:Wake()
 			phys:SetVelocity(vel)
-			proj:SetAngles(vel:GetNormalized():Angle())
+			proj:SetAngles(vel:GetVelocity():Angle())
 		end
 
 		VJ.EmitSound(self, "^npc/ministrider/ministrider_fire1.wav", 105, 100)
