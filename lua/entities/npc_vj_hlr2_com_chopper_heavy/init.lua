@@ -41,7 +41,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Chopper.Blade_Hull",
-	FirstP_Offset = Vector(140, 0, -45),
+	FirstP_Offset = Vector(140, 0, -45)
 }
 
 ENT.ConstantlyFaceEnemy = true

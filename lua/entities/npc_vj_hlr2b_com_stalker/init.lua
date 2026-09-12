@@ -28,7 +28,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Bip01 Head",
-	FirstP_Offset = Vector(1, 0, 1),
+	FirstP_Offset = Vector(1, 0, 1)
 }
 
 ENT.SoundTbl_FootStep = {

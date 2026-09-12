@@ -40,7 +40,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "MiniStrider.body_joint",
-	FirstP_Offset = Vector(18, 0, -5),
+	FirstP_Offset = Vector(18, 0, -5)
 }
 
 ENT.DisableFootStepSoundTimer = true

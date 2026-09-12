@@ -33,7 +33,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "HoundEye.Head",
-	FirstP_Offset = Vector(4, 0, 0),
+	FirstP_Offset = Vector(4, 0, 0)
 }
 
 ENT.SoundTbl_FootStep = {

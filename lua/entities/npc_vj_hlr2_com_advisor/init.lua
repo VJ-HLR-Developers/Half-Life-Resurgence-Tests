@@ -48,7 +48,7 @@ ENT.ControllerParams = {
     CameraMode = 1,
     ThirdP_Offset = Vector(),
     FirstP_Bone = "advisor.camera",
-    FirstP_Offset = Vector(8, 0, 4),
+    FirstP_Offset = Vector(8, 0, 4)
 }
 
 ENT.LimitChaseDistance = true

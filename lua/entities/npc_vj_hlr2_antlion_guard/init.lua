@@ -14,7 +14,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Antlion_Guard.head",
-	FirstP_Offset = Vector(5, 0, 3),
+	FirstP_Offset = Vector(5, 0, 3)
 }
 
 ENT.VJ_NPC_Class = {"CLASS_ANTLION"}

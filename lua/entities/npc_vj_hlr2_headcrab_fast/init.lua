@@ -11,7 +11,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "HCFast.Chest",
-	FirstP_Offset = Vector(1, 0, 2),
+	FirstP_Offset = Vector(1, 0, 2)
 }
 
 ENT.FootstepSoundTimerRun = 0.1

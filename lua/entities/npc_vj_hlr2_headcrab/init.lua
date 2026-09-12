@@ -15,7 +15,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "HeadcrabClassic.SpineControl",
-	FirstP_Offset = Vector(3, 0, -1),
+	FirstP_Offset = Vector(3, 0, -1)
 }
 
 ENT.BloodColor = VJ.BLOOD_COLOR_YELLOW

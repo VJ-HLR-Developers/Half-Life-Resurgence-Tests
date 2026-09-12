@@ -15,7 +15,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "HCblack.torso",
-	FirstP_Offset = Vector(1, 0, 2),
+	FirstP_Offset = Vector(1, 0, 2)
 }
 
 ENT.AnimTbl_IdleStand = {ACT_IDLE, "IdleSumo", "IdleSniff"}

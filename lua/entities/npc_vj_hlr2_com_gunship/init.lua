@@ -14,7 +14,7 @@ ENT.Aerial_AnimTbl_Alerted = ACT_IDLE
 
 ENT.PoseParameterLooking_InvertPitch = false
 ENT.PoseParameterLooking_InvertYaw = false
-ENT.PoseParameterLooking_Names = {pitch={"flex_vert"}, yaw={"flex_herz"}, roll={"fin_accel"}}
+ENT.PoseParameterLooking_Names = {pitch = {"flex_vert"}, yaw = {"flex_herz"}, roll = {"fin_accel"}}
 
 ENT.HasRangeAttack = false
 
@@ -25,7 +25,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Chopper.Blade_Hull",
-	FirstP_Offset = Vector(140, 0, -45),
+	FirstP_Offset = Vector(140, 0, -45)
 }
 
 ENT.SoundTbl_Idle = {"npc/combine_gunship/ping_patrol.wav", "npc/combine_gunship/ping_search.wav", "npc/combine_gunship/gunship_ping_search.wav"}

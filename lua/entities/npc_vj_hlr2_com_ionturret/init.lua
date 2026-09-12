@@ -25,7 +25,7 @@ ENT.GeneratorHealth = 100
 ENT.ControllerParams = {
 	FirstP_Bone = "polySurface167",
 	FirstP_Offset = Vector(-5, 1, 20),
-	FirstP_ShrinkBone = false,
+	FirstP_ShrinkBone = false
 }
 
 local doorSound = !IsMounted("ep2")

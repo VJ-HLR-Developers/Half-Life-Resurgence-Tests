@@ -19,7 +19,7 @@ ENT.Immune_Dissolve = true
 ENT.Immune_Fire = true
 
 ENT.PoseParameterLooking_InvertYaw = true
-ENT.PoseParameterLooking_Names = {pitch={"minigunPitch"}, yaw={"minigunYaw"}, roll={}}
+ENT.PoseParameterLooking_Names = {pitch = {"minigunPitch"}, yaw = {"minigunYaw"}, roll = {}}
 
 ENT.HasMeleeAttack = true
 ENT.AnimTbl_MeleeAttack = ACT_MELEE_ATTACK1
@@ -52,7 +52,7 @@ ENT.ControllerParams = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(),
 	FirstP_Bone = "Combine_Strider.Neck_Bone",
-	FirstP_Offset = Vector(8, 0, -60),
+	FirstP_Offset = Vector(8, 0, -60)
 }
 
 ENT.CanFlinch = "DamageTypes"
