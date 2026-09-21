@@ -3,7 +3,7 @@ ENT.Type = "ai"
 ENT.PrintName = ""
 ENT.Author = "DrVrej"
 ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
-ENT.Category = "Half-Life 2"
+ENT.Category = "Half-Life Resurgence"
 
 /*if CLIENT then
 	function ENT:Initialize()
