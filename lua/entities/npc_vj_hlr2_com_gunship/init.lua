@@ -277,13 +277,6 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 			self.Corpse:SetColor(self:GetColor())
 			self.Corpse:SetMaterial(self:GetMaterial())
 			self.Corpse:SetSkin(1)
-			if self.DeathCorpseSubMaterials then
-				for _, x in ipairs(self.DeathCorpseSubMaterials) do
-					if self:GetSubMaterial(x) != "" then
-						self.Corpse:SetSubMaterial(x, self:GetSubMaterial(x))
-					end
-				end
-			end
 			self.Corpse.IsVJBaseCorpse = true
 			self.Corpse.ChildEnts = self.DeathCorpse_ChildEnts or {}
 			if GetConVar("ai_serverragdolls"):GetInt() == 1 then
