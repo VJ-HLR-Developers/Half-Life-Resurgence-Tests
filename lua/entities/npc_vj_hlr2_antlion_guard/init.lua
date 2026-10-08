@@ -370,7 +370,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 				self:SetLayerPriority(gest, 1)
 				self:SetLayerPlaybackRate(gest, 0.5)
 				local ent = tr.Entity
-				local isProp = IsValid(ent) && VJ.IsProp(ent) or false
+				local isProp = IsValid(ent) && ent.VJ_ID_Prop or false
 				if IsValid(ent) && (isProp or self:CheckRelationship(ent) == D_HT) then
 					if isProp then
 						local phys = ent:GetPhysicsObject()

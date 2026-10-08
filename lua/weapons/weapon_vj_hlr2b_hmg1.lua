@@ -39,4 +39,5 @@ SWEP.Primary.Sound = "VJ.HL2R.BetaHMG1.Fire"
 SWEP.PrimaryEffects_MuzzleAttachment = "muzzle"
 SWEP.PrimaryEffects_ShellAttachment = "eject"
 SWEP.PrimaryEffects_ShellType = "RifleShellEject"
+
 SWEP.ReloadSound = "vj_hlr/src/wep/hmg1/hmg_reload.wav"

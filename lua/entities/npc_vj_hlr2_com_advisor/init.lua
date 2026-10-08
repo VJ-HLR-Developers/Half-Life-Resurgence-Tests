@@ -186,7 +186,7 @@ function ENT:ShieldCode(bEnable)
 	ParticleEffect("electrical_arc_01_system", self:GetPos() + self:OBBCenter(), Angle(), nil)
 	VJ.CreateSound(self, "ambient/energy/whiteflash.wav", 120)
 	for _, v in ipairs(ents.FindInSphere(self:GetPos(), 8000)) do
-		if VJ.IsProp(v) && self:Visible(v) then
+		if v.VJ_ID_Prop && self:Visible(v) then
 			local phys = v:GetPhysicsObject()
 			if IsValid(phys) && phys:GetMass() <= 6000 then
 				constraint.RemoveConstraints(v, "Weld")
@@ -228,7 +228,7 @@ end
 -- 		//print("SEARCH ----")
 -- 		local pTbl = {} -- Table of props that it found
 -- 		for _, v in ipairs(ents.FindInSphere(self:GetEnemy():GetPos(), 2000)) do
--- 			if VJ.IsProp(v) && self:Visible(v) && self:GetEnemy():Visible(v) then
+-- 			if v.VJ_ID_Prop && self:Visible(v) && self:GetEnemy():Visible(v) then
 -- 				local phys = v:GetPhysicsObject()
 -- 				if IsValid(phys) && phys:GetMass() <= 4000 && v.BeingControlledByAdvisor != true then
 -- 					//print("Prop -", v)
@@ -299,7 +299,7 @@ function ENT:OnThink()
 	self:SetPhysicsDamageScale(0)
 	local pTbl = {}
 	for _, v in ipairs(ents.FindInSphere(self:GetPos(), self.PropRange)) do
-		if /*VJ.IsProp(v) &&*/ !v:IsPlayer() && (!v:IsNPC() or v:IsNPC() && v:GetMoveType() == MOVETYPE_VPHYSICS) && IsValid(v:GetPhysicsObject()) && self:Visible(v) then
+		if /*v.VJ_ID_Prop &&*/ !v:IsPlayer() && (!v:IsNPC() or v:IsNPC() && v:GetMoveType() == MOVETYPE_VPHYSICS) && IsValid(v:GetPhysicsObject()) && self:Visible(v) then
 			local phys = v:GetPhysicsObject()
 			if !v:IsNPC() && phys:GetMass() <= 5000 or v:IsNPC() then
 				pTbl[#pTbl + 1] = v

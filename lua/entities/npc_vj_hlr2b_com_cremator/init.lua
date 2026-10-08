@@ -144,7 +144,7 @@ function ENT:OnThinkActive()
 		sound.EmitHint(SOUND_DANGER, pos +ang:Forward() *(self.Cremator_FlameRange /2), self.Cremator_FlameRange *2, 0.2, self)
 		VJ.ApplyRadiusDamage(self, self, (self:GetPos() +(self:GetForward() *self:OBBMaxs().y)), self.Cremator_FlameRange, self.Cremator_FlameDamage, dmgType, true, false, {UseConeDegree=35, UseConeDirection=ang:Forward()},
 		function(ent)
-			if (ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot() or VJ.IsProp(ent)) then
+			if (ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot() or ent.VJ_ID_Prop) then
 				if ent:IsPlayer() then
 					ent:ScreenFade(SCREENFADE.IN, Color(26, 255, 0, 170), 0.5, 0)
 				end

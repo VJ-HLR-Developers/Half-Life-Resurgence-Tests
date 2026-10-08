@@ -49,7 +49,7 @@ function ENT:OnCollisionPersist(data, phys)
 		}
 		hitEnt = data.HitEntity
 		if IsValid(owner) then
-			if (VJ.IsProp(hitEnt)) or (hitEnt:IsNPC() && (hitEnt:Disposition(owner) == D_HT or hitEnt:Disposition(owner) == D_FR) && hitEnt:Health() > 0 && (hitEnt != owner) && (hitEnt:GetClass() != owner:GetClass())) or (hitEnt:IsPlayer() && !VJ_CVAR_IGNOREPLAYERS && hitEnt:Alive() && hitEnt:Health() > 0) then
+			if (hitEnt.VJ_ID_Prop) or (hitEnt:IsNPC() && (hitEnt:Disposition(owner) == D_HT or hitEnt:Disposition(owner) == D_FR) && hitEnt:Health() > 0 && (hitEnt != owner) && (hitEnt:GetClass() != owner:GetClass())) or (hitEnt:IsPlayer() && !VJ_CVAR_IGNOREPLAYERS && hitEnt:Alive() && hitEnt:Health() > 0) then
 				local dmgInfo = DamageInfo()
 				dmgInfo:SetDamage(4)
 				dmgInfo:SetDamageType(DMG_SLASH)

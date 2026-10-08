@@ -296,7 +296,7 @@ function ENT:OnThinkActive()
 			else
 				self:PlayAnim("charge_miss_slide", true, false, false)
 				local ent = tr.Entity
-				local isProp = IsValid(ent) && VJ.IsProp(ent) or false
+				local isProp = IsValid(ent) && ent.VJ_ID_Prop or false
 				if IsValid(ent) && (isProp or self:CheckRelationship(ent) == D_HT) then
 					if isProp then
 						local phys = ent:GetPhysicsObject()
