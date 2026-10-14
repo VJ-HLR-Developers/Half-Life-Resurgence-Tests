@@ -172,11 +172,11 @@ function ENT:OnThinkAttack(atkType, ent)
 		local data = self.EnemyData
 		local busy = self:IsBusy()
 		if !busy && data.Visible && data.DistanceNearest <= 100 && curTime > self.NextJumpAwayT then
-			self:VJ_ACT_PLAYACTIVITY("jumpbackt", true, false, true)
+			self:PlayAnim("jumpbackt", true, false, true)
 			self.NextJumpAwayT = curTime + math.Rand(2.5, 7.5)
 			return
 		elseif !busy && data.DistanceNearest > 300 && data.DistanceNearest <= 1500 && curTime > self.NextRunAwayT then
-			self:VJ_ACT_PLAYACTIVITY("smoke", true, false, true)
+			self:PlayAnim("smoke", true, false, true)
 			return
 		end
 	end
