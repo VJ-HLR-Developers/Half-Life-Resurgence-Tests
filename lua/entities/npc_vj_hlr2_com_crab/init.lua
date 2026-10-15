@@ -58,7 +58,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Controller_Initialize(ply, controlEnt)
 	function controlEnt:OnThink()
-		self.VJC_BullseyeTracking = self.VJCE_NPC:GetIdealActivity() == ACT_WALK
+		self.VJC_BullseyeTracking = self:GetNPC():GetIdealActivity() == ACT_WALK
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
