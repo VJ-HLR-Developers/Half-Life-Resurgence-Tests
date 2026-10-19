@@ -154,18 +154,18 @@ function ENT:OnThink()
 			end
 		end
 	end
-	if (self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_RELOAD) or !self.VJ_IsBeingControlled && validEnt && !cloaked) && CurTime() > self.Assassin_NextCloakT then
+	if (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_RELOAD) or !self.VJ_Controlled && validEnt && !cloaked) && CurTime() > self.Assassin_NextCloakT then
 		self:SetCloaked(!cloaked)
 		VJ.EmitSound(self, "npc/roller/mine/combine_mine_deploy1.wav", 60, self:GetCloaked() && 120 or 100)
 		self.Assassin_NextCloakT = CurTime() +1
-	elseif !self.VJ_IsBeingControlled && !self.Alerted && cloaked then
+	elseif !self.VJ_Controlled && !self.Alerted && cloaked then
 		self:SetCloaked(false)
 		self.Assassin_NextCloakT = CurTime() +1
 	end
-	if (self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_JUMP) or validEnt && !self.VJ_IsBeingControlled && CurTime() > self.Assassin_NextDodgeT && !self:IsMoving() && self:GetPos():Distance(self:GetEnemy():GetPos()) < 2200) && self:IsOnGround() then
+	if (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP) or validEnt && !self.VJ_Controlled && CurTime() > self.Assassin_NextDodgeT && !self:IsMoving() && self:GetPos():Distance(self:GetEnemy():GetPos()) < 2200) && self:IsOnGround() then
 		self:Dodge()
 	end
-	if validEnt && self.WeaponAttackState == VJ.WEP_ATTACK_STATE_FIRE_STAND && self.VJ_IsBeingControlled == false && CurTime() > self.Assassin_NextJumpT && !self:IsMoving() && self:GetPos():Distance(self:GetEnemy():GetPos()) < 1400 then
+	if validEnt && self.WeaponAttackState == VJ.WEP_ATTACK_STATE_FIRE_STAND && !self.VJ_Controlled && CurTime() > self.Assassin_NextJumpT && !self:IsMoving() && self:GetPos():Distance(self:GetEnemy():GetPos()) < 1400 then
 		self:StopMoving()
 		self:SetGroundEntity(NULL)
 		if math.random(1, 2) == 1 then
@@ -184,8 +184,8 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Dodge()
 	if !self:IsBusy() then
-		if self.VJ_IsBeingControlled then
-			local ply = self.VJ_TheController
+		if self.VJ_Controlled then
+			local ply = self.VJ_Controller:GetPlayer()
 			self:PlayAnim((ply:KeyDown(IN_MOVELEFT) && "FlipLeft") or (ply:KeyDown(IN_MOVERIGHT) && "FlipRight") or (ply:KeyDown(IN_FORWARD) && "FlipForwardB") or "flipback", true, false, true)
 			self.Assassin_NextDodgeT = CurTime() +math.Rand(2, 6)
 		else
@@ -222,7 +222,7 @@ function ENT:OnWeaponCanFire()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnBleed(dmginfo, hitgroup)
-	if !self.VJ_IsBeingControlled && CurTime() > self.Assassin_NextDodgeT && !self:IsMoving() && self:IsOnGround() then
+	if !self.VJ_Controlled && CurTime() > self.Assassin_NextDodgeT && !self:IsMoving() && self:IsOnGround() then
 		self:Dodge()
 	end
 end

@@ -172,7 +172,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 	local dist = eneData.DistanceNearest
 	local headcrabs = self.Headcrabs
 
-	if headcrabs > 0 && ((self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_ATTACK2)) or (!self.VJ_IsBeingControlled && dist <= 700 && dist > 250 && math.random(1, 50) == 1 && eneData.Visible && CurTime() > self.NextThrowT && !self:IsBusy())) then
+	if headcrabs > 0 && ((self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2)) or (!self.VJ_Controlled && dist <= 700 && dist > 250 && math.random(1, 50) == 1 && eneData.Visible && CurTime() > self.NextThrowT && !self:IsBusy())) then
 		if dist <= 350 then
 			self:PlayAnim("headcrab2Leap", true, false, true)
 		else

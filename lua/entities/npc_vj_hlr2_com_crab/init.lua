@@ -134,7 +134,7 @@ function ENT:OnThinkActive()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:TranslateActivity(act)
-	if act == ACT_RUN && !IsValid(self.VJ_TheController) then
+	if act == ACT_RUN && !self.VJ_Controlled then
 		local dist = self.EnemyData.DistanceNearest
 		if dist && (dist >= 2000 or dist <= 500) then
 			return ACT_RUN

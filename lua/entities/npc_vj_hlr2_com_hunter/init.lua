@@ -359,7 +359,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 	local eneData = self.EnemyData
 	local dist = eneData.DistanceNearest
 	if eneData.Visible then
-		if !self.VJ_IsBeingControlled && !self:IsBusy() && CurTime() > self.NextRandMoveT && !self.DoRangeAttack && dist > 400 then
+		if !self.VJ_Controlled && !self:IsBusy() && CurTime() > self.NextRandMoveT && !self.DoRangeAttack && dist > 400 then
 			local checkdist = self:VJ_CheckAllFourSides(400)
 			local randmove = {}
 			if checkdist.Backward == true then randmove[#randmove+1] = "Backward" end
@@ -376,7 +376,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 			end
 		end
 
-		if dist > 500 && dist <= 2500 && !self.IsCharging && !self:IsBusy() && !self.DoRangeAttack && (self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_JUMP) or !self.VJ_IsBeingControlled && math.random(1, 50) == 1) && math.abs(self:GetPos().z -enemy:GetPos().z) <= 128 then
+		if dist > 500 && dist <= 2500 && !self.IsCharging && !self:IsBusy() && !self.DoRangeAttack && (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP) or !self.VJ_Controlled && math.random(1, 50) == 1) && math.abs(self:GetPos().z -enemy:GetPos().z) <= 128 then
 			self:PlayAnim("charge_start", true, false, true, 0, {OnFinish=function(interrupted, anim)
 				if interrupted then
 					return
@@ -390,7 +390,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		end
 	end
 
-	if self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_ATTACK2) && !self.DoRangeAttack && !self.IsCharging or !self.VJ_IsBeingControlled && !self.IsCharging && CurTime() > self.NextRangeT && !self.DoRangeAttack && dist > 250 && dist <= 2200 then
+	if self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2) && !self.DoRangeAttack && !self.IsCharging or !self.VJ_Controlled && !self.IsCharging && CurTime() > self.NextRangeT && !self.DoRangeAttack && dist > 250 && dist <= 2200 then
 		if !self:VisibleVec(eneData.VisiblePos or enemy:GetPos() + enemy:OBBCenter()) then return end
 		self.Shots = 0
 		self.DoRangeAttack = true

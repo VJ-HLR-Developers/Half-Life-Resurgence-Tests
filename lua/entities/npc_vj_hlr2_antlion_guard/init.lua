@@ -398,8 +398,8 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		return
 	end
 
-	local controlled = self.VJ_IsBeingControlled
-	local ply = self.VJ_TheController
+	local controlled = self.VJ_Controlled
+	local ply = self.VJ_Controlled and self.VJ_Controller:GetPlayer()
 	if (controlled && ply:KeyDown(IN_ATTACK2) or !controlled && eneData.Visible && dist > 500 && dist <= 2500 && !self:IsBusy() && math.random(1, 50) == 1 && math.abs(self:GetPos().z -enemy:GetPos().z) <= 128) && !self.IsCharging then
 		self.IsCharging = true
 		self.ChargeT = CurTime() +6

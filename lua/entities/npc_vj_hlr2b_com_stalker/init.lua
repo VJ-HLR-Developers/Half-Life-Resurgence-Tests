@@ -160,7 +160,7 @@ function ENT:OnThink()
 	else
 		self.NextLAnimT = 0
 	end
-	if !self.VJ_IsBeingControlled then
+	if !self.VJ_Controlled then
 		local ent = self:GetEnemy()
 		if IsValid(ent) then
 			if self:Visible(ent) && (CurTime() > self.NextRunAwayT) && ent:GetPos():Distance(self:GetPos()) < self.LimitChaseDistance_Max && ent:GetPos():Distance(self:GetPos()) > self.LimitChaseDistance_Min then
@@ -175,7 +175,7 @@ function ENT:OnThink()
 			end
 		end
 	else
-		if self.VJ_TheController:KeyDown(IN_ATTACK2) then
+		if self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2) then
 			if !self.IsLaserAttacking then
 				self.IsLaserAttacking = true
 				VJ.EmitSound(self, "vj_hlr/src/npc/beta_stalker/laser_start.wav", 70, 100)
@@ -196,7 +196,7 @@ function ENT:CustomOnRemove()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnDamaged(dmginfo, hitgroup, status)
-	if status == "PostDamage" && CurTime() > self.NextRunAwayT && !self.VJ_IsBeingControlled then
+	if status == "PostDamage" && CurTime() > self.NextRunAwayT && !self.VJ_Controlled then
 		self:LaserReset()
 		VJ.CreateSound(self, self.SoundTbl_Scramble, 80, 100)
 		self:SCHEDULE_COVER_ENEMY("TASK_RUN_PATH", function(x) x.RunCode_OnFail = function() self.NextRunAwayT = 0 end end)

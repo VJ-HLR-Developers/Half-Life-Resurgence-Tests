@@ -430,7 +430,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SelectSchedule()
 	self.BaseClass.SelectSchedule(self)
-	if !self.Dead && self.Vort_RunAway && !self:IsBusy() && !self.VJ_IsBeingControlled then
+	if !self.Dead && self.Vort_RunAway && !self:IsBusy() && !self.VJ_Controlled then
 		self.Vort_RunAway = false
 		self:SCHEDULE_COVER_ENEMY("TASK_RUN_PATH", function(x) x.RunCode_OnFail = function() self.NextDoAnyAttackT = 0 end end)
 		self.NextDoAnyAttackT = CurTime() + 5
@@ -439,7 +439,7 @@ function ENT:SelectSchedule()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThinkAttack(isAttacking, enemy)
-	if !self.VJ_IsBeingControlled then
+	if !self.VJ_Controlled then
 		local eneData = self.EnemyData
 		if eneData.Visible && CurTime() > self.NextRandMoveT && eneData.DistanceNearest <= self.RangeAttackMaxDistance && !self:IsBusy() && !self.Vort_RunAway then
 			local checkdist = self:VJ_CheckAllFourSides(375)
@@ -457,7 +457,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 			end
 		end
 	else
-		local ply = self.VJ_TheController
+		local ply = self.VJ_Controller:GetPlayer()
 		if ply:KeyDown(IN_JUMP) && CurTime() > self.Vort_DispelT && !self:IsBusy() then
 			local _, dur = self:PlayAnim("dispel", true, false, false)
 			self.NextDoAnyAttackT = CurTime() +dur
@@ -469,7 +469,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnDamaged(dmginfo, hitgroup, status)
 	if status == "PostDamage" then
-		if self.VJ_IsBeingControlled then return end
+		if self.VJ_Controlled then return end
 		if math.random(1, dmginfo:IsBulletDamage() && 3 or 6) == 1 then
 			self.Vort_RunAway = true
 		elseif !self.Vort_RunAway && math.random(1, 4) == 1 && !dmginfo:IsBulletDamage() && CurTime() > self.Vort_DispelT then

@@ -50,7 +50,7 @@ function ENT:OnThinkActive()
 		return
 	end
 
-	if self.VJ_IsBeingControlled then return end
+	if self.VJ_Controlled then return end
 
 	if !self.Alerted && !IsValid(self:GetEnemy()) && !self:IsMoving() && CurTime() > self.Headcrab_NextSleepT && !self.Headcrab_Sleeping && !self:IsBusy() then
 		self.Headcrab_Sleeping = true

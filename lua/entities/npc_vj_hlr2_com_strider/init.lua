@@ -140,7 +140,7 @@ function ENT:OnInput(key, activator, caller, data)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
-	if !self.VJ_IsBeingControlled then
+	if !self.VJ_Controlled then
 		if IsValid(self:GetEnemy()) && self:GetEnemy():Visible(self) then
 			self.LastSawEnemyPosition = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 			self.DisableChasingEnemy = true
@@ -279,8 +279,8 @@ function ENT:StartWarpCannon(doLastPos)
 
 	timer.Simple(SoundDuration("npc/strider/charging.wav"), function()
 		if IsValid(self) then
-			local target = self:GetEnemy()
-			local targetPos = self:GetPos() +self:GetForward() *800
+			target = self:GetEnemy()
+			targetPos = self:GetPos() +self:GetForward() *800
 			if IsValid(target) then
 				targetPos = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 			end
@@ -293,8 +293,8 @@ function ENT:StartWarpCannon(doLastPos)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:ControllAI(enemy, dist, cos)
-	local rmb = self.VJ_TheController:KeyDown(IN_ATTACK2)
-	local space = self.VJ_TheController:KeyDown(IN_JUMP)
+	local rmb = self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2)
+	local space = self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP)
 	if enemy:Visible(self) && cos then
 		if rmb then
 			if CurTime() > self.NextFireT then
@@ -308,7 +308,7 @@ function ENT:ControllAI(enemy, dist, cos)
 				bullet.Num = 1
 				bullet.Src = self:GetAttachment(self:LookupAttachment("MiniGun")).Pos
 				bullet.Dir = (self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()) -self:GetAttachment(self:LookupAttachment("MiniGun")).Pos +Vector(math.random(-self.MinigunSpread, self.MinigunSpread) -self.Shots, math.random(-self.MinigunSpread, self.MinigunSpread) -self.Shots, math.random(-self.MinigunSpread, self.MinigunSpread) -self.Shots)
-				bullet.Spread = self.MinigunSpread -self.Shots
+				//bullet.Spread = self.MinigunSpread -self.Shots
 				bullet.Tracer = 1
 				bullet.TracerName = "AR2Tracer"
 				bullet.Force = 3
@@ -362,7 +362,7 @@ function ENT:ControllAI(enemy, dist, cos)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThinkAttack(isAttacking, enemy)
-	local controlled = self.VJ_IsBeingControlled
+	local controlled = self.VJ_Controlled
 	local dist = self.EnemyData.DistanceNearest
 	local cos = (self:GetForward():Dot((enemy:GetPos() +enemy:OBBCenter() -self:GetPos() + self:OBBCenter()):GetNormalized()) > math.cos(math.rad(80)))
 	if controlled then

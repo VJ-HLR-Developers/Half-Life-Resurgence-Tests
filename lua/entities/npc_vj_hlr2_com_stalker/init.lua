@@ -136,7 +136,7 @@ function ENT:OnThink()
 	else
 		self.NextLAnimT = 0
 	end
-	if !self.VJ_IsBeingControlled then
+	if !self.VJ_Controlled then
 		local ent = self:GetEnemy()
 		if IsValid(ent) then
 			if self:Visible(ent) && ent:GetPos():Distance(self:GetPos()) < self.LimitChaseDistance_Max then
@@ -151,7 +151,7 @@ function ENT:OnThink()
 			end
 		end
 	else
-		if self.VJ_TheController:KeyDown(IN_ATTACK2) then
+		if self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2) then
 			if !self.IsLaserAttacking then
 				self.IsLaserAttacking = true
 				VJ.EmitSound(self, "vj_hlr/src/npc/beta_stalker/laser_start.wav", 70, 100)

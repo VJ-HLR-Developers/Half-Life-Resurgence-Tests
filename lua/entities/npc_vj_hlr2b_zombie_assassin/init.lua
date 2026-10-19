@@ -77,7 +77,7 @@ function ENT:OnInput(key, activator, caller, data)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThinkActive()
-	local controlled = self.VJ_IsBeingControlled
+	local controlled = self.VJ_Controlled
 	local set = self.AnimationSet
 	local enemy = self:GetEnemy()
 	if IsValid(enemy) && !controlled then

@@ -388,7 +388,7 @@ function ENT:OnThinkActive()
 			SafeRemoveEntity(v)
 		end
 	end
-	if IsValid(self:GetEnemy()) && CurTime() > self.NextSpawnT && ((self.VJ_IsBeingControlled == false) or (self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_JUMP))) then
+	if IsValid(self:GetEnemy()) && CurTime() > self.NextSpawnT && ((!self.VJ_Controlled) or (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP))) then
 		self.NextSpawnT = CurTime() +self:SpawnAlly()
 	end
 end

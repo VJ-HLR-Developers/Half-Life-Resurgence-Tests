@@ -182,7 +182,7 @@ function ENT:OnUpdatePoseParamTracking(pitch, yaw, roll)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThinkAttack(isAttacking, enemy)
-	local cont = self.VJ_TheController
+	local cont = self.VJ_Controlled and self.VJ_Controller:GetPlayer()
 	if CurTime() > self.NextRocketT && (!IsValid(cont) && enemy:Visible(self) or (IsValid(cont) && cont:KeyDown(IN_ATTACK2))) then
 		if self.Ammo <= 0 then
 			local t = SoundDuration("ambient/machines/thumper_shutdown1.wav")
@@ -313,7 +313,7 @@ function ENT:Tank_OnThink()
 	end
 
 	-- Deploy soldiers
-	if self.Tank_Status == 1 && self.APC_HasSpawnedSoldiers == false && self.APC_DoorOpen == false && IsValid(self:GetEnemy()) && ((!self.VJ_IsBeingControlled && math.random(1, 60) == 1) or (self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_JUMP))) then
+	if self.Tank_Status == 1 && self.APC_HasSpawnedSoldiers == false && self.APC_DoorOpen == false && IsValid(self:GetEnemy()) && ((!self.VJ_Controlled && math.random(1, 60) == 1) or (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP))) then
 		self.APC_DoorOpen = true
 		self.APC_HasSpawnedSoldiers = true
 		timer.Simple(0.5, function()

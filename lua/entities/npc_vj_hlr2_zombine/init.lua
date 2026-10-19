@@ -115,7 +115,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThinkAttack(isAttacking, enemy)
 	local dist = self.EnemyData.DistanceNearest
-	if !self.RageState && (self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_JUMP) or !self.VJ_IsBeingControlled && dist <= 750 && math.random(1, dist *0.5) == 1) then
+	if !self.RageState && (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP) or !self.VJ_Controlled && dist <= 750 && math.random(1, dist *0.5) == 1) then
 		VJ.STOPSOUND(self.CurrentSpeechSound)
 		VJ.STOPSOUND(self.CurrentIdleSound)
 		VJ.CreateSound(self, "vj_hlr/src/npc/zombine/zombine_alert6.wav", 80)
@@ -125,7 +125,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		self.RageState = false
 	end
 
-	if !self.GrenadePulled && !self:IsBusy() && (self.VJ_IsBeingControlled && self.VJ_TheController:KeyDown(IN_ATTACK2) or !self.VJ_IsBeingControlled && math.random(1, (self:Health() < self:GetMaxHealth() *0.25) && 15 or 150) == 1 && dist < 300) then
+	if !self.GrenadePulled && !self:IsBusy() && (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2) or !self.VJ_Controlled && math.random(1, (self:Health() < self:GetMaxHealth() *0.25) && 15 or 150) == 1 && dist < 300) then
 		self.GrenadePulled = true
 		self.GrenadeTime = CurTime() +20
 		VJ.CreateSound(self, "npc/zombine/zombine_readygrenade" .. math.random(1, 2) .. ".wav", 80, 100)
