@@ -116,12 +116,6 @@ function ENT:RangeAttackProjVel(projectile)
 	return self:CalculateProjectile("Curve", projectile:GetPos(), self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1200)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:OnFlinch(dmginfo, hitgroup, status)
-	if status == "Init" && self.AttackState == VJ.ATTACK_STATE_STARTED then -- Since StopAttacks() doesn't stop the velocity code from running
-		return true
-	end
-end
----------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnAlert(ent)
 	if self.CanAlertCrab != true then return end
 
