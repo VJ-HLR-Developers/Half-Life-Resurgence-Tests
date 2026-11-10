@@ -1,0 +1,6 @@
+ENT.Base = "npc_vj_hlr2_com_advisor"
+ENT.Type = "ai"
+ENT.PrintName = "Advisor"
+ENT.Author = "DrVrej"
+ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
+ENT.Category = "Half-Life Resurgence"

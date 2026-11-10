@@ -39,6 +39,7 @@ VJ.AddNPC("Overwatch APC", "npc_vj_hlr2_com_apc", spawnCategory, {SubCategory = 
 VJ.AddNPC("Overwatch APC (Meme)", "npc_vj_hlr2_com_apc_meme", spawnCategory, {SubCategory = subCategory})
 VJ.AddNPC("Overwatch Strider Synth", "npc_vj_hlr2_com_strider", spawnCategory, {SubCategory = subCategory})
 VJ.AddNPC("Overwatch Advisor", "npc_vj_hlr2_com_advisor", spawnCategory, {SubCategory = subCategory})
+VJ.AddNPC("Overwatch Advisor (Original)", "npc_vj_hlr2_com_advisor_old", spawnCategory, {SubCategory = subCategory})
 VJ.AddNPC("Overwatch Mortar Synth", "npc_vj_hlr2_com_mortar", spawnCategory, {SubCategory = subCategory})
 VJ.AddNPC("Overwatch Crab Synth", "npc_vj_hlr2_com_crab", spawnCategory, {SubCategory = subCategory})
 VJ.AddNPC("Overwatch Ceiling Turret", "npc_vj_hlr2_com_ceilingturret", spawnCategory, {SubCategory = subCategory, OnCeiling = true})
