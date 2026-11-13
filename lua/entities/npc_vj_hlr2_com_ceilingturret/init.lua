@@ -11,7 +11,7 @@ ENT.HasDeathCorpse = false
 ENT.StartHealth = 250
 ENT.SightDistance = 2200
 ENT.PoseParameterLooking_TurningSpeed = 25
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(13, 13, 0), Vector(-13, -13, -40))
 	self:SetPos(self:GetPos() +Vector(0, 0, 32))
@@ -32,13 +32,13 @@ function ENT:Init()
 	self.Turret_Sprite:Fire("HideSprite")
 	self:DeleteOnRemove(self.Turret_Sprite)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	if IsValid(self:GetEnemy()) or self.Alerted then
 		self.Turret_StandDown = false
 		self.AnimTbl_IdleStand = "idlealert"
 		-- Handle the light sprite
-		if self.Turret_HasLOS == true && IsValid(self:GetEnemy()) then
+		if self.Turret_HasLOS == true and IsValid(self:GetEnemy()) then
 			self.Turret_Sprite:Fire("Color", "255 0 0") -- Red
 			self.Turret_Sprite:Fire("ShowSprite")
 		elseif self.HasPoseParameterLooking == true then -- So when the alert animation is playing, it won't replace the activating light (green)
@@ -50,7 +50,7 @@ function ENT:OnThinkActive()
 		local pyaw = self:GetPoseParameter("aim_yaw")
 
 		-- Make it scan around if the enemy is behind, which is unreachable for it!
-		if IsValid(self:GetEnemy()) && self.Turret_HasLOS == false && (self:GetForward():Dot((self:GetEnemy():GetPos() - self:GetPos()):GetNormalized()) <= math.cos(math.rad(self.RangeAttackAngleRadius))) then
+		if IsValid(self:GetEnemy()) and self.Turret_HasLOS == false and (self:GetForward():Dot((self:GetEnemy():GetPos() - self:GetPos()):GetNormalized()) <= math.cos(math.rad(self.RangeAttackAngleRadius))) then
 			scan = true
 			self.HasPoseParameterLooking = false
 		else
@@ -83,7 +83,7 @@ function ENT:OnThinkActive()
 		end
 	else
 		-- Play the retracting sequence and sound
-		if !self.Alerted && self.Turret_StandDown == false then
+		if !self.Alerted and self.Turret_StandDown == false then
 			self.Turret_Sprite:Fire("Color", "0 150 0") -- Green
 			self.Turret_Sprite:Fire("ShowSprite")
 			self.Turret_StandDown = true

@@ -18,7 +18,7 @@ ENT.FootstepSoundTimerRun = 0.1
 ENT.FootstepSoundTimerWalk = 0.1
 
 ENT.MainSoundPitch = 120
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(12, 12, 15), Vector(-12, -12, 0))
 end

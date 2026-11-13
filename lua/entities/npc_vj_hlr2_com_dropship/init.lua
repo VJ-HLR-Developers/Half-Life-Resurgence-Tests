@@ -56,7 +56,7 @@ local LandingState = {
 	LANDING_UNLOADED,
 	LANDING_LIFTOFF,
 }
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self.AnimTbl = {
 		Idle = VJ.SequenceToActivity(self, "idle"),
@@ -107,11 +107,11 @@ function ENT:Init()
 	self.CargoLoop:SetSoundLevel(120)
 	self.CargoLoop:ChangeVolume(1)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:BarrageFire(cargo)
 	local i = 0
 	timer.Create("vj_timer_fire_" .. self:EntIndex(), 0.1, 16, function()
-		if IsValid(self:GetEnemy()) && !self.Dead then
+		if IsValid(self:GetEnemy()) and !self.Dead then
 			i = i +1
 			local att = cargo:GetAttachment(3)
 			sound.EmitHint(SOUND_DANGER, self:GetEnemy():GetPos(), 250, 0.25, self)
@@ -157,13 +157,13 @@ function ENT:BarrageFire(cargo)
 		end
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	local cargo = self.Cargo
-	if IsValid(cargo) && self.CargoType == CRATE_TYPES.CRATE_SOLDIER then
+	if IsValid(cargo) and self.CargoType == CRATE_TYPES.CRATE_SOLDIER then
 		if IsValid(self:GetEnemy()) then
 			local dist = self.EnemyData.DistanceNearest
-			if dist <= 4000 && self:Visible(self:GetEnemy()) then
+			if dist <= 4000 and self:Visible(self:GetEnemy()) then
 				if CurTime() > self.NextFireT then
 					self:BarrageFire(cargo)
 					VJ.CreateSound(self, "npc/combine_gunship/attack_start2.wav", 100)
@@ -173,15 +173,15 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:SetDropshipState(state)
 	self._State = state
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:GetDropshipState()
 	return self._State
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:EquipCargo(cargoType, count)
 	self:SetCollisionBounds(DROPSHIP_BBOX_MAX, DROPSHIP_BBOX_MIN)
 	self.CargoType = cargoType
@@ -206,7 +206,7 @@ function ENT:EquipCargo(cargoType, count)
 		self.Cargo = prop
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:DropOffCargo()
 	if self.HasDroppedOffCargo then return end
 	local cargo = self.Cargo
@@ -226,7 +226,7 @@ function ENT:DropOffCargo()
 		local soldierCount = math.random(DROPSHIP_DEFAULT_SOLDIERS, DROPSHIP_MAX_SOLDIERS)
 		for i = 1, soldierCount do
 			timer.Simple(2.7 *i, function()
-				if IsValid(cargo) && IsValid(self) then
+				if IsValid(cargo) and IsValid(self) then
 					local att = cargo:GetAttachment(cargo:LookupAttachment("Deploy_Start"))
 					local class = VJ.PICK({"npc_vj_hlr2_com_soldier", "npc_vj_hlr2_com_soldier", "npc_vj_hlr2_com_soldier", "npc_vj_hlr2_com_soldier", "npc_vj_hlr2_com_shotgunner"})
 					local soldier = ents.Create(class)
@@ -270,21 +270,21 @@ function ENT:DropOffCargo()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local math_angApproach = math.ApproachAngle
 --
 function ENT:OnUpdatePoseParamTracking(pitch, yaw, roll)
-	if IsValid(self.Cargo) && self.CargoType == CRATE_TYPES.CRATE_SOLDIER then
+	if IsValid(self.Cargo) and self.CargoType == CRATE_TYPES.CRATE_SOLDIER then
 		self.Cargo:SetPoseParameter("weapon_pitch", math_angApproach(self.Cargo:GetPoseParameter("weapon_pitch"), -pitch, 10))
 		self.Cargo:SetPoseParameter("weapon_yaw", math_angApproach(self.Cargo:GetPoseParameter("weapon_yaw"), yaw, 10))
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
 	local state = self:GetDropshipState()
-	return state == (LandingState.LANDING_NO or LandingState.LANDING_LIFTOFF) && (IsValid(self.Cargo) && self.AnimTbl.Cargo or self.AnimTbl.Idle) or self.AnimTbl.Hover
+	return state == (LandingState.LANDING_NO or LandingState.LANDING_LIFTOFF) and (IsValid(self.Cargo) and self.AnimTbl.Cargo or self.AnimTbl.Idle) or self.AnimTbl.Hover
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	self:Flight()
 
@@ -294,15 +294,15 @@ function ENT:OnThinkActive()
 		self.FireLoop:Stop()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:SetDesiredPosition(pos)
 	self.DesiredPosition = pos
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:GetDesiredPosition()
 	return self.DesiredPosition
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:GetCalculatedPosition(pos, calcType)
 	if calcType == 1 then
 		local trDown = util.TraceHull({
@@ -346,7 +346,7 @@ function ENT:GetCalculatedPosition(pos, calcType)
 			maxs = DROPSHIP_BBOX_MIN,
 		})
 
-		if trLeft.Hit && trRight.Hit then
+		if trLeft.Hit and trRight.Hit then
 			return false
 		end
 		if trLeft.Hit then
@@ -358,14 +358,14 @@ function ENT:GetCalculatedPosition(pos, calcType)
 	end
 	return tr.HitPos or false
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:GetMoveDirection()
 	if self:GetVelocity():Length() <= 5 then return false end
 	local myPos = self:GetPos()
 	local dir = ((self:GetDesiredPosition() or myPos) - myPos)
 	return (self:GetAngles() -dir:Angle()):Forward()
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:FindNodesNearPoint(checkPos, total, dist, minDist)
 	local nodegraph = table.Copy(VJ_Nodegraph.Data.Nodes)
 	local closestNode = NULL
@@ -379,13 +379,13 @@ function ENT:FindNodesNearPoint(checkPos, total, dist, minDist)
 	end
 	local savedPoints = {}
 	for _, v in pairs(nodegraph) do
-		if v.pos:Distance(closestNode.pos) <= (dist or 1024) && v.pos:Distance(closestNode.pos) >= (minDist or 0) && v.type == 2 then
+		if v.pos:Distance(closestNode.pos) <= (dist or 1024) and v.pos:Distance(closestNode.pos) >= (minDist or 0) and v.type == 2 then
 			table.insert(savedPoints, v.pos)
 		end
 	end
-	return #savedPoints > 0 && savedPoints or false
+	return #savedPoints > 0 and savedPoints or false
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Flight()
 	local state = self:GetDropshipState()
 	if self:IsFlagSet(FL_ONGROUND) then
@@ -393,7 +393,7 @@ function ENT:Flight()
 	end
 
 	local moveDir = self:GetMoveDirection()
-	if moveDir && state != LandingState.LANDING_DESCEND then
+	if moveDir and state != LandingState.LANDING_DESCEND then
 		if self.CargoType == CRATE_TYPES.CRATE_NONE then
 			self:SetPoseParameter("body_accel", moveDir.x)
 			self:SetPoseParameter("body_sway", -moveDir.y)
@@ -408,9 +408,9 @@ function ENT:Flight()
 	end
 
 	local ent = self:GetEnemy()
-	if !self.HasDroppedOffCargo && IsValid(ent) && CurTime() > self.NextFindDropOffT && !self.PossibleDropOffPoint then
+	if !self.HasDroppedOffCargo and IsValid(ent) and CurTime() > self.NextFindDropOffT and !self.PossibleDropOffPoint then
 		-- self.IsGoingToDropOffCargo = true
-		-- self:SetDesiredPosition(state == LandingState.LANDING_DESCEND && self.CargoDropOffPoint or ent:GetPos() +ent:GetUp() *512)
+		-- self:SetDesiredPosition(state == LandingState.LANDING_DESCEND and self.CargoDropOffPoint or ent:GetPos() +ent:GetUp() *512)
 		-- PossibleDropOffPoint
 
 		local nodes = self:FindNodesNearPoint(ent:GetPos(), 16, 1024, 256)
@@ -464,7 +464,7 @@ function ENT:Flight()
 				flPos = calcPos
 			end
 			-- VJ.DEBUG_TempEnt(calcPos, self:GetAngles(), Color(212, 0, 255), 5)
-		elseif state == LandingState.LANDING_DESCEND && !self.CargoDropOffPoint then
+		elseif state == LandingState.LANDING_DESCEND and !self.CargoDropOffPoint then
 			local calcPos = self:GetCalculatedPosition(desiredPos, 1)
 			if calcPos then
 				flPos = calcPos
@@ -495,7 +495,7 @@ function ENT:Flight()
 			accel = accel *30
 			self:SetLocalVelocity(vel *0.9)
 			self:SetTurnTarget(flPos, 0.2)
-			if !self.HasDroppedOffCargo && self.IsGoingToDropOffCargo && !self.CargoDropOffPoint then
+			if !self.HasDroppedOffCargo and self.IsGoingToDropOffCargo and !self.CargoDropOffPoint then
 				self:SetDropshipState(LandingState.LANDING_DESCEND)
 				self:SetPoseParameter("body_accel", 0)
 				self:SetPoseParameter("body_sway", 0)
@@ -527,7 +527,7 @@ function ENT:Flight()
 					self:DropOffCargo()
 				end
 			end
-			if desiredSpeed < ((DROPSHIP_MAX_SPEED *(self.Alerted && 1 or 0.4)) *(self.CargoDropOffPoint && 0.25 or 1)) then
+			if desiredSpeed < ((DROPSHIP_MAX_SPEED *(self.Alerted and 1 or 0.4)) *(self.CargoDropOffPoint and 0.25 or 1)) then
 				desiredSpeed = desiredSpeed +accel
 			end
 			self:SetLocalVelocity(vel +(dir *accel))
@@ -535,11 +535,11 @@ function ENT:Flight()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, corpse)
 	corpse:SetBodygroup(1, 1)
 	local cargo = self.Cargo
-	if IsValid(cargo) && self.CargoType == CRATE_TYPES.CRATE_SOLDIER then
+	if IsValid(cargo) and self.CargoType == CRATE_TYPES.CRATE_SOLDIER then
 		util.BlastDamage(self, self, cargo:GetPos(), 200, 40)
 		util.ScreenShake(cargo:GetPos(), 100, 200, 1, 2500)
 		VJ.EmitSound(cargo, "vj_fire/explosion2.wav", 100, 100)
@@ -549,7 +549,7 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, corpse)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self.EngineLoop:Stop()
 	self.EngineLoopB:Stop()

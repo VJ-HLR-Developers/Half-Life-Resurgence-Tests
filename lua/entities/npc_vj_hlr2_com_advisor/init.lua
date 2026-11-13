@@ -96,23 +96,23 @@ ENT.ProjectileDefenseRadius = 900
 ENT.ProjectileDefenseInterval = 0.08
 ENT.GrenadeReturnSpeed = 1800
 ENT.ProjectileDeflectSpeed = 2000
----------------------------------------------------------------------------------------------------------------------------------------------
+
 util.AddNetworkString("VJ.HLR.AdvisorScreenFX")
 --
 local function targetAlive(ent,allowBullseye) // Avoid doing a bunch of checks else where in the code
-	if !IsValid(ent) or IsValid(ent) && (allowBullseye && (ent.IsVJBaseBullseye or ent:GetClass() == "obj_vj_bullseye")) then
+	if !IsValid(ent) or IsValid(ent) and (allowBullseye and (ent.IsVJBaseBullseye or ent:GetClass() == "obj_vj_bullseye")) then
         return false
     end
 	if ent:IsPlayer() then
         return ent:Alive()
     end
-	return (ent:IsNPC() or ent:IsNextBot()) && ent:Health() > 0
+	return (ent:IsNPC() or ent:IsNextBot()) and ent:Health() > 0
 end
 
 local function getDir(vec,fallBack)
-	return vec:Length() > 0.03162277660168379 && vec:GetNormalized() or fallBack or Vector(1,0,0)
+	return vec:Length() > 0.03162277660168379 and vec:GetNormalized() or fallBack or Vector(1,0,0)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(-38,-38,-30),Vector(38,38,30))
 
@@ -146,19 +146,19 @@ function ENT:Init()
         end
     end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnMeleeAttack(status,enemy)
 	if status == "PreInit" then
         return self.CurAttack != nil or CurTime() < self.RetreatEndT
     end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:ShieldCode(enable,silent)
-	if self.HasShield == enable && !silent then return end
+	if self.HasShield == enable and !silent then return end
 	self.HasShield = enable
     self:SetAdvisorShield(enable)
-	self.ShieldHealth = enable && self.ShieldMaxHealth or 0
-	self.BloodParticle = enable && "hunter_shield_impact" or "vj_blood_impact_yellow"
+	self.ShieldHealth = enable and self.ShieldMaxHealth or 0
+	self.BloodParticle = enable and "hunter_shield_impact" or "vj_blood_impact_yellow"
 	if enable then
 		ParticleEffectAttach("advisor_psychic_shield_idle",PATTACH_ABSORIGIN_FOLLOW,self,0)
 		if !silent then
@@ -172,7 +172,7 @@ function ENT:ShieldCode(enable,silent)
 		self:ReleaseProps()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo,hitgroup,status)
 	if status == "PreDamage" then
 		if CurTime() < self.InvulnerableT then
@@ -181,18 +181,18 @@ function ENT:OnDamaged(dmginfo,hitgroup,status)
         end
 		if self.HasShield then
 			local dmg = dmginfo:GetDamage()
-			self.ShieldHealth = self.ShieldHealth -(dmginfo:IsDamageType(DMG_BLAST) && dmg >= self.ShieldBlastThreshold && self.ShieldMaxHealth or dmg *(dmginfo:IsDamageType(DMG_BLAST) && 2 or 1))
+			self.ShieldHealth = self.ShieldHealth -(dmginfo:IsDamageType(DMG_BLAST) and dmg >= self.ShieldBlastThreshold and self.ShieldMaxHealth or dmg *(dmginfo:IsDamageType(DMG_BLAST) and 2 or 1))
 			if self.ShieldHealth <= 0 then
                 self:ShieldCode(false)
             end
 			dmginfo:SetDamage(0)
 			return
 		end
-		if dmginfo:GetDamage() > 0 && self.CurAttack && self.CurAttack.type == "pull" then
+		if dmginfo:GetDamage() > 0 and self.CurAttack and self.CurAttack.type == "pull" then
 			self:FinishAttack(false)
 		end
 		dmginfo:SetDamage(math.min(dmginfo:GetDamage(),160))
-	elseif status == "PostDamage" && self.HasRetreat && !self.Dead && dmginfo:GetDamage() > 0 && CurTime() >= self.RetreatEndT then
+	elseif status == "PostDamage" and self.HasRetreat and !self.Dead and dmginfo:GetDamage() > 0 and CurTime() >= self.RetreatEndT then
 		local time = CurTime()
 		local total = dmginfo:GetDamage()
 		for i = #self.DamageHistory,1,-1 do
@@ -213,16 +213,16 @@ function ENT:OnDamaged(dmginfo,hitgroup,status)
 			self.InvulnerableT = time +3
 			self.NextAttackT = self.RetreatEndT +1
 			local enemy = self:GetEnemy()
-			local away = IsValid(enemy) && getDir(self:GetPos() -enemy:GetPos(),-self:GetForward()) or -self:GetForward()
+			local away = IsValid(enemy) and getDir(self:GetPos() -enemy:GetPos(),-self:GetForward()) or -self:GetForward()
 			self.RetreatPos = self:GetPos() +away *800 +Vector(0,0,300)
 			self.NextRetreatMoveT = 0
 			VJ.EmitSound(self,"vj_hlr/src/npc/advisor/pain.wav",95)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:ReleaseProp(ent,delay)
-	local data = self.LevitatedProps && self.LevitatedProps[ent]
+	local data = self.LevitatedProps and self.LevitatedProps[ent]
 	if !data then return end
 	self.LevitatedProps[ent] = nil
 	if !IsValid(ent) then return end
@@ -241,21 +241,21 @@ function ENT:ReleaseProp(ent,delay)
 		ent:SetNW2Bool("VJ.HLR.Advisor.Controlled",false)
 		ent:SetNW2Entity("VJ.HLR.Advisor.Owner",NULL)
 	end
-	if delay && delay > 0 then
+	if delay and delay > 0 then
         self.RecentThrownProps[ent] = {
             untilT = CurTime() +delay
         }
         ent.VJ_HLR_AdvisorThrownUntil = CurTime() +delay
     end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:ReleaseProps()
 	if !self.LevitatedProps then return end
 	for ent in pairs(self.LevitatedProps) do
 		self:ReleaseProp(ent,2)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:UpdateProps(scan,delta)
 	local time = CurTime()
 	local center = self:WorldSpaceCenter()
@@ -269,12 +269,12 @@ function ENT:UpdateProps(scan,delta)
         end
 		if data.untilT <= time then
 			if ent:GetOwner() == self then
-                ent:SetOwner(IsValid(data.owner) && data.owner or NULL)
+                ent:SetOwner(IsValid(data.owner) and data.owner or NULL)
             end
 			self.RecentThrownProps[ent] = nil
-		elseif data.goal && self.PhysicsThrowSteering then
+		elseif data.goal and self.PhysicsThrowSteering then
 			local phys = ent:GetPhysicsObject()
-			if IsValid(phys) && phys:GetVelocity():Length() >= 1000 then
+			if IsValid(phys) and phys:GetVelocity():Length() >= 1000 then
 				local vel = phys:GetVelocity() +getDir(data.goal -ent:WorldSpaceCenter()) *(2000 *delta)
 				if vel:Length() > 3500 then
                     vel = vel:GetNormalized() *3500
@@ -286,7 +286,7 @@ function ENT:UpdateProps(scan,delta)
 		end
 	end
 
-	if scan && self.HasShield then
+	if scan and self.HasShield then
 		local count = table.Count(self.LevitatedProps)
 		for ent in pairs(self.LevitatedProps) do
 			if !IsValid(ent) or ent:GetPos():Distance(self:GetPos()) > self.LevitationRadius *1.4 then
@@ -299,13 +299,13 @@ function ENT:UpdateProps(scan,delta)
 				if count >= self.MaxLevitatedProps then
                     break
                 end
-				if !IsValid(ent) or self.LevitatedProps[ent] or ent.VJ_HLR_AdvisorOwner or (ent.VJ_HLR_AdvisorThrownUntil && ent.VJ_HLR_AdvisorThrownUntil > time) then
+				if !IsValid(ent) or self.LevitatedProps[ent] or ent.VJ_HLR_AdvisorOwner or (ent.VJ_HLR_AdvisorThrownUntil and ent.VJ_HLR_AdvisorThrownUntil > time) then
                     continue
                 end
-				if ent:GetClass() != "prop_physics" && ent:GetClass() != "prop_physics_multiplayer" && ent:GetClass() != "prop_physics_override" && ent:GetClass() != "func_physbox" then
+				if ent:GetClass() != "prop_physics" and ent:GetClass() != "prop_physics_multiplayer" and ent:GetClass() != "prop_physics_override" and ent:GetClass() != "func_physbox" then
                     continue
                 end
-				if ent.IsPlayerHolding && ent:IsPlayerHolding() or constraint.HasConstraints(ent) then
+				if ent.IsPlayerHolding and ent:IsPlayerHolding() or constraint.HasConstraints(ent) then
                     continue
                 end
 				local phys = ent:GetPhysicsObject()
@@ -364,17 +364,17 @@ function ENT:UpdateProps(scan,delta)
 	end
 
 	if !self.HasShield then return end
-	local pullActive = self.CurAttack && self.CurAttack.type == "pull"
-	local forward = hasEnemy && getDir(enemy:WorldSpaceCenter() -center,self:GetForward()) or self:GetForward()
+	local pullActive = self.CurAttack and self.CurAttack.type == "pull"
+	local forward = hasEnemy and getDir(enemy:WorldSpaceCenter() -center,self:GetForward()) or self:GetForward()
 	local right = getDir(forward:Cross(Vector(0,0,1)),self:GetRight())
 	local up = getDir(right:Cross(forward),Vector(0,0,1))
 	for ent,data in pairs(self.LevitatedProps) do
-		local phys = IsValid(ent) && ent:GetPhysicsObject()
+		local phys = IsValid(ent) and ent:GetPhysicsObject()
 		if !IsValid(phys) then
             self:ReleaseProp(ent)
             continue
         end
-		if self.CurAttack && self.CurAttack.type == "avalanche" && self.CurAttack.stage == "shockwave" then
+		if self.CurAttack and self.CurAttack.type == "avalanche" and self.CurAttack.stage == "shockwave" then
             continue
         end
 		local slot = data.slot -1
@@ -403,7 +403,7 @@ function ENT:UpdateProps(scan,delta)
 		phys:ComputeShadowControl(shadow)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:ThrowProp(ent,enemy)
 	if !self.LevitatedProps[ent] or !targetAlive(enemy,self.VJ_IsBeingControlled) then return end
 	local phys = ent:GetPhysicsObject()
@@ -413,7 +413,7 @@ function ENT:ThrowProp(ent,enemy)
     end
 	local pos = ent:WorldSpaceCenter()
 	local aim = enemy:WorldSpaceCenter() +enemy:GetVelocity() *0.16
-	if enemy:IsPlayer() && enemy:EyeAngles():Forward():Dot(getDir(self:GetPos() -enemy:EyePos())) < -0.5 then
+	if enemy:IsPlayer() and enemy:EyeAngles():Forward():Dot(getDir(self:GetPos() -enemy:EyePos())) < -0.5 then
 		aim = aim +Vector(0,0,120) +self:GetRight() *math.Rand(-70,70)
 	end
 	self:ReleaseProp(ent,5)
@@ -429,33 +429,33 @@ function ENT:ThrowProp(ent,enemy)
 	phys:Wake()
 	VJ.EmitSound(self,"vj_hlr/src/npc/advisor/advisorattack02.wav",95)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:StartAttack(atkType,enemy)
 	if self.CurAttack or CurTime() < self.NextAttackT or CurTime() < self.RetreatEndT then
         return false
     end
-	if !targetAlive(enemy,self.VJ_IsBeingControlled && atkType != "pull") then
+	if !targetAlive(enemy,self.VJ_IsBeingControlled and atkType != "pull") then
         return false
     end
 	local dist = self:GetPos():Distance(enemy:GetPos())
 	local props = table.Count(self.LevitatedProps)
-	if atkType == "throw" && props == 0 then
+	if atkType == "throw" and props == 0 then
         return false
     end
-	if atkType == "avalanche" && (!self.HasAvalanche or props < 4 or dist > 1300) then
+	if atkType == "avalanche" and (!self.HasAvalanche or props < 4 or dist > 1300) then
         return false
     end
-	if atkType == "spit" && (!self.HasSpitAttack or dist < 240 or dist > 2200) then
+	if atkType == "spit" and (!self.HasSpitAttack or dist < 240 or dist > 2200) then
         return false
     end
 	if atkType == "pull" then
 		if !self.HasPsychicPull or dist < 85 or dist > self.PsychicPullRange or CurTime() < self.NextPullT then
             return false
         end
-		if IsValid(enemy.VJ_HLR_AdvisorPullOwner) && enemy.VJ_HLR_AdvisorPullOwner != self then
+		if IsValid(enemy.VJ_HLR_AdvisorPullOwner) and enemy.VJ_HLR_AdvisorPullOwner != self then
             return false
         end
-		if enemy:IsPlayer() && (enemy:InVehicle() or enemy:GetMoveType() != MOVETYPE_WALK) then
+		if enemy:IsPlayer() and (enemy:InVehicle() or enemy:GetMoveType() != MOVETYPE_WALK) then
             return false
         end
 	end
@@ -477,11 +477,11 @@ function ENT:StartAttack(atkType,enemy)
 		self:PlayAnim(ACT_SPECIAL_ATTACK1,true,0.45,true)
 	elseif atkType == "throw" then
 		local options = {}
-		local look = enemy:IsPlayer() && enemy:EyeAngles():Forward() or enemy:GetForward()
+		local look = enemy:IsPlayer() and enemy:EyeAngles():Forward() or enemy:GetForward()
 		for prop in pairs(self.LevitatedProps) do
 			if IsValid(prop) then
 				local phys = prop:GetPhysicsObject()
-				local score = (look:Dot(getDir(prop:WorldSpaceCenter() -enemy:WorldSpaceCenter())) >= 0.85 && 500 or 0) +(IsValid(phys) && phys:GetMass() or 0) +math.Rand(-35,35)
+				local score = (look:Dot(getDir(prop:WorldSpaceCenter() -enemy:WorldSpaceCenter())) >= 0.85 and 500 or 0) +(IsValid(phys) and phys:GetMass() or 0) +math.Rand(-35,35)
 				options[#options +1] = {
                     ent = prop,
                     score = score
@@ -518,13 +518,13 @@ function ENT:StartAttack(atkType,enemy)
 	end
 	return true
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:FinishAttack(success)
 	local attack = self.CurAttack
 	if !attack then return end
 	if attack.type == "pull" then
 		local target = attack.enemy
-		if IsValid(target) && target.VJ_HLR_AdvisorPullOwner == self then
+		if IsValid(target) and target.VJ_HLR_AdvisorPullOwner == self then
 			target.VJ_HLR_AdvisorPullOwner = nil
 			if target:IsPlayer() then
 				target:SetNW2Entity("VJ.HLR.Advisor.PullOwner",NULL)
@@ -537,7 +537,7 @@ function ENT:FinishAttack(success)
 			end
 		end
         self:SetPullTarget(NULL)
-		self.NextPullT = CurTime() +(success && self.PsychicPullCooldown or 5)
+		self.NextPullT = CurTime() +(success and self.PsychicPullCooldown or 5)
     end
     if attack.stage == "sucking" then
         self:SetState()
@@ -565,15 +565,15 @@ function ENT:FinishAttack(success)
 	self.CurAttack = nil
 	self.PsionicAttacking = false
     self:SetPsionicEffect(false)
-	self.NextAttackT = CurTime() +(success && self.AttackCooldown or 1.5) +math.Rand(0,1)
+	self.NextAttackT = CurTime() +(success and self.AttackCooldown or 1.5) +math.Rand(0,1)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:UpdateAttack()
 	local atk = self.CurAttack
 	if !atk then return end
 	local time = CurTime()
 	local target = atk.enemy
-	if !targetAlive(target,self.VJ_IsBeingControlled && atk.type != "pull") or (atk.type != "pull" && time > atk.started +8) then
+	if !targetAlive(target,self.VJ_IsBeingControlled and atk.type != "pull") or (atk.type != "pull" and time > atk.started +8) then
         self:FinishAttack(false)
         return
     end
@@ -598,18 +598,18 @@ function ENT:UpdateAttack()
 		local start = self:GetPos() +self:GetForward() *75 +self:GetUp() *20
 		local dir = getDir(target:WorldSpaceCenter() -start +target:GetVelocity() *0.25,self:GetForward())
 		for i = 1,6 do
-			local size = i == 1 && 3 or (i %2 == 0 && 2 or 1)
+			local size = i == 1 and 3 or (i %2 == 0 and 2 or 1)
 			local proj = ents.Create("obj_vj_hlr2_antlionspit")
 			if !IsValid(proj) then break end
 			proj.Size = size
-			proj.Damage = size == 3 && 20 or (size == 2 && 10 or 5)
+			proj.Damage = size == 3 and 20 or (size == 2 and 10 or 5)
 			proj.Advisor = self
 			proj:SetPos(start +self:GetRight() *math.Rand(-16,16))
 			proj:SetAngles(dir:Angle())
 			proj:SetOwner(self)
 			proj:Spawn()
 			proj:Activate()
-            local vel = self:CalculateProjectile("Curve", proj:GetPos(), (target:GetPos() +target:OBBCenter()) +(VectorRand() *0.07 *(size == 3 && 850 or math.Rand(750,900))), 1200)
+            local vel = self:CalculateProjectile("Curve", proj:GetPos(), (target:GetPos() +target:OBBCenter()) +(VectorRand() *0.07 *(size == 3 and 850 or math.Rand(750,900))), 1200)
             local phys = proj:GetPhysicsObject()
             if IsValid(phys) then
                 phys:SetVelocity(vel)
@@ -654,7 +654,7 @@ function ENT:UpdateAttack()
 				local phys = prop:GetPhysicsObject()
 				local pos = prop:WorldSpaceCenter()
 				self:ReleaseProp(prop,5)
-				if IsValid(phys) && pos:Distance(target:WorldSpaceCenter()) > 128 then
+				if IsValid(phys) and pos:Distance(target:WorldSpaceCenter()) > 128 then
 					local old = self.RecentThrownProps[prop] or {}
 					old.owner = prop:GetOwner()
 					old.untilT = time +5
@@ -670,7 +670,7 @@ function ENT:UpdateAttack()
             end
 		end
 	elseif atk.type == "pull" then
-		if time > atk.deadline && atk.stage != "sucking" then
+		if time > atk.deadline and atk.stage != "sucking" then
             self:FinishAttack(false)
             return
         end
@@ -678,7 +678,7 @@ function ENT:UpdateAttack()
 			if time < atk.nextT then
                 return
             end
-			if IsValid(target.VJ_HLR_AdvisorPullOwner) && target.VJ_HLR_AdvisorPullOwner != self then
+			if IsValid(target.VJ_HLR_AdvisorPullOwner) and target.VJ_HLR_AdvisorPullOwner != self then
                 self:FinishAttack(false)
                 return
             end
@@ -701,7 +701,7 @@ function ENT:UpdateAttack()
 		end
 
 		local holdPos = self:GetTongueHoldPos(target)
-		if !target:IsPlayer() && target:GetMoveType() != MOVETYPE_NONE then
+		if !target:IsPlayer() and target:GetMoveType() != MOVETYPE_NONE then
             target:SetMoveType(MOVETYPE_NONE)
         end
 		local delta = holdPos -target:GetPos()
@@ -741,12 +741,12 @@ function ENT:UpdateAttack()
                         mask = MASK_SOLID_BRUSHONLY
                     })
 					if !tr.StartSolid then
-						local fraction = tr.Hit && math.max(tr.Fraction -0.02,0) or 1
+						local fraction = tr.Hit and math.max(tr.Fraction -0.02,0) or 1
 						target:SetPos(target:GetPos() +step *fraction)
 					end
 					target:SetAbsVelocity(Vector(0,0,0))
 				end
-				if atk.lastDist && atk.lastDist <= delta:Length() +1 then
+				if atk.lastDist and atk.lastDist <= delta:Length() +1 then
 					atk.stuckT = atk.stuckT or time
 					if time -atk.stuckT > 1.1 then
                         self:FinishAttack(false)
@@ -765,7 +765,7 @@ function ENT:UpdateAttack()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:DefendProjectiles()
 	if !self.HasProjectileDefense then return end
 	local time = CurTime()
@@ -792,18 +792,18 @@ function ENT:DefendProjectiles()
 		local grenade = ent.VJ_ID_Grenade or class == "npc_grenade_frag" or class == "grenade_ar2" or class == "obj_vj_grenade"
 		local rocket = class == "rpg_missile"
 		local projectile = ent.IsVJBaseProjectile
-		if !grenade && !rocket && !projectile then continue end
+		if !grenade and !rocket and !projectile then continue end
 
 		local owner = ent:GetOwner()
-		if IsValid(owner) && owner:IsWeapon() then
+		if IsValid(owner) and owner:IsWeapon() then
             owner = owner:GetOwner()
         end
-		if IsValid(owner) && (owner == self or ((owner:IsNPC() or owner:IsNextBot() or owner:IsPlayer()) && self:CheckRelationship(owner) == D_LI)) then
+		if IsValid(owner) and (owner == self or ((owner:IsNPC() or owner:IsNextBot() or owner:IsPlayer()) and self:CheckRelationship(owner) == D_LI)) then
             continue
         end
 		local vel = ent:GetVelocity()
 		local towards = getDir(center -ent:WorldSpaceCenter(),-self:GetForward())
-		if !grenade && vel:Dot(towards) < 30 then continue end
+		if !grenade and vel:Dot(towards) < 30 then continue end
 		local tr = util.TraceLine({
             start = center,
             endpos = ent:WorldSpaceCenter(),
@@ -823,10 +823,10 @@ function ENT:DefendProjectiles()
 			dmginfo:SetDamagePosition(ent:WorldSpaceCenter())
 			ent:TakeDamageInfo(dmginfo)
 		elseif grenade or projectile then
-			local destination = targetAlive(enemy) && enemy or (targetAlive(owner) && owner or nil)
-			local direction = IsValid(destination) && getDir(destination:WorldSpaceCenter() -ent:WorldSpaceCenter(),-towards) or -towards
+			local destination = targetAlive(enemy) and enemy or (targetAlive(owner) and owner or nil)
+			local direction = IsValid(destination) and getDir(destination:WorldSpaceCenter() -ent:WorldSpaceCenter(),-towards) or -towards
 			if grenade then direction = getDir(direction +Vector(0,0,0.25),-towards) end
-			local speed = grenade && self.GrenadeReturnSpeed or math.max(self.ProjectileDeflectSpeed,vel:Length() *1.1)
+			local speed = grenade and self.GrenadeReturnSpeed or math.max(self.ProjectileDeflectSpeed,vel:Length() *1.1)
 			local newVel = direction *speed
 			local phys = ent:GetPhysicsObject()
 			ent.VJ_HLR_AdvisorDeflected = true
@@ -836,7 +836,7 @@ function ENT:DefendProjectiles()
 			else
 				ent:SetAbsVelocity(newVel)
 			end
-			if projectile && !grenade then
+			if projectile and !grenade then
 				ent:SetAngles(newVel:Angle())
 				ent:SetOwner(self)
 				self.DeflectedProjectiles[ent] = {
@@ -848,7 +848,7 @@ function ENT:DefendProjectiles()
 		VJ.EmitSound(self,"vj_hlr/src/npc/advisor/advisorattack02.wav",85)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:SpawnAlly() // Old behavior, isn't in the official EP3 leaked code but I will keep it here in case jv base wants it as a feature
 	if !self.HasSummonAttack then
         return
@@ -865,7 +865,7 @@ function ENT:SpawnAlly() // Old behavior, isn't in the official EP3 leaked code 
         return
     end
 	local enemy = self:GetEnemy()
-	local pos = targetAlive(enemy) && enemy:GetPos() or self:GetPos()
+	local pos = targetAlive(enemy) and enemy:GetPos() or self:GetPos()
 	local tr = util.TraceLine({
         start = pos +VectorRand() *480 +Vector(0,0,240),
         endpos = pos +Vector(0,0,-1200),
@@ -882,30 +882,30 @@ function ENT:SpawnAlly() // Old behavior, isn't in the official EP3 leaked code 
 	npc:SetAngles(Angle(0,self:GetAngles().y,0))
 	npc:Spawn()
 	npc:Activate()
-	if info.weapons && npc.Give then
+	if info.weapons and npc.Give then
         npc:Give(info.weapons[math.random(#info.weapons)])
     end
 	self.Summons[npc] = true
 	ParticleEffect("electrical_arc_01_system",npc:GetPos(),Angle(),nil)
 	VJ.EmitSound(npc,"ambient/energy/whiteflash.wav",90)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	if self.Dead then
         return
     end
-    if self.CurAttack && self.CurAttack.stage == "sucking" then
+    if self.CurAttack and self.CurAttack.stage == "sucking" then
         self:SetLocalVelocity(vector_origin)
     end
 	local time = CurTime()
-	if self.HasShield && time >= self.NextDefenseT then
+	if self.HasShield and time >= self.NextDefenseT then
 		self.NextDefenseT = time +self.ProjectileDefenseInterval
 		self:DefendProjectiles()
 	end
 	local scan = time >= self.NextScanT
 	if scan then
 		self.NextScanT = time +self.LevitationScanInterval
-		if !self.HasShield && time >= self.ShieldRecoverT then
+		if !self.HasShield and time >= self.ShieldRecoverT then
             self:ShieldCode(true)
         end
 	end
@@ -916,7 +916,7 @@ function ENT:OnThinkActive()
 		self:UpdateProps(scan,delta)
 		self:UpdateAttack()
 	end
-	if self.HasScreenFX && time >= self.NextFXT then
+	if self.HasScreenFX and time >= self.NextFXT then
 		self.NextFXT = time +math.Rand(7,12)
 		for _,ply in ipairs(player.GetAll()) do
 			if !ply:Alive() or ply:GetPos():Distance(self:GetPos()) > 2500 then
@@ -939,20 +939,20 @@ function ENT:OnThinkActive()
         return
     end
 	local enemy = self:GetEnemy()
-	if self.VJ_IsBeingControlled && IsValid(self.VJ_TheController) then
+	if self.VJ_IsBeingControlled and IsValid(self.VJ_TheController) then
 		local ply = self.VJ_TheController
 		local aimed = ply:GetEyeTrace().Entity
-		local target = targetAlive(aimed) && aimed or enemy
+		local target = targetAlive(aimed) and aimed or enemy
 		if ply:KeyDown(IN_ATTACK) then
             self:StartAttack("throw",target)
 		elseif ply:KeyDown(IN_ATTACK2) then
             self:StartAttack("spit",target)
 		elseif ply:KeyDown(IN_RELOAD) then
             self:StartAttack("avalanche",target)
-		elseif ply:KeyDown(IN_USE) && targetAlive(aimed) then
+		elseif ply:KeyDown(IN_USE) and targetAlive(aimed) then
             self:StartAttack("pull",aimed)
         end
-		if ply:KeyDown(IN_JUMP) && time >= self.NextSummonT then
+		if ply:KeyDown(IN_JUMP) and time >= self.NextSummonT then
 			self.NextSummonT = time +self.SummonCooldown
 			self:SpawnAlly()
 		end
@@ -970,8 +970,8 @@ function ENT:OnThinkActive()
         return
     end
 	local dist = self:GetPos():Distance(enemy:GetPos())
-	if self.HasPsychicPull && time >= self.NextPullT then
-		if dist <= self.PsychicPullRange && dist >= 85 then
+	if self.HasPsychicPull and time >= self.NextPullT then
+		if dist <= self.PsychicPullRange and dist >= 85 then
 			if self:StartAttack("pull",enemy) then
                 return
             end
@@ -987,21 +987,21 @@ function ENT:OnThinkActive()
 	if next(self.LevitatedProps) then
         options[#options +1] = "throw"
     end
-	if self.HasAvalanche && table.Count(self.LevitatedProps) >= 4 && dist <= 1300 then
+	if self.HasAvalanche and table.Count(self.LevitatedProps) >= 4 and dist <= 1300 then
         options[#options +1] = "avalanche"
     end
-	if self.HasSpitAttack && dist >= 240 && dist <= 2200 then
+	if self.HasSpitAttack and dist >= 240 and dist <= 2200 then
         options[#options +1] = "spit"
     end
 	if #options > 0 then
         self:StartAttack(options[math.random(#options)],enemy)
     end
-	if self.HasSummonAttack && time >= self.NextSummonT then
+	if self.HasSummonAttack and time >= self.NextSummonT then
 		self.NextSummonT = time +self.SummonCooldown
 		self:SpawnAlly()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key)
 	if key == "melee" then
         self:ExecuteMeleeAttack()
@@ -1011,7 +1011,7 @@ function ENT:OnInput(key)
         local ent = self:GetPullTarget()
         if !IsValid(ent) then return end
         local dmginfo = DamageInfo()
-        dmginfo:SetDamage(math.max(1,math.ceil((ent.GetMaxHealth && ent:GetMaxHealth() or ent:Health()) *0.5)))
+        dmginfo:SetDamage(math.max(1,math.ceil((ent.GetMaxHealth and ent:GetMaxHealth() or ent:Health()) *0.5)))
         dmginfo:SetDamageType(DMG_SHOCK)
         dmginfo:SetAttacker(self)
         dmginfo:SetInflictor(self)
@@ -1020,7 +1020,7 @@ function ENT:OnInput(key)
         self:FinishAttack(true)
     end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo,hitgroup,status)
 	if status != "Init" then
         return
@@ -1030,25 +1030,25 @@ function ENT:OnDeath(dmginfo,hitgroup,status)
     self:SetPullTarget(NULL)
 	self:SetPsionicEffect(false)
 	for ent,data in pairs(self.RecentThrownProps) do
-		if IsValid(ent) && ent:GetOwner() == self then
-            ent:SetOwner(IsValid(data.owner) && data.owner or NULL)
+		if IsValid(ent) and ent:GetOwner() == self then
+            ent:SetOwner(IsValid(data.owner) and data.owner or NULL)
         end
 	end
 	self.RecentThrownProps = {}
 	self.DeflectedProjectiles = {}
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self:FinishAttack(false)
 	self:ReleaseProps()
 	for ent,data in pairs(self.RecentThrownProps or {}) do
-		if IsValid(ent) && ent:GetOwner() == self then
-            ent:SetOwner(IsValid(data.owner) && data.owner or NULL)
+		if IsValid(ent) and ent:GetOwner() == self then
+            ent:SetOwner(IsValid(data.owner) and data.owner or NULL)
         end
 	end
 	self:SetPullTarget(NULL)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:ResetAI()
 	self:SetState()
 	self:ResetMoveCalc()
@@ -1075,8 +1075,8 @@ function ENT:ResetAI()
     self.CurAttack = nil
 	self:ReleaseProps()
 	for ent,data in pairs(self.RecentThrownProps or {}) do
-		if IsValid(ent) && ent:GetOwner() == self then
-            ent:SetOwner(IsValid(data.owner) && data.owner or NULL)
+		if IsValid(ent) and ent:GetOwner() == self then
+            ent:SetOwner(IsValid(data.owner) and data.owner or NULL)
         end
 	end
 	self:SetPullTarget(NULL)

@@ -97,7 +97,7 @@ ENT.Assassin_TargetCloakLevel = 1
 local projKnife = "models/weapons/w_knife_t.mdl"
 local projPest = "models/weapons/w_bugbait.mdl"
 local projHopwire = "models/vj_hlr/hl2b/weapons/tripwire.mdl"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetRenderMode(RENDERMODE_TRANSALPHA)
 
@@ -127,7 +127,7 @@ function ENT:Init()
 	self.NextRunAwayT = CurTime() + math.Rand(1, 2)
 	self.RunAwayT = 0
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	local prevClockLvl = self:GetColor().a
 	local targetLvl = self.Assassin_TargetCloakLevel * 255
@@ -149,45 +149,45 @@ function ENT:OnThink()
 	local curTime = CurTime()
 	local busy = self:IsBusy()
 	if curTime < self.RunAwayT then
-		if !self:IsMoving() && !busy then
+		if !self:IsMoving() and !busy then
 			self:SCHEDULE_COVER_ENEMY()
 		end
 		self.DisableChasingEnemy = true
 		self.Assassin_TargetCloakLevel = 0
 		return
-	elseif self.DisableChasingEnemy && curTime > self.RunAwayT then
+	elseif self.DisableChasingEnemy and curTime > self.RunAwayT then
 		self.DisableChasingEnemy = false
 		self.Assassin_TargetCloakLevel = 1
 		self:StopParticles()
 	end
-	if !busy && IsValid(self:GetEnemy()) && curTime > self.Assassin_NextJumpT && self.EnemyData.Distance < 1400 && !self.VJ_Controlled && math.random(1, 30) == 1 then
-		self:ForceMoveJump(((self:GetPos() +self:GetRight() *(math.random(1, 2) == 1 && 500 or -500) +self:GetForward() *(math.random(1, 2) == 1 && 1 or -500)) -(self:GetPos() +self:OBBCenter())):GetNormalized() *300 +self:GetUp() *600)
+	if !busy and IsValid(self:GetEnemy()) and curTime > self.Assassin_NextJumpT and self.EnemyData.Distance < 1400 and !self.VJ_Controlled and math.random(1, 30) == 1 then
+		self:ForceMoveJump(((self:GetPos() +self:GetRight() *(math.random(1, 2) == 1 and 500 or -500) +self:GetForward() *(math.random(1, 2) == 1 and 1 or -500)) -(self:GetPos() +self:OBBCenter())):GetNormalized() *300 +self:GetUp() *600)
 		self.Assassin_NextJumpT = curTime + math.Rand(7, 11)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(atkType, ent)
 	if !atkType then
 		local curTime = CurTime()
 		local data = self.EnemyData
 		local busy = self:IsBusy()
-		if !busy && data.Visible && data.DistanceNearest <= 100 && curTime > self.NextJumpAwayT then
+		if !busy and data.Visible and data.DistanceNearest <= 100 and curTime > self.NextJumpAwayT then
 			self:PlayAnim("jumpbackt", true, false, true)
 			self.NextJumpAwayT = curTime + math.Rand(2.5, 7.5)
 			return
-		elseif !busy && data.DistanceNearest > 300 && data.DistanceNearest <= 1500 && curTime > self.NextRunAwayT then
+		elseif !busy and data.DistanceNearest > 300 and data.DistanceNearest <= 1500 and curTime > self.NextRunAwayT then
 			self:PlayAnim("smoke", true, false, true)
 			return
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnRangeAttack(status, enemy)
 	if status == "PreInit" then
 		return self:GetNavType() == NAV_JUMP
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	-- print(key)
 	if key == "step" then
@@ -242,7 +242,7 @@ function ENT:OnInput(key, activator, caller, data)
 	elseif key == "attack_knife" then
 		SafeRemoveEntity(self.HoldObject)
 		local ent = self:GetEnemy()
-		local targetPos = IsValid(ent) && ent:GetPos() +ent:OBBCenter() or self:GetPos() +self:OBBCenter() +self:GetForward() *1000
+		local targetPos = IsValid(ent) and ent:GetPos() +ent:OBBCenter() or self:GetPos() +self:OBBCenter() +self:GetForward() *1000
 		local att = self:GetAttachment(self:LookupAttachment("rhand"))
 		local proj = ents.Create("obj_vj_projectile_base")
 		proj:SetModel(projKnife)
@@ -259,12 +259,12 @@ function ENT:OnInput(key, activator, caller, data)
 
 		local phys = proj:GetPhysicsObject()
 		if IsValid(phys) then
-			phys:SetVelocity(VJ.CalculateTrajectory(self, ent, "Line", proj:GetPos(), IsValid(ent) && 0.75 or targetPos, 4000))
+			phys:SetVelocity(VJ.CalculateTrajectory(self, ent, "Line", proj:GetPos(), IsValid(ent) and 0.75 or targetPos, 4000))
 		end
 	elseif key == "attack_tripwire" then
 		SafeRemoveEntity(self.HoldObject)
 		local ent = self:GetEnemy()
-		local targetPos = IsValid(ent) && ent:GetPos() +ent:OBBCenter() or self:GetPos() +self:OBBCenter() +self:GetForward() *1000
+		local targetPos = IsValid(ent) and ent:GetPos() +ent:OBBCenter() or self:GetPos() +self:OBBCenter() +self:GetForward() *1000
 		local att = self:GetAttachment(self:LookupAttachment("rhand"))
 		local proj = ents.Create("obj_vj_projectile_base")
 		proj:SetModel(projHopwire)
@@ -311,7 +311,7 @@ function ENT:OnInput(key, activator, caller, data)
 			proj:NextThink(CurTime())
 			if !proj.Activated then
 				local phys = proj:GetPhysicsObject()
-				if IsValid(phys) && CurTime() > self.FuseTime && phys:GetVelocity():Length() <= 350 then
+				if IsValid(phys) and CurTime() > self.FuseTime and phys:GetVelocity():Length() <= 350 then
 					proj.Activated = true
 					proj.Hooks = {}
 					proj.FilterEnts = {proj, proj:GetOwner()}
@@ -340,7 +340,7 @@ function ENT:OnInput(key, activator, caller, data)
 				local hooks = proj.Hooks
 				if #hooks > 0 then
 					for _, hook in pairs(hooks) do
-						if IsValid(hook) && hook.Frozen then
+						if IsValid(hook) and hook.Frozen then
 							local tr = util.TraceLine({
 								start = proj:GetPos(),
 								endpos = hook:GetPos(),
@@ -348,7 +348,7 @@ function ENT:OnInput(key, activator, caller, data)
 							})
 							if tr.HitNonWorld then
 								local trEnt = tr.Entity
-								if (trEnt.VJ_HLR_HopwireHook or trEnt == proj) && !VJ.HasValue(proj.FilterEnts, trEnt) or IsValid(proj:GetOwner()) && proj:GetOwner():CheckRelationship(trEnt) == D_LI then
+								if (trEnt.VJ_HLR_HopwireHook or trEnt == proj) and !VJ.HasValue(proj.FilterEnts, trEnt) or IsValid(proj:GetOwner()) and proj:GetOwner():CheckRelationship(trEnt) == D_LI then
 									table.insert(proj.FilterEnts, trEnt)
 									return
 								end
@@ -404,7 +404,7 @@ function ENT:OnInput(key, activator, caller, data)
 			end
 			function ropeObj:Freeze()
 				local phys = ropeObj:GetPhysicsObject()
-				if !ropeObj.Frozen && IsValid(phys) then
+				if !ropeObj.Frozen and IsValid(phys) then
 					SafeRemoveEntity(trail)
 					ropeObj.Frozen = true
 					phys:EnableMotion(false)
@@ -487,12 +487,12 @@ function ENT:OnInput(key, activator, caller, data)
 
 		local phys = proj:GetPhysicsObject()
 		if IsValid(phys) then
-			phys:SetVelocity(VJ.CalculateTrajectory(self, ent, "Curve", proj:GetPos(), IsValid(ent) && 0.75 or targetPos, 50))
+			phys:SetVelocity(VJ.CalculateTrajectory(self, ent, "Curve", proj:GetPos(), IsValid(ent) and 0.75 or targetPos, 50))
 		end
 	elseif key == "attack_pests" then
 		SafeRemoveEntity(self.HoldObject)
 		local ent = self:GetEnemy()
-		local targetPos = IsValid(ent) && ent:GetPos() +ent:OBBCenter() or self:GetPos() +self:OBBCenter() +self:GetForward() *1000
+		local targetPos = IsValid(ent) and ent:GetPos() +ent:OBBCenter() or self:GetPos() +self:OBBCenter() +self:GetForward() *1000
 		local att = self:GetAttachment(self:LookupAttachment("rhand"))
 		local proj = ents.Create("obj_vj_projectile_base")
 		proj:SetModel(projPest)
@@ -526,9 +526,9 @@ function ENT:OnInput(key, activator, caller, data)
 			phys:EnableDrag(true)
 			phys:SetMass(1)
 			if self:GetSequenceName(self:GetSequence()) == "jumpbackt" then
-				phys:SetVelocity(VJ.CalculateTrajectory(self, ent, "Line", proj:GetPos(), IsValid(ent) && 0.75 or targetPos, 1800))
+				phys:SetVelocity(VJ.CalculateTrajectory(self, ent, "Line", proj:GetPos(), IsValid(ent) and 0.75 or targetPos, 1800))
 			else
-				phys:SetVelocity(VJ.CalculateTrajectory(self, ent, "Curve", proj:GetPos(), IsValid(ent) && 0.75 or targetPos, 50))
+				phys:SetVelocity(VJ.CalculateTrajectory(self, ent, "Curve", proj:GetPos(), IsValid(ent) and 0.75 or targetPos, 50))
 			end
 		end
 	elseif key == "smoke" then
@@ -539,10 +539,10 @@ function ENT:OnInput(key, activator, caller, data)
 		VJ.CreateSound(self, "vj_hlr/src/npc/alienassassin/tattle1.wav", 70)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
-	if status == "PreDamage" && dmginfo:IsBulletDamage() && (hitgroup == 2 or hitgroup == 3 or hitgroup == 6 or hitgroup == 7) then
-		if self.HasSounds && self.HasImpactSounds then
+	if status == "PreDamage" and dmginfo:IsBulletDamage() and (hitgroup == 2 or hitgroup == 3 or hitgroup == 6 or hitgroup == 7) then
+		if self.HasSounds and self.HasImpactSounds then
 			VJ.EmitSound(self, "VJ.Impact.Armor")
 		end
 		dmginfo:ScaleDamage(0.8)

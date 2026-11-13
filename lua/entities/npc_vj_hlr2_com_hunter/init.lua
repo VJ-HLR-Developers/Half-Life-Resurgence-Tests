@@ -8,7 +8,7 @@ include("shared.lua")
 ENT.Model = "models/vj_hlr/hl2/hunter.mdl"
 ENT.StartHealth = 210
 ENT.HullType = HULL_HUMAN
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 ENT.BloodColor = VJ.BLOOD_COLOR_WHITE
 
@@ -121,15 +121,15 @@ ENT.MainSoundPitch = 100
 
 -- Custom
 ENT.Flechette_Speed = 3000
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCallForHelp(ally)
-	if ally:GetClass() == self:GetClass() && !ally:IsBusy("Activities") && !IsValid(ally:GetEnemy()) then
+	if ally:GetClass() == self:GetClass() and !ally:IsBusy("Activities") and !IsValid(ally:GetEnemy()) then
 		ally:PlaySoundSystem("CallForHelp")
 		ally:PlayAnim(ally.AnimTbl_CallForHelp, true, false, ally.CallForHelpAnimFaceEnemy)
 		ally.NextCallForHelpAnimationT = CurTime() +ally.CallForHelpAnimCooldown
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(18, 18, 100), Vector(-18, -18, 0))
 	-- self:CreateBoneFollowers()
@@ -153,10 +153,10 @@ function ENT:Init()
 
 	self:SetStepHeight(28)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:FireFlechette()
 	if self.Shots < 12 then
-		local targetPos = IsValid(self:GetEnemy()) && self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter() or self:GetPos() +self:GetForward() *400 +VectorRand(-1, 1) *math.Rand(0, 100)
+		local targetPos = IsValid(self:GetEnemy()) and self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter() or self:GetPos() +self:GetForward() *400 +VectorRand(-1, 1) *math.Rand(0, 100)
 		local proj = ents.Create("obj_vj_hlr2_flechette")
 		proj:SetPos(self:GetAttachment(self.CurrentEye).Pos)
 		proj:SetAngles((targetPos -self:GetAttachment(self.CurrentEye).Pos):Angle())
@@ -196,7 +196,7 @@ function ENT:FireFlechette()
 		self.Shots = self.Shots +1
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	-- print(key)
 	if key == "step" then
@@ -207,11 +207,11 @@ function ENT:OnInput(key, activator, caller, data)
 		self:FireFlechette()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjVel(projectile)
 	local ent = self:GetEnemy()
 	local targetPos
-	if IsValid(ent) && ent:Visible(self) then
+	if IsValid(ent) and ent:Visible(self) then
 		targetPos = ent:GetPos() +ent:OBBCenter()
 	else
 		targetPos = self.EnemyData.VisiblePos or projectile:GetPos() +projectile:GetForward() *1000
@@ -219,10 +219,10 @@ function ENT:RangeAttackProjVel(projectile)
 	targetPos = targetPos +VectorRand(-35, 35)
 	return self:CalculateProjectile("Line", projectile:GetPos(), targetPos, self.Flechette_Speed)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
-	if status == "PreDamage" && dmginfo:IsBulletDamage() then
-		dmginfo:ScaleDamage(dmginfo:GetDamageType() == DMG_BUCKSHOT && 0.5 or 0.6)
+	if status == "PreDamage" and dmginfo:IsBulletDamage() then
+		dmginfo:ScaleDamage(dmginfo:GetDamageType() == DMG_BUCKSHOT and 0.5 or 0.6)
 		self.DamageSpark1 = ents.Create("env_spark")
 		self.DamageSpark1:SetKeyValue("Magnitude", "1")
 		self.DamageSpark1:SetKeyValue("Spark Trail Length", "1")
@@ -236,7 +236,7 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 		self:DeleteOnRemove(self.DamageSpark1)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
 	if act == ACT_IDLE then
 		if self.IsPlanted then
@@ -251,9 +251,9 @@ function ENT:TranslateActivity(act)
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
-	if self.IsCharging && !self:IsBusy() then
+	if self.IsCharging and !self:IsBusy() then
 		if CurTime() > self.ChargeT then
 			self:SetMaxYawSpeed(self.TurningSpeed)
 			self.IsCharging = false
@@ -296,8 +296,8 @@ function ENT:OnThinkActive()
 			else
 				self:PlayAnim("charge_miss_slide", true, false, false)
 				local ent = tr.Entity
-				local isProp = IsValid(ent) && ent.VJ_ID_Prop or false
-				if IsValid(ent) && (isProp or self:CheckRelationship(ent) == D_HT) then
+				local isProp = IsValid(ent) and ent.VJ_ID_Prop or false
+				if IsValid(ent) and (isProp or self:CheckRelationship(ent) == D_HT) then
 					if isProp then
 						local phys = ent:GetPhysicsObject()
 						if IsValid(phys) then
@@ -338,7 +338,7 @@ function ENT:OnThinkActive()
 			end})
 			return
 		end
-		if !self.IsPlanted && !self:IsBusy() then
+		if !self.IsPlanted and !self:IsBusy() then
 			self:SetState(VJ_STATE_ONLY_ANIMATION)
 			self:PlayAnim("vjseq_plant", true, false, true, 0, {OnFinish=function(interrupted, anim)
 				if interrupted then
@@ -346,20 +346,20 @@ function ENT:OnThinkActive()
 				end
 				self.IsPlanted = true
 			end})
-		elseif self.IsPlanted && CurTime() > self.NextShootT then
+		elseif self.IsPlanted and CurTime() > self.NextShootT then
 			self:FireFlechette()
 			self.NextShootT = CurTime() +0.07
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	if self.IsCharging then return end
 
 	local eneData = self.EnemyData
 	local dist = eneData.DistanceNearest
 	if eneData.Visible then
-		if !self.VJ_Controlled && !self:IsBusy() && CurTime() > self.NextRandMoveT && !self.DoRangeAttack && dist > 400 then
+		if !self.VJ_Controlled and !self:IsBusy() and CurTime() > self.NextRandMoveT and !self.DoRangeAttack and dist > 400 then
 			local checkdist = self:VJ_CheckAllFourSides(400)
 			local randmove = {}
 			if checkdist.Backward == true then randmove[#randmove+1] = "Backward" end
@@ -376,7 +376,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 			end
 		end
 
-		if dist > 500 && dist <= 2500 && !self.IsCharging && !self:IsBusy() && !self.DoRangeAttack && (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP) or !self.VJ_Controlled && math.random(1, 50) == 1) && math.abs(self:GetPos().z -enemy:GetPos().z) <= 128 then
+		if dist > 500 and dist <= 2500 and !self.IsCharging and !self:IsBusy() and !self.DoRangeAttack and (self.VJ_Controlled and self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP) or !self.VJ_Controlled and math.random(1, 50) == 1) and math.abs(self:GetPos().z -enemy:GetPos().z) <= 128 then
 			self:PlayAnim("charge_start", true, false, true, 0, {OnFinish=function(interrupted, anim)
 				if interrupted then
 					return
@@ -390,14 +390,14 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		end
 	end
 
-	if self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2) && !self.DoRangeAttack && !self.IsCharging or !self.VJ_Controlled && !self.IsCharging && CurTime() > self.NextRangeT && !self.DoRangeAttack && dist > 250 && dist <= 2200 then
+	if self.VJ_Controlled and self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2) and !self.DoRangeAttack and !self.IsCharging or !self.VJ_Controlled and !self.IsCharging and CurTime() > self.NextRangeT and !self.DoRangeAttack and dist > 250 and dist <= 2200 then
 		if !self:VisibleVec(eneData.VisiblePos or enemy:GetPos() + enemy:OBBCenter()) then return end
 		self.Shots = 0
 		self.DoRangeAttack = true
 		self.HasMeleeAttack = false
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local defAng = Angle()
 local angY45 = Angle(0, 45, 0)
 local angYN45 = Angle(0, -45, 0)
@@ -432,7 +432,7 @@ function ENT:Controller_Movement(cont, ply, bullseyePos)
 				-- else
 				-- 	cont:StartMovement(aimVector, defAng)
 				-- end
-				self.ControllerParams.TurnAngle = LerpAngle(FT, self.ControllerParams.TurnAngle, gerta_lef && angY45 or gerta_rig && angYN45 or defAng)
+				self.ControllerParams.TurnAngle = LerpAngle(FT, self.ControllerParams.TurnAngle, gerta_lef and angY45 or gerta_rig and angYN45 or defAng)
 				cont:StartMovement(aimVector, self.ControllerParams.TurnAngle)
 			end
 		elseif ply:KeyDown(IN_BACK) then
@@ -443,7 +443,7 @@ function ENT:Controller_Movement(cont, ply, bullseyePos)
 			-- else
 			-- 	cont:StartMovement(aimVector*-1, defAng)
 			-- end
-			self.ControllerParams.TurnAngle = LerpAngle(FT, self.ControllerParams.TurnAngle, gerta_lef && angY135 or gerta_rig && angYN135 or angY180)
+			self.ControllerParams.TurnAngle = LerpAngle(FT, self.ControllerParams.TurnAngle, gerta_lef and angY135 or gerta_rig and angYN135 or angY180)
 			cont:StartMovement(aimVector, self.ControllerParams.TurnAngle)
 		elseif gerta_lef then
 			-- cont:StartMovement(aimVector, angY90)

@@ -25,7 +25,7 @@ ENT.AA_MoveAccelerate = 4
 ENT.AA_MoveDecelerate = 4
 
 ENT.PoseParameterLooking_InvertPitch = true
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 
 ENT.Bleeds = false
@@ -62,11 +62,11 @@ ENT.SoundTbl_Death = "npc/attack_helicopter/aheli_crash_alert2.wav"
 ENT.AlertSoundLevel = 150
 ENT.PainSoundLevel = 150
 ENT.DeathSoundLevel = 150
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjVel(projectile)
 	return self:CalculateProjectile("Line", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter(), 0)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(140, 140, 100), Vector(-140, -140, -75))
 	self:SetPos(self:GetPos() +Vector(0, 0, 400))
@@ -94,21 +94,21 @@ function ENT:Init()
 
 	self:CreateBoneFollowers()
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
-	if status == "Init" && dmginfo:IsDamageType(DMG_PHYSGUN) then
+	if status == "Init" and dmginfo:IsDamageType(DMG_PHYSGUN) then
 		dmginfo:SetDamage(0)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnRangeAttackExecute(status, enemy, projectile)
 	if status == "PostSpawn" then
-		self.RangeUseAttachmentForPosID = self.RangeUseAttachmentForPosID == "Damage0" && "Damage3" or "Damage0"
+		self.RangeUseAttachmentForPosID = self.RangeUseAttachmentForPosID == "Damage0" and "Damage3" or "Damage0"
 		VJ.CreateSound(projectile, "weapons/rpg/rocketfire1.wav", 80)
 		VJ.CreateSound(projectile, "vj_base/weapons/rpg/rpg1_single_dist.wav", 120)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CreateFakeBullet(att)
 	local startPos = self:GetAttachment(self:LookupAttachment(att)).Pos
 
@@ -123,7 +123,7 @@ function ENT:CreateFakeBullet(att)
 
 	return FakeSpawn
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:FireBullet()
 	local spread = 60
 	sound.EmitHint(SOUND_DANGER, self:GetEnemy():GetPos(), 250, 0.25, self)
@@ -158,7 +158,7 @@ function ENT:FireBullet()
 
 			util.ScreenShake(tr.HitPos, 16, 100, 0.5, 175)
 			sound.Play("weapons/fx/nearmiss/bulletltor0" .. math.random(3, 9) .. ".wav", tr.HitPos +tr.HitNormal *60, 60, 100, 1)
-			if tr.MatType && VJ.HasValue({MAT_METAL, MAT_GRATE, MAT_CONCRETE, MAT_COMPUTER, MAT_VENT}, tr.MatType) then
+			if tr.MatType and VJ.HasValue({MAT_METAL, MAT_GRATE, MAT_CONCRETE, MAT_COMPUTER, MAT_VENT}, tr.MatType) then
 				sound.Play("weapons/fx/rics/ric" .. math.random(1, 5) .. ".wav", tr.HitPos, 65, 100, 1)
 			end
 		end
@@ -194,7 +194,7 @@ function ENT:FireBullet()
 
 			util.ScreenShake(tr.HitPos, 16, 100, 0.5, 175)
 			sound.Play("weapons/fx/nearmiss/bulletltor0" .. math.random(3, 9) .. ".wav", tr.HitPos +tr.HitNormal *60, 60, 100, 1)
-			if tr.MatType && VJ.HasValue({MAT_METAL, MAT_GRATE, MAT_CONCRETE, MAT_COMPUTER, MAT_VENT}, tr.MatType) then
+			if tr.MatType and VJ.HasValue({MAT_METAL, MAT_GRATE, MAT_CONCRETE, MAT_COMPUTER, MAT_VENT}, tr.MatType) then
 				sound.Play("weapons/fx/rics/ric" .. math.random(1, 5) .. ".wav", tr.HitPos, 65, 100, 1)
 			end
 		end
@@ -231,10 +231,10 @@ function ENT:FireBullet()
 		self:DeleteOnRemove(FireLight1)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:BarrageFire()
 	timer.Create("vj_timer_fire_" .. self:EntIndex(), 0.1, 150, function()
-		if IsValid(self:GetEnemy()) && !self.Dead then
+		if IsValid(self:GetEnemy()) and !self.Dead then
 			self:FireBullet()
 		else
 			timer.Remove("vj_timer_fire_" .. self:EntIndex())
@@ -242,7 +242,7 @@ function ENT:BarrageFire()
 		end
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	if IsValid(self:GetEnemy()) then
 		local dist = self.EnemyData.DistanceNearest
@@ -254,7 +254,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 				maxs = self:OBBMaxs(),
 				filter = self
 			})
-			if IsValid(tr.Entity) && self:Disposition(tr.Entity) == D_HT then
+			if IsValid(tr.Entity) and self:Disposition(tr.Entity) == D_HT then
 				local bomb = ents.Create("combine_mine")
 				bomb:SetPos(self:GetAttachment(5).Pos)
 				bomb:Spawn()
@@ -265,7 +265,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 				constraint.NoCollide(bomb, self, 0, 0)
 				self.NextBombT = CurTime() +math.Rand(2, 4)
 			elseif !IsValid(tr.Entity) then
-				if dist <= 2300 && math.random(1, 150) == 1 then
+				if dist <= 2300 and math.random(1, 150) == 1 then
 					local bomb = ents.Create("npc_rollermine")
 					bomb:SetPos(self:GetAttachment(5).Pos)
 					bomb:Spawn()
@@ -274,7 +274,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 				end
 			end
 		end
-		if dist <= 4000 && self:Visible(self:GetEnemy()) then
+		if dist <= 4000 and self:Visible(self:GetEnemy()) then
 			if CurTime() > self.NextFireT then
 				if !self.Charged then
 					if !self.Charging then
@@ -297,7 +297,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	local velNorm = self:GetVelocity():GetNormalized()
 	local speed = FrameTime()*4
@@ -310,7 +310,7 @@ function ENT:OnThink()
 		self.FireLP:Stop()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Init" then
 		ParticleEffectAttach("fire_large_01", PATTACH_POINT_FOLLOW, self, 8)
@@ -318,7 +318,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 		ParticleEffectAttach("smoke_burning_engine_01", PATTACH_POINT_FOLLOW, self, 6)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, corpse)
 	local pos, ang = self:GetBonePosition(0)
 	corpse:SetPos(pos)
@@ -354,7 +354,7 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, corpse)
 		util.Effect("ThumperDust", dusteffect)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self.IdleLP:Stop()
 	self.FireLP:Stop()

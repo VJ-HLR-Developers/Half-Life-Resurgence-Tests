@@ -29,7 +29,7 @@ ENT.ControllerParams = {
 }
 
 local doorSound = !IsMounted("ep2")
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self.SightDistance = 5000
 	self:SetCollisionBounds(Vector(8, 12, 22), Vector(-8, -12, 0))
@@ -72,10 +72,10 @@ function ENT:Init()
 	prop2.Dead = false
 	prop2.DoorState = 0
 	prop2.OnTakeDamage = function(self, dmginfo)
-		if dmginfo:GetDamageType() == DMG_BLAST && self:GetSequenceName(self:GetSequence()) == "open" then
+		if dmginfo:GetDamageType() == DMG_BLAST and self:GetSequenceName(self:GetSequence()) == "open" then
 			self:SetHealth(self:Health() -dmginfo:GetDamage())
 		end
-		if self:Health() <= 0 && !self.Dead then
+		if self:Health() <= 0 and !self.Dead then
 			if IsValid(self:GetParent()) then
 				dmginfo:SetDamage(999999999)
 				self:GetParent():TakeDamageInfo(dmginfo)
@@ -114,10 +114,10 @@ function ENT:Init()
 	-- prop2.Dead = false
 	-- prop2.DoorState = 0
 	-- prop2.OnTakeDamage = function(self, dmginfo)
-	-- 	if dmginfo:GetDamageType() == DMG_BLAST && self:GetSequenceName(self:GetSequence()) == "open" then
+	-- 	if dmginfo:GetDamageType() == DMG_BLAST and self:GetSequenceName(self:GetSequence()) == "open" then
 	-- 		self:SetHealth(self:Health() -dmginfo:GetDamage())
 	-- 	end
-	-- 	if self:Health() <= 0 && !self.Dead then
+	-- 	if self:Health() <= 0 and !self.Dead then
 	-- 		if IsValid(self:GetParent()) then
 	-- 			dmginfo:SetDamage(999999999)
 	-- 			self:GetParent():TakeDamageInfo(dmginfo)
@@ -149,8 +149,8 @@ function ENT:Init()
 		self:SetPos(self:GetPos() +self:GetUp() *54)
 		for i = 1, 2 do
 			local t = ents.Create("npc_vj_hlr2_com_ionturret")
-			t:SetPos(self:GetPos() +self:GetRight() *(i == 1 && -24 or 24) +self:GetForward() *4 +Vector(0, 0, 1))
-			t:SetAngles(self:GetAngles() +Angle(0, i == 1 && 40 or -40, 0))
+			t:SetPos(self:GetPos() +self:GetRight() *(i == 1 and -24 or 24) +self:GetForward() *4 +Vector(0, 0, 1))
+			t:SetAngles(self:GetAngles() +Angle(0, i == 1 and 40 or -40, 0))
 			t.SideTurret = true
 			t:Spawn()
 			t:SetParent(self)
@@ -176,7 +176,7 @@ function ENT:Init()
 		end)
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:DoTrace()
 	-- if IsValid(self:GetEnemy()) then return end
 	local tr = util.TraceLine({
@@ -188,7 +188,7 @@ function ENT:DoTrace()
 	PrintTable(self.Obstacles)
 	return tr.HitPos
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnRangeAttackExecute(status, enemy, projectile)
 	if status == "Init" then
 		local attackpos = self:DoTrace()
@@ -223,7 +223,7 @@ function ENT:OnRangeAttackExecute(status, enemy, projectile)
 		return true
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	self.HasPoseParameterLooking = false -- Make it not aim at the enemy right away!
 	timer.Simple(0.6, function()
@@ -234,7 +234,7 @@ function ENT:OnAlert(ent)
 	self:PlayAnim({"deploy"}, true, false)
 	VJ.EmitSound(self, {"npc/turret_floor/click1.wav"}, 70, 100)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	local parameter = self:GetPoseParameter("aim_yaw")
 	if parameter != self.Turret_CurrentParameter then
@@ -248,12 +248,12 @@ function ENT:OnThink()
 
 	local gen = self.Generator
 	if IsValid(gen) then
-		if !self.Turret_StandDown && gen.DoorState != 2 then
+		if !self.Turret_StandDown and gen.DoorState != 2 then
 			gen.DoorState = 2
 			gen:ResetSequence(gen:LookupSequence("close"))
 			self.Bullseye:AddFlags(FL_NOTARGET)
 			if doorSound then VJ.CreateSound(gen, "vj_hlr/src/npc/ioncannon/ol09_gungrate_open.wav", 80) end
-		elseif self.Turret_StandDown && gen.DoorState != 1 then
+		elseif self.Turret_StandDown and gen.DoorState != 1 then
 			gen.DoorState = 1
 			gen:ResetSequence(gen:LookupSequence("open"))
 			self.Bullseye:RemoveFlags(FL_NOTARGET)
@@ -261,19 +261,19 @@ function ENT:OnThink()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnUpdatePoseParamTracking(pitch, yaw, roll)
 	-- Compare the difference between the current position of the pose parameter and the position it's suppose to go to
 	if (math.abs(math.AngleDifference(self:GetPoseParameter("aim_yaw"), math.ApproachAngle(self:GetPoseParameter("aim_yaw"), yaw, self.PoseParameterLooking_TurningSpeed))) >= 10) or (math.abs(math.AngleDifference(self:GetPoseParameter("aim_pitch"), math.ApproachAngle(self:GetPoseParameter("aim_pitch"), pitch, self.PoseParameterLooking_TurningSpeed))) >= 10) then
 		self.Turret_HasLOS = false
 	else
-		if self.Turret_HasLOS == false && IsValid(self:GetEnemy()) then -- If it just got LOS, then play the gun "activate" sound
+		if self.Turret_HasLOS == false and IsValid(self:GetEnemy()) then -- If it just got LOS, then play the gun "activate" sound
 			VJ.EmitSound(self, {"npc/turret_floor/active.wav"}, 70, 100)
 		end
 		self.Turret_HasLOS = true
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	if IsValid(self:GetEnemy()) or self.Alerted then
 		self.Turret_StandDown = false
@@ -283,7 +283,7 @@ function ENT:OnThinkActive()
 		local pyaw = self:GetPoseParameter("aim_yaw")
 
 		-- Make it scan around if the enemy is behind, which is unreachable for it!
-		if IsValid(self:GetEnemy()) && self.Turret_HasLOS == false && (self:GetForward():Dot((self:GetEnemy():GetPos() - self:GetPos()):GetNormalized()) <= math.cos(math.rad(self.RangeAttackAngleRadius))) then
+		if IsValid(self:GetEnemy()) and self.Turret_HasLOS == false and (self:GetForward():Dot((self:GetEnemy():GetPos() - self:GetPos()):GetNormalized()) <= math.cos(math.rad(self.RangeAttackAngleRadius))) then
 			scan = true
 			self.HasPoseParameterLooking = false
 		else
@@ -316,7 +316,7 @@ function ENT:OnThinkActive()
 		end
 	else
 		-- Play the retracting sequence and sound
-		if !self.Alerted && self.Turret_StandDown == false then
+		if !self.Alerted and self.Turret_StandDown == false then
 			self.Turret_StandDown = true
 			self:PlayAnim({"retire"}, true, 1)
 			VJ.EmitSound(self, {"npc/turret_floor/retract.wav"}, 70, 100)
@@ -326,7 +326,7 @@ function ENT:OnThinkActive()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local defAng = Angle()
 --
 function ENT:OnDeath(dmginfo, hitgroup, status)
@@ -350,7 +350,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 		explode(self.Turret2)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local sdGibCollide = {"physics/metal/metal_box_impact_hard1.wav", "physics/metal/metal_box_impact_hard2.wav", "physics/metal/metal_box_impact_hard3.wav"}
 --
 function ENT:HandleGibOnDeath(dmginfo, hitgroup)

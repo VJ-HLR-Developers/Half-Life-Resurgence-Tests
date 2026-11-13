@@ -10,11 +10,11 @@ ENT.Base = "obj_vj_projectile_base"
 ENT.PrintName = "Flechette"
 ENT.Author = "DrVrej"
 ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 if CLIENT then
 	VJ.AddKillIcon("obj_vj_hlr2_flechette", ENT.PrintName, VJ.KILLICON_PROJECTILE)
 end
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 if !SERVER then return end
 
 ENT.Model = "models/vj_hlr/hl2/projectiles/hunter_flechette.mdl"
@@ -30,17 +30,17 @@ ENT.SoundTbl_OnCollide = {
 }
 
 ENT.IdleSoundLevel = 60
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	ParticleEffectAttach("hunter_flechette_trail", PATTACH_POINT_FOLLOW, self, 1)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCollisionPersist(data, phys)
 	local owner = self:GetOwner()
 	local hitEnt = NULL
 	local dmgPos = (data != nil and data.HitPos) or self:GetPos()
 
-	if IsValid(data.HitEntity) && data.HitEntity != Entity(0) then
+	if IsValid(data.HitEntity) and data.HitEntity != Entity(0) then
 		self.SoundTbl_OnCollide = {
 			"vj_hlr/src/npc/ministrider/flechette_flesh_impact1.wav",
 			"vj_hlr/src/npc/ministrider/flechette_flesh_impact2.wav",
@@ -49,7 +49,7 @@ function ENT:OnCollisionPersist(data, phys)
 		}
 		hitEnt = data.HitEntity
 		if IsValid(owner) then
-			if (hitEnt.VJ_ID_Prop) or (hitEnt:IsNPC() && (hitEnt:Disposition(owner) == D_HT or hitEnt:Disposition(owner) == D_FR) && hitEnt:Health() > 0 && (hitEnt != owner) && (hitEnt:GetClass() != owner:GetClass())) or (hitEnt:IsPlayer() && !VJ_CVAR_IGNOREPLAYERS && hitEnt:Alive() && hitEnt:Health() > 0) then
+			if (hitEnt.VJ_ID_Prop) or (hitEnt:IsNPC() and (hitEnt:Disposition(owner) == D_HT or hitEnt:Disposition(owner) == D_FR) and hitEnt:Health() > 0 and (hitEnt != owner) and (hitEnt:GetClass() != owner:GetClass())) or (hitEnt:IsPlayer() and !VJ_CVAR_IGNOREPLAYERS and hitEnt:Alive() and hitEnt:Health() > 0) then
 				local dmgInfo = DamageInfo()
 				dmgInfo:SetDamage(4)
 				dmgInfo:SetDamageType(DMG_SLASH)
@@ -84,7 +84,7 @@ function ENT:OnCollisionPersist(data, phys)
 			if IsValid(fakeEnt) then
 				VJ.EmitSound(fakeEnt, "vj_hlr/src/npc/ministrider/flechette_explode" .. math.random(1, 3) .. ".wav", 95)
 				ParticleEffect("hunter_projectile_explosion_1", data.HitPos, Angle(), nil)
-				VJ.ApplyRadiusDamage(IsValid(self) && self or IsValid(owner) && owner or fakeEnt, IsValid(owner) && owner or IsValid(self) && self or fakeEnt, data.HitPos, 128, 12, bit.bor(DMG_BLAST, DMG_DISSOLVE), true, true)
+				VJ.ApplyRadiusDamage(IsValid(self) and self or IsValid(owner) and owner or fakeEnt, IsValid(owner) and owner or IsValid(self) and self or fakeEnt, data.HitPos, 128, 12, bit.bor(DMG_BLAST, DMG_DISSOLVE), true, true)
 				util.Decal("Scorch", data.HitPos +data.HitNormal, data.HitPos -data.HitNormal)
 				fakeEnt:Remove()
 			end

@@ -6,7 +6,7 @@ include("shared.lua")
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
 ENT.Model = "models/vj_hlr/hl2b/zombie.mdl"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInit()
 	self.SoundTbl_Idle = {"vj_hlr/gsrc/npc/zombie/zo_idle1.wav", "vj_hlr/gsrc/npc/zombie/zo_idle2.wav", "vj_hlr/gsrc/npc/zombie/zo_idle3.wav", "vj_hlr/gsrc/npc/zombie/zo_idle4.wav"}
 	self.SoundTbl_Alert = {"vj_hlr/gsrc/npc/zombie/zo_alert10.wav", "vj_hlr/gsrc/npc/zombie/zo_alert20.wav", "vj_hlr/gsrc/npc/zombie/zo_alert30.wav"}

@@ -55,23 +55,23 @@ ENT.SoundTbl_MeleeAttack = "npc/ichthyosaur/snap.wav"
 ENT.MainSoundPitch = 100
 
 ENT.Icky_Idle = 0
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(40, 40, 40), Vector(-40, -40, -40))
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "melee" then
 		self:ExecuteMeleeAttack()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnMeleeAttackExecute(status, ent, isProp)
 	if status == "Init" then
 		local pos = self:GetPos() +self:GetAngles():Forward() *35
 		effects.Bubbles(pos +Vector(-32, -32, -32), pos +Vector(32, 32, 32), math.random(16, 32), math.random(100, 300), 1)
 	elseif status == "PreDamage" then
-		self:SetHealth(math.Clamp(self:Health() + ((self.MeleeAttackDamage > ent:Health() && ent:Health()) or self.MeleeAttackDamage), self:Health(), self:GetMaxHealth()*2))
+		self:SetHealth(math.Clamp(self:Health() + ((self.MeleeAttackDamage > ent:Health() and ent:Health()) or self.MeleeAttackDamage), self:Health(), self:GetMaxHealth()*2))
 		self:PlayAnim(ACT_RANGE_ATTACK1_LOW, true, false, true)
 		if ent:IsPlayer() then
 			ent:ScreenFade(SCREENFADE.IN, Color(64, 0, 0), 0.5, 0)
@@ -81,19 +81,19 @@ function ENT:OnMeleeAttackExecute(status, ent, isProp)
 		VJ.CreateSound(self, "npc/ichthyosaur/snap_miss.wav", 75)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	local waterLevel = self:WaterLevel()
-	if math.random(1, 10) == 1 && waterLevel > 0 then
+	if math.random(1, 10) == 1 and waterLevel > 0 then
 		effects.Bubbles(self:GetPos() +(self:OBBMins() *0.5), self:GetPos() +(self:OBBMaxs() *0.5), math.random(1, 4), math.random(100, 300), 1)
 	end
-	if self.Icky_Idle == 0 && waterLevel == 0 then
+	if self.Icky_Idle == 0 and waterLevel == 0 then
 		self.Icky_Idle = 1
 		self.HasMeleeAttack = false
 		self.HasDeathAnimation = false
 		self.NextIdleStandTime = 0
 		self.AnimTbl_IdleStand = {"thrash"}
-	elseif self.Icky_Idle == 1 && waterLevel > 0 then
+	elseif self.Icky_Idle == 1 and waterLevel > 0 then
 		self.Icky_Idle = 0
 		self.HasMeleeAttack = true
 		self.HasDeathAnimation = true

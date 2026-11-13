@@ -40,7 +40,7 @@ if CLIENT then
 
         local targetSpeed = 0
         if self:GetDriving() then
-            targetSpeed = self:GetDriveSpeed() *(self:GetDrivingForward() && 1 or -1)
+            targetSpeed = self:GetDriveSpeed() *(self:GetDrivingForward() and 1 or -1)
         end
         self.WheelSpeed = Lerp(FrameTime() *10, self.WheelSpeed, targetSpeed)
         self.WheelRot = self.WheelRot +(self.WheelSpeed *FrameTime() *0.2)

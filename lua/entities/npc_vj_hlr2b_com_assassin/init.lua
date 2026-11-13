@@ -13,7 +13,7 @@ ENT.JumpParams = {
 	MaxDrop = 620,
 	MaxDistance = 620
 }
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 ENT.BloodColor = VJ.BLOOD_COLOR_RED
 
@@ -50,7 +50,7 @@ ENT.Assassin_OffGround = false
 ENT.Assassin_CloakLevel = 1
 ENT.Assassin_NextCloakT = 0
 ENT.Assassin_NextDodgeT = CurTime()
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:SetAnimationTranslations(wepHoldType)
 	self.AnimationTranslations[ACT_RANGE_ATTACK1] 				= ACT_RANGE_ATTACK1
 	self.AnimationTranslations[ACT_GESTURE_RANGE_ATTACK1] 		= ACT_RANGE_ATTACK1
@@ -72,7 +72,7 @@ function ENT:SetAnimationTranslations(wepHoldType)
 	self.AnimationTranslations[ACT_RUN_CROUCH] 					= ACT_RUN
 	self.AnimationTranslations[ACT_RUN_CROUCH_AIM] 				= ACT_RUN
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(13, 13, 60), Vector(-13, -13, 0))
 	-- self:SetRenderMode(RENDERMODE_TRANSADD)
@@ -99,13 +99,13 @@ function ENT:Init()
 
 	self:Give("weapon_vj_hlr_dualpistol")
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateSound(sdData, sdFile)
 	if VJ.HasValue(self.SoundTbl_BeforeMeleeAttack, sdFile) then return end
 	VJ.EmitSound(self, "npc/combine_soldier/vo/on" .. math.random(1, 2) .. ".wav")
-	timer.Simple(SoundDuration(sdFile), function() if IsValid(self) && sdData:IsPlaying() then VJ.EmitSound(self, "npc/combine_soldier/vo/off" .. math.random(1, 3) .. ".wav") end end)
+	timer.Simple(SoundDuration(sdFile), function() if IsValid(self) and sdData:IsPlaying() then VJ.EmitSound(self, "npc/combine_soldier/vo/off" .. math.random(1, 3) .. ".wav") end end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "Foot" then
 		VJ.EmitSound(self, "npc/footsteps/hardboot_generic2.wav", 72, 100)
@@ -120,7 +120,7 @@ function ENT:OnInput(key, activator, caller, data)
 		self:ExecuteMeleeAttack()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	if IsValid(self:GetActiveWeapon()) then
 		self:GetActiveWeapon():SetClip1(999)
@@ -133,7 +133,7 @@ function ENT:OnThink()
 	-- self:SetColor(Color(255, 255, 255, math.Clamp(self.Assassin_CloakLevel * 255, 40, 255)))
 	-- self.Assassin_CloakLevel = math.Clamp(self.Assassin_CloakLevel + 0.05, 0, 1)
 	-- if cloaklvl <= 220 then -- Yete asorme tsadz e, ere vor mouys NPC-nere chi desnen iren!
-	if cloaked && CurTime() > self:GetFireTime() && self:GetMoveVelocity():Length() <= 60 then -- Yupe sa pee pee inz la poo poo
+	if cloaked and CurTime() > self:GetFireTime() and self:GetMoveVelocity():Length() <= 60 then -- Yupe sa pee pee inz la poo poo
 		self:AddFlags(FL_NOTARGET)
 		self:DrawShadow(false)
 	else
@@ -154,18 +154,18 @@ function ENT:OnThink()
 			end
 		end
 	end
-	if (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_RELOAD) or !self.VJ_Controlled && validEnt && !cloaked) && CurTime() > self.Assassin_NextCloakT then
+	if (self.VJ_Controlled and self.VJ_Controller:GetPlayer():KeyDown(IN_RELOAD) or !self.VJ_Controlled and validEnt and !cloaked) and CurTime() > self.Assassin_NextCloakT then
 		self:SetCloaked(!cloaked)
-		VJ.EmitSound(self, "npc/roller/mine/combine_mine_deploy1.wav", 60, self:GetCloaked() && 120 or 100)
+		VJ.EmitSound(self, "npc/roller/mine/combine_mine_deploy1.wav", 60, self:GetCloaked() and 120 or 100)
 		self.Assassin_NextCloakT = CurTime() +1
-	elseif !self.VJ_Controlled && !self.Alerted && cloaked then
+	elseif !self.VJ_Controlled and !self.Alerted and cloaked then
 		self:SetCloaked(false)
 		self.Assassin_NextCloakT = CurTime() +1
 	end
-	if (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP) or validEnt && !self.VJ_Controlled && CurTime() > self.Assassin_NextDodgeT && !self:IsMoving() && self:GetPos():Distance(self:GetEnemy():GetPos()) < 2200) && self:IsOnGround() then
+	if (self.VJ_Controlled and self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP) or validEnt and !self.VJ_Controlled and CurTime() > self.Assassin_NextDodgeT and !self:IsMoving() and self:GetPos():Distance(self:GetEnemy():GetPos()) < 2200) and self:IsOnGround() then
 		self:Dodge()
 	end
-	if validEnt && self.WeaponAttackState == VJ.WEP_ATTACK_STATE_FIRE_STAND && !self.VJ_Controlled && CurTime() > self.Assassin_NextJumpT && !self:IsMoving() && self:GetPos():Distance(self:GetEnemy():GetPos()) < 1400 then
+	if validEnt and self.WeaponAttackState == VJ.WEP_ATTACK_STATE_FIRE_STAND and !self.VJ_Controlled and CurTime() > self.Assassin_NextJumpT and !self:IsMoving() and self:GetPos():Distance(self:GetEnemy():GetPos()) < 1400 then
 		self:StopMoving()
 		self:SetGroundEntity(NULL)
 		if math.random(1, 2) == 1 then
@@ -181,12 +181,12 @@ function ENT:OnThink()
 		self.Assassin_NextJumpT = CurTime() + 8
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Dodge()
 	if !self:IsBusy() then
 		if self.VJ_Controlled then
 			local ply = self.VJ_Controller:GetPlayer()
-			self:PlayAnim((ply:KeyDown(IN_MOVELEFT) && "FlipLeft") or (ply:KeyDown(IN_MOVERIGHT) && "FlipRight") or (ply:KeyDown(IN_FORWARD) && "FlipForwardB") or "flipback", true, false, true)
+			self:PlayAnim((ply:KeyDown(IN_MOVELEFT) and "FlipLeft") or (ply:KeyDown(IN_MOVERIGHT) and "FlipRight") or (ply:KeyDown(IN_FORWARD) and "FlipForwardB") or "flipback", true, false, true)
 			self.Assassin_NextDodgeT = CurTime() +math.Rand(2, 6)
 		else
 			local checkdist = self:VJ_CheckAllFourSides(400)
@@ -200,7 +200,7 @@ function ENT:Dodge()
 			if pickmove == "Right" then anim = "FlipRight" end
 			if pickmove == "Left" then anim = "FlipLeft" end
 			if pickmove == "Forward" then anim = "FlipForwardB" end
-			if type(pickmove) == "table" && #pickmove == 4 then
+			if type(pickmove) == "table" and #pickmove == 4 then
 				anim = VJ.PICK({"flipback", "FlipRight", "FlipLeft", "FlipForwardB"})
 			end
 			if pickmove == "Backward" or pickmove == "Right" or pickmove == "Left" then
@@ -210,30 +210,30 @@ function ENT:Dodge()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnFireBullet(data)
 	self.Assassin_CloakLevel = 0
 	self:SetFireTime(CurTime() + 1)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnWeaponCanFire()
 	if self.Assassin_OffGround == true then return false end
 	return true
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnBleed(dmginfo, hitgroup)
-	if !self.VJ_Controlled && CurTime() > self.Assassin_NextDodgeT && !self:IsMoving() && self:IsOnGround() then
+	if !self.VJ_Controlled and CurTime() > self.Assassin_NextDodgeT and !self:IsMoving() and self:IsOnGround() then
 		self:Dodge()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Finish" then
 		self:SetCloaked(false)
 		self:SetBodygroup(1, 1)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeathWeaponDrop(dmginfo, hitgroup, wepEnt)
 	wepEnt:Remove()
 	for i = 1, 2 do

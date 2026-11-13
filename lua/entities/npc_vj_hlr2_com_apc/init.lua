@@ -13,7 +13,7 @@ ENT.ControllerParams = {
 	FirstP_Offset = Vector(0, 0, 20),
 	FirstP_ShrinkBone = false
 }
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 ENT.DeathCorpseModel = "models/combine_apc_destroyed_gib01.mdl"
 
@@ -137,7 +137,7 @@ ENT.APC_DoorOpen = false
 ENT.APC_HasLOS = false
 ENT.APC_HasSpawnedSoldiers = false
 ENT.VJ_ForceRocketFollow = true
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Tank_Init()
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then
@@ -152,17 +152,17 @@ function ENT:Tank_Init()
 	self.NextRocketT = 0
 	self.Ammo = 2
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateSound(sdData, sdFile)
 	if VJ.HasValue(self.SoundTbl_Fire, sdFile) or VJ.HasValue(self.SoundTbl_FireRocket, sdFile) or VJ.HasValue(self.SoundTbl_Breath, sdFile) or VJ.HasValue(self.Tank_SoundTbl_DrivingEngine, sdFile) or VJ.HasValue(self.Tank_SoundTbl_Track, sdFile) or sdFile == "vj_base/vehicles/armored/chassis_tracks.wav" then return end
 	VJ.EmitSound(self, "npc/overwatch/radiovoice/on3.wav")
-	timer.Simple(SoundDuration(sdFile), function() if IsValid(self) && sdData:IsPlaying() then VJ.EmitSound(self, "npc/overwatch/radiovoice/off2.wav") end end)
+	timer.Simple(SoundDuration(sdFile), function() if IsValid(self) and sdData:IsPlaying() then VJ.EmitSound(self, "npc/overwatch/radiovoice/off2.wav") end end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Controller_Initialize(ply, controlEnt)
 	ply:ChatPrint("JUMP: Deploy Civil-Protection Squad (1 time)")
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Tank_UpdateMoveParticles()
 	local effectData = EffectData()
 	effectData:SetScale(1)
@@ -172,7 +172,7 @@ function ENT:Tank_UpdateMoveParticles()
 	effectData:SetOrigin(self:GetPos() +self:GetRight() *58)
 	util.Effect("VJ_VehicleMove", effectData, true, true)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnUpdatePoseParamTracking(pitch, yaw, roll)
 	if (math.abs(math.AngleDifference(self:GetPoseParameter("aim_yaw"), math.ApproachAngle(self:GetPoseParameter("aim_yaw"), yaw, self.PoseParameterLooking_TurningSpeed))) >= 10) or (math.abs(math.AngleDifference(self:GetPoseParameter("aim_pitch"), math.ApproachAngle(self:GetPoseParameter("aim_pitch"), pitch, self.PoseParameterLooking_TurningSpeed))) >= 10) then
 		self.APC_HasLOS = false
@@ -180,10 +180,10 @@ function ENT:OnUpdatePoseParamTracking(pitch, yaw, roll)
 		self.APC_HasLOS = true
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	local cont = self.VJ_Controlled and self.VJ_Controller:GetPlayer()
-	if CurTime() > self.NextRocketT && (!IsValid(cont) && enemy:Visible(self) or (IsValid(cont) && cont:KeyDown(IN_ATTACK2))) then
+	if CurTime() > self.NextRocketT and (!IsValid(cont) and enemy:Visible(self) or (IsValid(cont) and cont:KeyDown(IN_ATTACK2))) then
 		if self.Ammo <= 0 then
 			local t = SoundDuration("ambient/machines/thumper_shutdown1.wav")
 			VJ.CreateSound(self, "ambient/machines/thumper_shutdown1.wav", 75)
@@ -207,7 +207,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		self.NextRocketT = CurTime() +SoundDuration("weapons/stinger_fire1.wav")
 	end
 
-	if CurTime() > self.NextFireT && self.APC_HasLOS && (!IsValid(cont) && enemy:Visible(self) or (IsValid(cont) && cont:KeyDown(IN_ATTACK))) then
+	if CurTime() > self.NextFireT and self.APC_HasLOS and (!IsValid(cont) and enemy:Visible(self) or (IsValid(cont) and cont:KeyDown(IN_ATTACK))) then
 		local startpos = self:GetAttachment(1).Pos
 		local bullet = {}
 		bullet.Num = 1
@@ -252,7 +252,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		self.NextFireT = CurTime() +0.06
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:AntiFlip()
 	local phys = self:GetPhysicsObject()
 	if !IsValid(phys) then return end
@@ -273,7 +273,7 @@ function ENT:AntiFlip()
 	end
 
 	self.NextForceUprightT = self.NextForceUprightT or (curTime +1.25)
-	if curTime < self.NextForceUprightT or self.LastForceUprightT && curTime < self.LastForceUprightT +2 then return end
+	if curTime < self.NextForceUprightT or self.LastForceUprightT and curTime < self.LastForceUprightT +2 then return end
 	self:SetPos(self:GetPos() +Vector(0,0,35))
 	self:SetAngles(Angle(0,self:GetAngles().y,0))
 	phys:Wake()
@@ -282,7 +282,7 @@ function ENT:AntiFlip()
 	self.LastForceUprightT = curTime
 	self.NextForceUprightT = nil
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Tank_OnThink()
 	self:AntiFlip()
 
@@ -296,11 +296,11 @@ function ENT:Tank_OnThink()
 	end
 
 	-- If moving then close the door
-	if self.Tank_Status == 0 && self.APC_DoorOpen == true then
+	if self.Tank_Status == 0 and self.APC_DoorOpen == true then
 		self.APC_DoorOpen = false
 	end
 
-	if !self.Tank_IsMoving && phys:GetVelocity():Length() > 10 then
+	if !self.Tank_IsMoving and phys:GetVelocity():Length() > 10 then
 		local tr = util.TraceLine({
 			start = self:GetPos(),
 			endpos = self:GetPos() -Vector(0, 0, 40),
@@ -313,7 +313,7 @@ function ENT:Tank_OnThink()
 	end
 
 	-- Deploy soldiers
-	if self.Tank_Status == 1 && self.APC_HasSpawnedSoldiers == false && self.APC_DoorOpen == false && IsValid(self:GetEnemy()) && ((!self.VJ_Controlled && math.random(1, 60) == 1) or (self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP))) then
+	if self.Tank_Status == 1 and self.APC_HasSpawnedSoldiers == false and self.APC_DoorOpen == false and IsValid(self:GetEnemy()) and ((!self.VJ_Controlled and math.random(1, 60) == 1) or (self.VJ_Controlled and self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP))) then
 		self.APC_DoorOpen = true
 		self.APC_HasSpawnedSoldiers = true
 		timer.Simple(0.5, function()
@@ -345,7 +345,7 @@ function ENT:Tank_OnThink()
 		end)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:GetNearDeathSparkPositions()
 	local randPos = math.random(1, 5)
 	if randPos == 1 then
@@ -360,7 +360,7 @@ function ENT:GetNearDeathSparkPositions()
 		self.Spark1:SetLocalPos(self:GetPos() + self:GetRight()*-60 + self:GetForward()*-40 + self:GetUp()*81)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Tank_OnDeathCorpse(dmginfo, hitgroup, corpse, status, statusData)
 	if status == "Override" then
 		corpse:SetAngles(self:GetAngles() +Angle(0, 270, 0))
@@ -371,7 +371,7 @@ function ENT:Tank_OnDeathCorpse(dmginfo, hitgroup, corpse, status, statusData)
 		self:CreateExtraDeathCorpse("prop_physics", "models/combine_apc_destroyed_gib06.mdl", {Pos = corpse:GetPos(), Ang = corpse:GetAngles()})
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	if !self.Dead then
 		for _, v in pairs(self.APC_DeployedUnits) do

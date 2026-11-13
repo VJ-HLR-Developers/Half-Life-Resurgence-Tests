@@ -230,7 +230,7 @@ ENT.SoundTbl_Pain = {
 		"heal_cycle"
 		"heal_end"
 */
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.Vort_AnimationCache = {} -- Should we use this? Better than converting these everytime theyre needed ig
 --
 function ENT:Init()
@@ -248,7 +248,7 @@ function ENT:Init()
 	self.NextRandMoveT = 0
 	self.AnimTbl_Medic_GiveHealth = self.Vort_AnimationCache["heal_cycle"]
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local getEventName = util.GetAnimEventNameByID
 --
 function ENT:OnAnimEvent(ev, evTime, evCycle, evType, evOptions)
@@ -257,13 +257,13 @@ function ENT:OnAnimEvent(ev, evTime, evCycle, evType, evOptions)
 	if event == "AE_VORTIGAUNT_ZAP_POWERUP" or event == "AE_VORTIGAUNT_DEFEND_BEAMS" or event == "AE_VORTIGAUNT_HEAL_STARTBEAMS" then
 		local short = event == "AE_VORTIGAUNT_DEFEND_BEAMS"
 		local noElec = event == "AE_VORTIGAUNT_HEAL_STARTBEAMS"
-		if !short && !noElec && (!self.Vort_ZapPowerUp or self.Vort_ZapPowerUp && !self.Vort_ZapPowerUp:IsPlaying()) then
+		if !short and !noElec and (!self.Vort_ZapPowerUp or self.Vort_ZapPowerUp and !self.Vort_ZapPowerUp:IsPlaying()) then
 			self.Vort_ZapPowerUp = CreateSound(self, "npc/vort/attack_charge.wav")
 			self.Vort_ZapPowerUp:Play()
 		end
 
-		for i = 3, (noElec && 3 or 4) do
-			ParticleEffectAttach(noElec && "vortigaunt_hand_glow" or "vortigaunt_charge_token", PATTACH_POINT_FOLLOW, self, i)
+		for i = 3, (noElec and 3 or 4) do
+			ParticleEffectAttach(noElec and "vortigaunt_hand_glow" or "vortigaunt_charge_token", PATTACH_POINT_FOLLOW, self, i)
 
 			local light = ents.Create("light_dynamic")
 			light:SetKeyValue("_light", "44 255 139 255")
@@ -276,7 +276,7 @@ function ENT:OnAnimEvent(ev, evTime, evCycle, evType, evOptions)
 			light:Activate()
 			light:SetParent(self)
 			light:Fire("TurnOn")
-			light:Fire("SetParentAttachment", i == 3 && "leftclaw" or "rightclaw")
+			light:Fire("SetParentAttachment", i == 3 and "leftclaw" or "rightclaw")
 			self:DeleteOnRemove(light)
 
 			if !noElec then
@@ -301,12 +301,12 @@ function ENT:OnAnimEvent(ev, evTime, evCycle, evType, evOptions)
 				particle:Spawn()
 				particle:Activate()
 				particle:SetParent(self)
-				particle:Fire("SetParentAttachment", i == 3 && "leftclaw" or "rightclaw")
+				particle:Fire("SetParentAttachment", i == 3 and "leftclaw" or "rightclaw")
 				particle:DeleteOnRemove(target)
 				self:DeleteOnRemove(particle)
 			end
 
-			local deleteTime = (short or noElec) && 0.25 or 1.5
+			local deleteTime = (short or noElec) and 0.25 or 1.5
 			SafeRemoveEntityDelayed(target, deleteTime)
 			SafeRemoveEntityDelayed(particle, deleteTime)
 			SafeRemoveEntityDelayed(light, deleteTime)
@@ -341,7 +341,7 @@ function ENT:OnAnimEvent(ev, evTime, evCycle, evType, evOptions)
 		util.ScreenShake(self:GetPos(), 16, 100, 1, 600)
 		VJ.ApplyRadiusDamage(self, self, self:GetPos(), 500, 90, bit.bor(DMG_SHOCK, DMG_ENERGYBEAM, DMG_BLAST), true, false, {Force = 175})
 		for _, v in pairs(ents.FindInSphere(self:GetPos(), 500)) do
-			if (v:IsNPC() && v != self or v:IsPlayer()) && self:CheckRelationship(v) == D_LI then
+			if (v:IsNPC() and v != self or v:IsPlayer()) and self:CheckRelationship(v) == D_LI then
 				v:SetHealth(math.Clamp(v:Health() +25, 1, v:GetMaxHealth()))
 			end
 		end
@@ -362,7 +362,7 @@ function ENT:OnAnimEvent(ev, evTime, evCycle, evType, evOptions)
 		SafeRemoveEntityDelayed(light, 0.15)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnRangeAttackExecute(status, enemy, projectile)
 	if status == "Init" then
 		local startPos = self:GetPos() + self:GetUp()*45 + self:GetForward()*40
@@ -392,11 +392,11 @@ function ENT:OnRangeAttackExecute(status, enemy, projectile)
 		return true
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local alertAntlions = {"vj_hlr/src/npc/vort/vo/alert_antlions.wav"}
 --
 function ENT:OnAlert(ent)
-	if math.random(1, 2) == 1 && ent:IsNPC() then
+	if math.random(1, 2) == 1 and ent:IsNPC() then
 		for _, v in ipairs(ent.VJ_NPC_Class or {1}) do
 			if v == "CLASS_ANTLION" or ent:Classify() == CLASS_ANTLION then
 				self:PlaySoundSystem("Alert", alertAntlions)
@@ -405,7 +405,7 @@ function ENT:OnAlert(ent)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnMedicBehavior(status, statusData)
 	if status == "OnHeal" then
 		if statusData:IsPlayer() then
@@ -414,7 +414,7 @@ function ENT:OnMedicBehavior(status, statusData)
 		return true
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
 	if self.Alerted then
 		if act == ACT_IDLE then
@@ -427,21 +427,21 @@ function ENT:TranslateActivity(act)
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:SelectSchedule()
 	self.BaseClass.SelectSchedule(self)
-	if !self.Dead && self.Vort_RunAway && !self:IsBusy() && !self.VJ_Controlled then
+	if !self.Dead and self.Vort_RunAway and !self:IsBusy() and !self.VJ_Controlled then
 		self.Vort_RunAway = false
 		self:SCHEDULE_COVER_ENEMY("TASK_RUN_PATH", function(x) x.RunCode_OnFail = function() self.NextDoAnyAttackT = 0 end end)
 		self.NextDoAnyAttackT = CurTime() + 5
 		self.NextRandMoveT = CurTime() + 5
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	if !self.VJ_Controlled then
 		local eneData = self.EnemyData
-		if eneData.Visible && CurTime() > self.NextRandMoveT && eneData.DistanceNearest <= self.RangeAttackMaxDistance && !self:IsBusy() && !self.Vort_RunAway then
+		if eneData.Visible and CurTime() > self.NextRandMoveT and eneData.DistanceNearest <= self.RangeAttackMaxDistance and !self:IsBusy() and !self.Vort_RunAway then
 			local checkdist = self:VJ_CheckAllFourSides(375)
 			local randmove = {}
 			if checkdist.Backward == true then randmove[#randmove+1] = "Backward" end
@@ -458,7 +458,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		end
 	else
 		local ply = self.VJ_Controller:GetPlayer()
-		if ply:KeyDown(IN_JUMP) && CurTime() > self.Vort_DispelT && !self:IsBusy() then
+		if ply:KeyDown(IN_JUMP) and CurTime() > self.Vort_DispelT and !self:IsBusy() then
 			local _, dur = self:PlayAnim("dispel", true, false, false)
 			self.NextDoAnyAttackT = CurTime() +dur
 			self.NextRandMoveT = CurTime() +dur
@@ -466,13 +466,13 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
 	if status == "PostDamage" then
 		if self.VJ_Controlled then return end
-		if math.random(1, dmginfo:IsBulletDamage() && 3 or 6) == 1 then
+		if math.random(1, dmginfo:IsBulletDamage() and 3 or 6) == 1 then
 			self.Vort_RunAway = true
-		elseif !self.Vort_RunAway && math.random(1, 4) == 1 && !dmginfo:IsBulletDamage() && CurTime() > self.Vort_DispelT then
+		elseif !self.Vort_RunAway and math.random(1, 4) == 1 and !dmginfo:IsBulletDamage() and CurTime() > self.Vort_DispelT then
 			local _, dur = self:PlayAnim("dispel", true, false, false)
 			self.NextDoAnyAttackT = CurTime() +dur
 			self.NextRandMoveT = CurTime() +dur
@@ -480,19 +480,19 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnFlinch(dmginfo, hitgroup, status)
 	if status == "Execute" then
 		self:StopParticles()
 		VJ.STOPSOUND(self.Vort_ZapPowerUp)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnChangeActivity(newAct)
 	self:StopParticles()
 	VJ.STOPSOUND(self.Vort_ZapPowerUp)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	VJ.STOPSOUND(self.Vort_ZapPowerUp)
 end

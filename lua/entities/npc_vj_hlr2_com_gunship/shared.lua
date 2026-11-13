@@ -4,7 +4,7 @@ ENT.PrintName = ""
 ENT.Author = ""
 ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
 ENT.Category = "Half-Life Resurgence"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 if CLIENT then
 	ENT.Rotor = 0
 	function ENT:Draw()

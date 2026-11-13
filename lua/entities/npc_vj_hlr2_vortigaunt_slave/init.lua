@@ -30,7 +30,7 @@ ENT.SoundTbl_Pain = {
 	"vo/npc/vortigaunt/vortigese05.wav",
 	"vo/npc/vortigaunt/vortigese07.wav"
 }
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateSound(sdData, sdFile)
 	sdData:SetDSP(2)
 end

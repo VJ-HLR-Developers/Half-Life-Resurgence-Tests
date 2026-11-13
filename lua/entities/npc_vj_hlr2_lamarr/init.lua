@@ -10,7 +10,7 @@ ENT.StartHealth = 200
 
 ENT.VJ_NPC_Class = {"CLASS_PLAYER_ALLY"}
 ENT.AlliedWithPlayerAllies = true
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(8, 10, 15), Vector(-8, -10, 0))
 
@@ -19,13 +19,13 @@ function ENT:Init()
 	self.Headcrab_WakeUpT = 0
 	self.Headcrab_SleepAnimT = 0
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	if self.Headcrab_Sleeping then
 		self.Headcrab_WakeUpT = 0
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnBleed(dmginfo, hitgroup)
 	if self.Headcrab_Sleeping then
 		self.Headcrab_WakeUpT = 0
@@ -33,7 +33,7 @@ function ENT:OnBleed(dmginfo, hitgroup)
 		self.Headcrab_NextSleepT = CurTime() + math.random(20, 30)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 
 	if self.Headcrab_Sleeping then
@@ -52,7 +52,7 @@ function ENT:OnThinkActive()
 
 	if self.VJ_Controlled then return end
 
-	if !self.Alerted && !IsValid(self:GetEnemy()) && !self:IsMoving() && CurTime() > self.Headcrab_NextSleepT && !self.Headcrab_Sleeping && !self:IsBusy() then
+	if !self.Alerted and !IsValid(self:GetEnemy()) and !self:IsMoving() and CurTime() > self.Headcrab_NextSleepT and !self.Headcrab_Sleeping and !self:IsBusy() then
 		self.Headcrab_Sleeping = true
 		self.Headcrab_WakeUpT = CurTime() +math.Rand(15, 30)
 		self:SetState(VJ_STATE_ONLY_ANIMATION)

@@ -44,13 +44,13 @@ ENT.BreathSoundLevel = 70
 
 ENT.IsGuardian = false
 ENT.ChargePercentage = 0.65
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Controller_Initialize(ply, controlEnt)
 	ply:ChatPrint("MOUSE2: Charge Attack")
 	ply:ChatPrint("RELOAD: Summon Antlions")
 	-- ply:ChatPrint("RELOAD: Summon Antlions (Only works on weak surfaces [Grass, Snow, Sand, etc])")
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.Guard_AnimationCache = {}
 ENT.Guard_Antlions = {}
 --
@@ -144,7 +144,7 @@ function ENT:Init()
 	end
 	//charge_cancel, charge_crash, charge_loop, charge_stop, floor_break, flinch1, flinch2, pain
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CreateEffects()
 	local glow1 = ents.Create("env_sprite")
 	glow1:SetKeyValue("model", "vj_base/sprites/glow.vmt")
@@ -215,7 +215,7 @@ function ENT:CreateEffects()
 	glowlight_top:Fire("TurnOn")
 	glowlight_top:DeleteOnRemove(self)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:IsDirt(pos)
 	local tr = util.TraceLine({
 		start = pos,
@@ -224,9 +224,9 @@ function ENT:IsDirt(pos)
 		mask = MASK_NPCWORLDSTATIC
 	})
 	local mat = tr.MatType
-	return tr.HitWorld && (mat == MAT_SAND || mat == MAT_DIRT || mat == MAT_FOLIAGE || mat == MAT_SLOSH || mat == 85)
+	return tr.HitWorld and (mat == MAT_SAND or mat == MAT_DIRT or mat == MAT_FOLIAGE or mat == MAT_SLOSH or mat == 85)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:FindNodesNearPoint(checkPos, total, dist, minDist)
 	local nodegraph = table.Copy(VJ_Nodegraph.Data.Nodes)
 	local closestNode = NULL
@@ -234,7 +234,7 @@ function ENT:FindNodesNearPoint(checkPos, total, dist, minDist)
 	local minDist = minDist or 0
 	for _, v in pairs(nodegraph) do
 		local dist = v.pos:Distance(checkPos)
-		if dist < closestDist && dist > minDist then
+		if dist < closestDist and dist > minDist then
 			closestNode = v
 			closestDist = dist
 		end
@@ -245,9 +245,9 @@ function ENT:FindNodesNearPoint(checkPos, total, dist, minDist)
 			table.insert(savedPoints, v.pos)
 		end
 	end
-	return #savedPoints > 0 && savedPoints or false
+	return #savedPoints > 0 and savedPoints or false
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:SummonAllies(anim)
 	if self:IsBusy("Activities") or self.Charging then return end
 	local anim = anim or "bark"
@@ -255,7 +255,7 @@ function ENT:SummonAllies(anim)
 	timer.Simple(0.5, function()
 		if IsValid(self) then
 			VJ.CreateSound(self, "npc/antlion_guard/angry2.wav", 95, 100)
-			for i = 1, math.random(4, self.IsGuardian && 10 or 6) do
+			for i = 1, math.random(4, self.IsGuardian and 10 or 6) do
 				local pos = self:FindNodesNearPoint(self:GetPos(), 16, 1024, 256)
 				self:CreateAntlion(VJ.PICK(pos) or self:GetPos() +self:GetRight() *math.Rand(-512, 512) +self:GetForward() *math.Rand(-512, 512))
 			end
@@ -281,15 +281,15 @@ function ENT:SummonAllies(anim)
 	end
 	self.NextSummonT = CurTime() +math.Rand(25, 45)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	if self:IsBusy("Activities") or self.Charging then return end
 	self.NextChargeT = CurTime() +5
-	if math.random(1, 3) == 1 && CurTime() > self.NextSummonT then
+	if math.random(1, 3) == 1 and CurTime() > self.NextSummonT then
 		self:SummonAllies(VJ.PICK({"bark", "roar"}))
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CreateAntlion(pos)
 	-- print(pos)
 	local class = "npc_vj_hlr2_antlion"
@@ -307,17 +307,17 @@ function ENT:CreateAntlion(pos)
 	ParticleEffect("advisor_plat_break", antlion:GetPos(), antlion:GetAngles(), antlion)
 	ParticleEffect("strider_impale_ground", antlion:GetPos(), antlion:GetAngles(), antlion)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:MeleeAttackKnockbackVelocity(ent)
 	return self:GetForward() *math.random(400, 500) +self:GetUp() *300
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
-	if status == "PreDamage" && dmginfo:IsBulletDamage() then
+	if status == "PreDamage" and dmginfo:IsBulletDamage() then
 		dmginfo:ScaleDamage(math.Rand(0.5, 0.75))
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	local eneData = self.EnemyData
 	local dist = eneData.DistanceNearest
@@ -370,8 +370,8 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 				self:SetLayerPriority(gest, 1)
 				self:SetLayerPlaybackRate(gest, 0.5)
 				local ent = tr.Entity
-				local isProp = IsValid(ent) && ent.VJ_ID_Prop or false
-				if IsValid(ent) && (isProp or self:CheckRelationship(ent) == D_HT) then
+				local isProp = IsValid(ent) and ent.VJ_ID_Prop or false
+				if IsValid(ent) and (isProp or self:CheckRelationship(ent) == D_HT) then
 					if isProp then
 						local phys = ent:GetPhysicsObject()
 						if IsValid(phys) then
@@ -400,7 +400,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 
 	local controlled = self.VJ_Controlled
 	local ply = self.VJ_Controlled and self.VJ_Controller:GetPlayer()
-	if (controlled && ply:KeyDown(IN_ATTACK2) or !controlled && eneData.Visible && dist > 500 && dist <= 2500 && !self:IsBusy() && math.random(1, 50) == 1 && math.abs(self:GetPos().z -enemy:GetPos().z) <= 128) && !self.IsCharging then
+	if (controlled and ply:KeyDown(IN_ATTACK2) or !controlled and eneData.Visible and dist > 500 and dist <= 2500 and !self:IsBusy() and math.random(1, 50) == 1 and math.abs(self:GetPos().z -enemy:GetPos().z) <= 128) and !self.IsCharging then
 		self.IsCharging = true
 		self.ChargeT = CurTime() +6
 		VJ.CreateSound(self, {"npc/antlion_guard/angry1.wav", "npc/antlion_guard/angry2.wav", "npc/antlion_guard/angry3.wav"}, 72)
@@ -415,20 +415,20 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		return
 	end
 
-	if ((controlled && ply:KeyDown(IN_RELOAD)) or !controlled && math.random(1, 75) == 1) && CurTime() > self.NextSummonT then
+	if ((controlled and ply:KeyDown(IN_RELOAD)) or !controlled and math.random(1, 75) == 1) and CurTime() > self.NextSummonT then
 		self:SummonAllies()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	local hasEnemy = IsValid(self:GetEnemy())
 
-	self.BreathPitch = Lerp(FrameTime() *10, self.BreathPitch, hasEnemy && 110 or 90)
-	self.Breath:ChangeVolume(hasEnemy && 1 or 0.65, 1)
+	self.BreathPitch = Lerp(FrameTime() *10, self.BreathPitch, hasEnemy and 110 or 90)
+	self.Breath:ChangeVolume(hasEnemy and 1 or 0.65, 1)
 	self.Breath:ChangePitch(self.BreathPitch)
 	self.ChargeBreath:ChangePitch(self.BreathPitch)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
 	if act == ACT_IDLE then
 		if self.IsCharging then
@@ -441,7 +441,7 @@ function ENT:TranslateActivity(act)
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self.Breath:Stop()
 	self.ChargeBreath:Stop()
@@ -451,7 +451,7 @@ function ENT:CustomOnRemove()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local defAng = Angle()
 local angY45 = Angle(0, 45, 0)
 local angY45 = Angle(0, 45, 0)
@@ -487,7 +487,7 @@ function ENT:Controller_Movement(cont, ply, bullseyePos)
 				-- else
 				-- 	cont:StartMovement(aimVector, defAng)
 				-- end
-				self.ControllerParams.TurnAngle = LerpAngle(FT, self.ControllerParams.TurnAngle, gerta_lef && angY45 or gerta_rig && angYN45 or defAng)
+				self.ControllerParams.TurnAngle = LerpAngle(FT, self.ControllerParams.TurnAngle, gerta_lef and angY45 or gerta_rig and angYN45 or defAng)
 				cont:StartMovement(aimVector, self.ControllerParams.TurnAngle)
 			end
 		elseif ply:KeyDown(IN_BACK) then
@@ -498,7 +498,7 @@ function ENT:Controller_Movement(cont, ply, bullseyePos)
 			-- else
 			-- 	cont:StartMovement(aimVector*-1, defAng)
 			-- end
-			self.ControllerParams.TurnAngle = LerpAngle(FT, self.ControllerParams.TurnAngle, gerta_lef && angY135 or gerta_rig && angYN135 or angY180)
+			self.ControllerParams.TurnAngle = LerpAngle(FT, self.ControllerParams.TurnAngle, gerta_lef and angY135 or gerta_rig and angYN135 or angY180)
 			cont:StartMovement(aimVector, self.ControllerParams.TurnAngle)
 		elseif gerta_lef then
 			-- cont:StartMovement(aimVector, angY90)

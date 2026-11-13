@@ -8,7 +8,7 @@ include("shared.lua")
 ENT.Model = "models/breen.mdl"
 ENT.StartHealth = 100
 ENT.HullType = HULL_HUMAN
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 ENT.BloodColor = VJ.BLOOD_COLOR_RED
 ENT.AnimTbl_MeleeAttack = "vjseq_MeleeAttack01"
@@ -145,7 +145,7 @@ ENT.MainSoundPitch = 100
 
 -- Specific kill sounds
 local sdKilledEnemyPlayer = {"vo/citadel/br_mock01.wav", "vo/citadel/br_mock04.wav", "vo/citadel/br_mock07.wav"}
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local defAng = Angle()
 --
 function ENT:Init()
@@ -170,29 +170,29 @@ function ENT:Init()
 	combineElite2:Give("weapon_vj_ar2")
 	self.CombineElite2 = combineElite2
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	local combineElite1 = self.CombineElite1
 	local combineElite2 = self.CombineElite2
-	if IsValid(combineElite1) && !combineElite1.IsFollowing then
+	if IsValid(combineElite1) and !combineElite1.IsFollowing then
 		combineElite1:Follow(self, true)
 		combineElite1.IsFollowing = true
 	end
-	if IsValid(combineElite2) && !combineElite2.IsFollowing then
+	if IsValid(combineElite2) and !combineElite2.IsFollowing then
 		combineElite2:Follow(self, true)
 		combineElite2.IsFollowing = true
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
-	if math.random(1, 2) == 1 && ent:IsNPC() then
+	if math.random(1, 2) == 1 and ent:IsNPC() then
 		if ent.VJ_HLR_Freeman then
 			self:PlaySoundSystem("Alert", self.SoundTbl_OnPlayerSight)
 			return
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnKilledEnemy(ent, inflictor, wasLast)
 	if math.random(1, 2) == 1 then
 		if ent:IsPlayer() or ent.VJ_HLR_Freeman then
@@ -201,7 +201,7 @@ function ENT:OnKilledEnemy(ent, inflictor, wasLast)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	if !self.Dead then -- Remove Combine Elites if we were removed (Undo, remover tool, etc.)
 		local combineElite1 = self.CombineElite1

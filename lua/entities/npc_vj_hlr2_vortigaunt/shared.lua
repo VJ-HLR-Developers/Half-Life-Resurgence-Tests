@@ -5,7 +5,7 @@ ENT.Author = "Cpt. Hazama"
 ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
 ENT.Category = "Half-Life Resurgence"
 
--- if CLIENT && GetConVar("vj_hlr2_combine_eyeglow"):GetInt() == 1 then
+-- if CLIENT and GetConVar("vj_hlr2_combine_eyeglow"):GetInt() == 1 then
 -- local mat = Material("sprites/light_glow02_add")
 -- local vecOrigin = Vector(9.5, 0, 0)
 -- local size = 30

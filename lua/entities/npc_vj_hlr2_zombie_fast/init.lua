@@ -47,17 +47,17 @@ ENT.SoundTbl_MeleeAttackExtra = {"npc/zombie/claw_strike1.wav", "npc/zombie/claw
 ENT.SoundTbl_MeleeAttackMiss = {"npc/zombie/claw_miss1.wav", "npc/zombie/claw_miss2.wav"}
 ENT.SoundTbl_Pain = "npc/fast_zombie/wake1.wav"
 ENT.SoundTbl_DeathFollow = "npc/fast_zombie/wake1.wav"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:SetSlump(doSlump)
 	if doSlump then
 		self:SetState(VJ_STATE_ONLY_ANIMATION_NOATTACK)
-		self.SlumpSet = math.random(1, 2) == 1 && "a" or "b"
+		self.SlumpSet = math.random(1, 2) == 1 and "a" or "b"
 		self.SlumpAnimation = VJ.SequenceToActivity(self, "slump_" .. self.SlumpSet)
 		self:SetMaxLookDistance(150)
 		self.SightAngle = 360
 		self:AddFlags(FL_NOTARGET)
 	else
-		self:PlayAnim("slumprise_" .. (self.SlumpSet == "a" && VJ.PICK({"a", "c"}) or self.SlumpSet), true, false, false, 0, {OnFinish=function(interrupted, anim)
+		self:PlayAnim("slumprise_" .. (self.SlumpSet == "a" and VJ.PICK({"a", "c"}) or self.SlumpSet), true, false, false, 0, {OnFinish=function(interrupted, anim)
 			self:SetState()
 		end})
 		self:SetMaxLookDistance(10000)
@@ -67,13 +67,13 @@ function ENT:SetSlump(doSlump)
 	end
 	self.IsSlumped = doSlump
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	if self.IsSlumped then
 		self:SetSlump(false)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	if self.OnInit then
 		self:OnInit()
@@ -92,7 +92,7 @@ function ENT:Init()
 	self.TotalHits = 0
 	self.LastHitT = 0
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "step" then
 		VJ.EmitSound(self, self.SoundTbl_FootStep, self.FootstepSoundLevel)
@@ -100,7 +100,7 @@ function ENT:OnInput(key, activator, caller, data)
 		self:ExecuteMeleeAttack()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnMeleeAttackExecute(status, ent, isProp)
 	if status == "PreDamage" then
 		if CurTime() > self.LastHitT then self.TotalHits = 0 end
@@ -112,14 +112,14 @@ function ENT:OnMeleeAttackExecute(status, ent, isProp)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
 	if act == ACT_IDLE then
 		if self.IsSlumped then
 			return self.SlumpAnimation
-		elseif !self:OnGround() && !self:IsMoving() then
+		elseif !self:OnGround() and !self:IsMoving() then
 			return ACT_GLIDE
-		elseif self:IsOnFire() && !self.IsBeta then
+		elseif self:IsOnFire() and !self.IsBeta then
 			return ACT_IDLE_ON_FIRE
 		end
 	elseif act == ACT_CLIMB_DOWN then
@@ -127,27 +127,27 @@ function ENT:TranslateActivity(act)
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	if !self.IsSlumped then
 		self.IdleSoundBlockTime = CurTime() +math.random(4, 8)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
 	if status == "PreDamage" then
 		local nonGes = (hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG)
-		self.FlinchChance = nonGes && 8 or 2
-		self.FlinchCooldown = nonGes && 5 or 2
+		self.FlinchChance = nonGes and 8 or 2
+		self.FlinchCooldown = nonGes and 5 or 2
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnBleed(dmginfo, hitgroup)
 	if self.IsSlumped then
 		self:SetSlump(false)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 	if self:GetBodygroup(1) == 0 then
 		return false
@@ -168,7 +168,7 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 			end
 		)
 	else
-		if math.random(1, (dmgtype == DMG_CLUB or dmgtype == DMG_SLASH) && 1 or 3) == 1 then
+		if math.random(1, (dmgtype == DMG_CLUB or dmgtype == DMG_SLASH) and 1 or 3) == 1 then
 			ent:SetBodygroup(1, 0)
 			local crab = ents.Create(self.HeadcrabClass or "npc_vj_hlr2_headcrab_fast")
 			crab:SetPos(self:GetAttachment(self:LookupAttachment("headcrab")).Pos or self:EyePos())

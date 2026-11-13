@@ -144,7 +144,7 @@ function ENT:Think()
 	local curTime = CurTime()
 	local operator = self.Operator
 	if IsValid(operator) then
-		if self.Gun_Status != 2 && self.Gun_Status != 1 then
+		if self.Gun_Status != 2 and self.Gun_Status != 1 then
 			self.Emplacement:ResetSequence(animTbl["mount"])
 			self:EmitSound("weapons/shotgun/shotgun_cock.wav", 70, 100)
 			self.Gun_Status = 1
@@ -158,7 +158,7 @@ function ENT:Think()
 			self.Emplacement:ResetSequence(animTbl["idle_mounted"])
 		end
 	else
-		if self.Gun_Status == 2 && self.Gun_Status != 1 then
+		if self.Gun_Status == 2 and self.Gun_Status != 1 then
 			self.Emplacement:ResetSequence(animTbl["dismount"])
 			self:EmitSound("weapons/shotgun/shotgun_cock.wav", 70, 92)
 			self.Gun_Status = 1
@@ -175,7 +175,7 @@ function ENT:Think()
 	if curTime > self.LastShotT then
 		self.Overheat = 0
 	end
-	if curTime > self.OverheatRechargeT && turret.Loop then
+	if curTime > self.OverheatRechargeT and turret.Loop then
 		turret:StopParticles()
 		turret.Loop:Stop()
 	end
@@ -186,8 +186,8 @@ function ENT:Think()
 		local possibleOperator = self.DetectedOperator
 		if !IsValid(possibleOperator) then
 			for _, v in ipairs(ents.FindInSphere(self:GetPos(), 500)) do
-				if v:IsNPC() && v:Visible(self) && v.IsVJBaseSNPC && VJ.AnimExists(v, ACT_IDLE_MANNEDGUN) && (!v.VJ_HLR_ApproachingTurret && !v.VJ_HLR_ManningTurret) then
-					if v.VJ_HLR_NextApproachTurretT && v.VJ_HLR_NextApproachTurretT > curTime then return end
+				if v:IsNPC() and v:Visible(self) and v.IsVJBaseSNPC and VJ.AnimExists(v, ACT_IDLE_MANNEDGUN) and (!v.VJ_HLR_ApproachingTurret and !v.VJ_HLR_ManningTurret) then
+					if v.VJ_HLR_NextApproachTurretT and v.VJ_HLR_NextApproachTurretT > curTime then return end
 					self.DetectedOperator = v
 					v.VJ_HLR_ApproachingTurret = true
 					break
@@ -195,7 +195,7 @@ function ENT:Think()
 			end
 		else
 			possibleOperator:SetLastPosition(self.TargetPos)
-			possibleOperator:SCHEDULE_GOTO_POSITION(possibleOperator.Alerted && "TASK_RUN_PATH" or "TASK_WALK_PATH")
+			possibleOperator:SCHEDULE_GOTO_POSITION(possibleOperator.Alerted and "TASK_RUN_PATH" or "TASK_WALK_PATH")
 			if possibleOperator:GetPos():Distance(self.TargetPos) <= 50 then
 				possibleOperator:SetPos(self.TargetPos)
 				self:ManGun(possibleOperator)
@@ -206,7 +206,7 @@ function ENT:Think()
 		operator:SetAngles(self:GetAngles())
 		if IsValid(operator:GetEnemy()) then
 			local ene = operator:GetEnemy()
-			if (turret:GetForward():Dot((ene:GetPos() -turret:GetPos()):GetNormalized()) > math.cos(math.rad(operator:GetFOV() / 2))) && (ene:GetPos():Distance(self:GetPos()) < 3500) then
+			if (turret:GetForward():Dot((ene:GetPos() -turret:GetPos()):GetNormalized()) > math.cos(math.rad(operator:GetFOV() / 2))) and (ene:GetPos():Distance(self:GetPos()) < 3500) then
 				if self:Visible(ene) then
 					self:FireEmplacement()
 				end
@@ -294,7 +294,7 @@ function ENT:UpdatePoseParamTracking(resetPoses)
 	local ene = operator:GetEnemy()
 	local newPitch = 0
 	local newYaw = 0
-	if IsValid(ene) && !resetPoses then
+	if IsValid(ene) and !resetPoses then
 		local myEyePos = operator:EyePos()
 		local myAng = self:GetAngles()
 		local enePos = operator:GetAimPosition(ene, myEyePos)

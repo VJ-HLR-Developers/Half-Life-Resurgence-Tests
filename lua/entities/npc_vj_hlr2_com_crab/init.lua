@@ -51,17 +51,17 @@ ENT.SoundTbl_Idle = "vj_hlr/src/npc/crab/taunt.wav"
 ENT.SoundTbl_Pain = "vj_hlr/src/npc/crab/pain1.wav"
 ENT.SoundTbl_MeleeAttackExtra = "vj_hlr/src/npc/crab/stab.wav"
 ENT.SoundTbl_MeleeAttackMiss = "vj_hlr/src/npc/crab/step2.wav"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(45, 45, 100), Vector(-45, -45, 0))
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Controller_Initialize(ply, controlEnt)
 	function controlEnt:OnThink()
 		self.VJC_BullseyeTracking = self:GetNPC():GetIdealActivity() == ACT_WALK
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	-- print(key)
 	if key == "step" then
@@ -97,7 +97,7 @@ function ENT:OnInput(key, activator, caller, data)
 		VJ.EmitSound(self, "vj_hlr/src/npc/crab/fire.wav", 150)
 		ParticleEffectAttach("vj_muzzle_ar2_main", PATTACH_POINT_FOLLOW, self, 1)
 		local att = self:GetAttachment(1)
-		local targetPos = IsValid(self:GetEnemy()) && self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter() or self:GetPos() +self:GetForward() *1500
+		local targetPos = IsValid(self:GetEnemy()) and self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter() or self:GetPos() +self:GetForward() *1500
 		for i = 1, 2 do
 			local bullet = {}
 			bullet.Num = 1
@@ -124,26 +124,26 @@ function ENT:OnInput(key, activator, caller, data)
 		VJ.EmitSound(self, "vj_hlr/src/npc/crab/gun_retract.wav", 80)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:MeleeAttackKnockbackVelocity()
 	return self:GetForward() *125 +self:GetRight() *-450 +self:GetUp() *150
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	self.ConstantlyFaceEnemy = self:GetIdealActivity() == ACT_WALK
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
-	if act == ACT_RUN && !self.VJ_Controlled then
+	if act == ACT_RUN and !self.VJ_Controlled then
 		local dist = self.EnemyData.DistanceNearest
-		if dist && (dist >= 2000 or dist <= 500) then
+		if dist and (dist >= 2000 or dist <= 500) then
 			return ACT_RUN
 		end
 		return ACT_WALK
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
 	if status == "PreDamage" then
 		if hitgroup == 15 then

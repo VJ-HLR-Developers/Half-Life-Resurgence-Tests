@@ -14,7 +14,7 @@ ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
 if CLIENT then
 	VJ.AddKillIcon("obj_vj_hlr2b_cremator", ENT.PrintName)
 end
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 if !SERVER then return end
 
 ENT.Model = "models/vj_base/projectiles/spit_acid_medium.mdl"
@@ -26,7 +26,7 @@ ENT.RadiusDamageUseRealisticRadius = true
 ENT.RadiusDamageType = bit.bor(DMG_BURN, DMG_DISSOLVE, DMG_ENERGYBEAM)
 ENT.SoundTbl_Idle = "vj_hlr/gsrc/npc/kingpin/kingpin_move.wav"
 ENT.SoundTbl_OnCollide = "vj_hlr/src/npc/cremator/plasma_stop.wav"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetNoDraw(true)
 	self:DrawShadow(false)
@@ -34,11 +34,11 @@ function ENT:Init()
 	ParticleEffectAttach("vj_hlr_cremator_projectile", PATTACH_ABSORIGIN_FOLLOW, self, 0)
 	VJ.EmitSound(self, "vj_hlr/src/npc/cremator/plasma_ignite.wav", 75)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	sound.EmitHint(SOUND_DANGER, self:GetPos() +self:GetVelocity(), self.RadiusDamageRadius, 1, self)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDestroy(data, phys)
 	ParticleEffect("vj_hlr_cremator_projectile_impact", data.HitPos, Angle())
 end

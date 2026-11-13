@@ -83,7 +83,7 @@ ENT.SoundTbl_Death = {
 }
 
 ENT.Bullsquid_MoveType = 0 -- 0 = Normal | 1 = Swimming
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(40, 40, 40), Vector(-40, -40, 0))
 
@@ -107,7 +107,7 @@ function ENT:Init()
 	self:ManipulateBoneJiggle(20, 1)
 	self:ManipulateBoneJiggle(21, 1)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "step" then
 		self:PlayFootstepSound()
@@ -119,7 +119,7 @@ function ENT:OnInput(key, activator, caller, data)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	if self:WaterLevel() > 1 then
 		if self.Bullsquid_MoveType != 1 then
@@ -130,7 +130,7 @@ function ENT:OnThinkActive()
 			self.HasRangeAttack = false
 			self.Bullsquid_MoveType = 1
 		end
-		if IsValid(self:GetEnemy()) && self:GetEnemy():WaterLevel() < 3 then
+		if IsValid(self:GetEnemy()) and self:GetEnemy():WaterLevel() < 3 then
 			self:AA_MoveTo(self:GetEnemy(), true)
 		end
 	else
@@ -144,23 +144,23 @@ function ENT:OnThinkActive()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:MeleeAttackKnockbackVelocity(ent)
 	return self:GetForward() * 55 + self:GetUp() * 255
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjPos(projectile)
 	return self:GetAttachment(self:LookupAttachment("mouth")).Pos
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjVel(projectile)
 	local projPos = projectile:GetPos()
 	return self:CalculateProjectile("Curve", projPos, self:GetAimPosition(self:GetEnemy(), projPos, 1, 1100) +(VectorRand() *28), 1100)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	if self:WaterLevel() < 2 then
-		if ent.VJ_ID_Headcrab && math.random(1, 2) == 1 then
+		if ent.VJ_ID_Headcrab and math.random(1, 2) == 1 then
 			self:PlayAnim("hc_spot", true, false, true)
 		else
 			if math.random(1, 3) == 1 then

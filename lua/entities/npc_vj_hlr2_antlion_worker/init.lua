@@ -29,11 +29,11 @@ ENT.SoundTbl_Death = {
 	"npc/antlion/antlion_preburst_scream1.wav",
 	"npc/antlion/antlion_preburst_scream2.wav"
 }
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjPos(projectile)
 	return self:GetPos() + self:GetUp() * 20 + self:GetForward() * 30
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:HandleGibOnDeath(dmginfo, hitgroup)
 	timer.Simple(0.89999995708466, function()
 		if IsValid(self) then

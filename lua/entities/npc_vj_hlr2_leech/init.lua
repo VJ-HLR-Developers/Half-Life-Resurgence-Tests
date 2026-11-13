@@ -15,7 +15,7 @@ ENT.Aquatic_SwimmingSpeed_Calm = 80
 ENT.Aquatic_SwimmingSpeed_Alerted = 200
 ENT.Aquatic_AnimTbl_Calm = ACT_IDLE
 ENT.Aquatic_AnimTbl_Alerted = ACT_IDLE
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_XEN"}
 ENT.BloodColor = VJ.BLOOD_COLOR_YELLOW
 ENT.HasBloodPool = false
@@ -36,7 +36,7 @@ ENT.SoundTbl_MeleeAttack = {"vj_hlr/gsrc/npc/leech/leech_bite1.wav", "vj_hlr/gsr
 ENT.Leech_FollowOffsetPos = 0
 
 Leech_Leader = NULL
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(4, 4, 3), Vector(-4, -4, -2))
 	self.Leech_FollowOffsetPos = Vector(math.random(-50, 50), math.random(-120, 120), math.random(-150, 150))
@@ -44,15 +44,15 @@ function ENT:Init()
 		Leech_Leader = self
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "melee" then
 		self:ExecuteMeleeAttack()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
-	if !self.Dead && self:WaterLevel() == 0 then
+	if !self.Dead and self:WaterLevel() == 0 then
 		self:TakeDamage(1, self, self)
 	end
 	if IsValid(Leech_Leader) then

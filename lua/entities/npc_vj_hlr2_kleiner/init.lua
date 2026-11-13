@@ -13,7 +13,7 @@ ENT.HealthRegenParams = {
 	Delay = VJ.SET(0.35, 0.35),
 }
 ENT.HullType = HULL_HUMAN
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_PLAYER_ALLY"}
 ENT.AlliedWithPlayerAllies = true
 ENT.BloodColor = VJ.BLOOD_COLOR_RED
@@ -296,9 +296,9 @@ ENT.SoundTbl_Death = {
 local sdAlertHeadcrab = {"vo/k_lab/kl_hedyno02.wav", "vo/k_lab2/kl_onehedy.wav"}
 
 ENT.MainSoundPitch = 100
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
-	if math.random(1, 2) == 1 && ent:IsNPC() then
+	if math.random(1, 2) == 1 and ent:IsNPC() then
 		if ent.VJ_ID_Headcrab then
 			self:PlaySoundSystem("Alert", sdAlertHeadcrab)
 			return

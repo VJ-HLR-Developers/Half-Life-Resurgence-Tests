@@ -97,7 +97,7 @@ ENT.SoundTbl_UnFollowPlayer = {
 ENT.MainSoundPitch = 100
 
 ENT.AnimationSet = 0 -- 0 = Default, 1 = Scurry, 2 = Custom
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(14, 14, 15), Vector(-14, -14, 0))
 
@@ -107,15 +107,15 @@ function ENT:Init()
 	self.WasThrown = false
 	self.HasRanThrownDamage = false
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjPos(projectile)
 	return self:GetPos() + self:GetUp() * 15 + self:GetForward() * 10
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjVel(projectile)
 	return self:CalculateProjectile("Curve", projectile:GetPos(), self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1200)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	if self.CanAlertCrab != true then return end
 
@@ -124,7 +124,7 @@ function ENT:OnAlert(ent)
 	self.CurrentSpeechSound = VJ.CreateSound(self, VJ.PICK(self.SoundTbl_AlertAnim), self.AlertSoundLevel, self:GetSoundPitch(self.AlertSoundPitch))
 	self:PlayAnim("Threatdisplay", true, VJ.AnimDuration(self, "Threatdisplay"), false)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
 	if act == ACT_IDLE then
 		if self.WasThrown then
@@ -134,16 +134,16 @@ function ENT:TranslateActivity(act)
 		if self.IsFollowing then
 			return self.ScurryAnimation
 		end
-		return self:Health() <= 10 && self.ScurryAnimation or ACT_RUN
+		return self:Health() <= 10 and self.ScurryAnimation or ACT_RUN
 	elseif act == ACT_WALK then
 		if self.IsFollowing then
 			return self.ScurryAnimation
 		end
-		return self:Health() <= 10 && self.ScurryAnimation or ACT_RUN
+		return self:Health() <= 10 and self.ScurryAnimation or ACT_RUN
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	local animSet = self.AnimationSet
 	if self.WasThrown then
@@ -154,16 +154,16 @@ function ENT:OnThink()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnTouch(ent)
-	if self.WasThrown && !self.HasRanThrownDamage then
-		if (ent:IsNPC() || (ent:IsPlayer() && ent:Alive())) && (self:Disposition(ent) != D_LI) && (ent != self) && (ent:GetClass() != self:GetClass()) then
+	if self.WasThrown and !self.HasRanThrownDamage then
+		if (ent:IsNPC() or (ent:IsPlayer() and ent:Alive())) and (self:Disposition(ent) != D_LI) and (ent != self) and (ent:GetClass() != self:GetClass()) then
 			self.HasRanThrownDamage = true
 			self:DoPoisonHeadcrabDamage(ent)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:DoPoisonHeadcrabDamage(v)
 	if !IsValid(v) then return end
 
@@ -191,13 +191,13 @@ function ENT:DoPoisonHeadcrabDamage(v)
 		v:TakeDamageInfo(normalDMG, self)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnLeapAttack(status, enemy)
 	if status == "PostInit" then
 		sound.EmitHint(SOUND_DANGER, enemy:GetPos(), 250, 1, self)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnLeapAttackExecute(status, ent)
 	if status == "PreDamage" then
 		self:DoPoisonHeadcrabDamage(ent)

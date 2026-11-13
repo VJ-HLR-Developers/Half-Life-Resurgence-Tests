@@ -36,7 +36,7 @@ ENT.SoundTbl_MeleeAttackExtra = {
 }
 ENT.SoundTbl_Pain = "npc/manhack/bat_away.wav"
 ENT.SoundTbl_Death = "npc/manhack/gib.wav"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	timer.Simple(0, function()
 		if IsValid(self:GetOwner()) then
@@ -123,7 +123,7 @@ function ENT:Init()
 	light:Fire("SetParentAttachment", "light")
 	self:DeleteOnRemove(light)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
 	if act == ACT_IDLE then
 		return ACT_FLY
@@ -141,7 +141,7 @@ function ENT:TranslateActivity(act)
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Manhack_Displacement(angForce, velForce, velTime, ent)
 	if !self.Manhack_HasHit then
 		if angForce == nil then angForce = 35 end
@@ -170,7 +170,7 @@ function ENT:Manhack_Displacement(angForce, velForce, velTime, ent)
 
 		local id = self.Manhack_HitID
 		timer.Simple(velTime, function()
-			if IsValid(self) && self.Manhack_HitID == id then
+			if IsValid(self) and self.Manhack_HitID == id then
 				self:SetMaxYawSpeed(self.TurningSpeed)
 				self.DisableChasingEnemy = false
 				self.DisableWandering = false
@@ -179,11 +179,11 @@ function ENT:Manhack_Displacement(angForce, velForce, velTime, ent)
 		end)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	local dist = self.EnemyData.DistanceNearest
 	if dist then
-		self.Panels = Lerp(FrameTime() *10, self.Panels, (dist <= 275 && IsValid(self:GetEnemy())) && 100 or 0)
+		self.Panels = Lerp(FrameTime() *10, self.Panels, (dist <= 275 and IsValid(self:GetEnemy())) and 100 or 0)
 		if self.Panels >= 25 then
 			if !self.BladeLoop:IsPlaying() then
 				VJ.CreateSound(self, "npc/manhack/mh_blade_snick1.wav", 60)
@@ -200,7 +200,7 @@ function ENT:OnThinkActive()
 		self:SetPoseParameter("PincerBottom", (self.Panels /100) *45)
 
 		local pitch = math.Clamp(self:GetVelocity():Length() /self.Aerial_FlyingSpeed_Calm, 0.85, 1.5) *100
-		if !self.Manhack_HasHit && self:GetActivity() == ACT_FLY && IsValid(self:GetEnemy()) && dist <= 275 && dist > 1 then
+		if !self.Manhack_HasHit and self:GetActivity() == ACT_FLY and IsValid(self:GetEnemy()) and dist <= 275 and dist > 1 then
 			self:SetVelocity(self:GetForward() *200)
 			pitch = 150
 		end
@@ -208,10 +208,10 @@ function ENT:OnThinkActive()
 		self.IdleLoop2:ChangePitch(pitch)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnTouch(ent)
 	if !self.BladeLoop:IsPlaying() then return end
-	if !ent:IsNPC() && !ent:IsPlayer() && !ent:IsNextBot() then
+	if !ent:IsNPC() and !ent:IsPlayer() and !ent:IsNextBot() then
 		VJ.EmitSound(self, "npc/manhack/grind" .. math.random(1, 5) .. ".wav", 75)
 		self:SetMaxYawSpeed(self.TurningSpeed)
 		self.DisableChasingEnemy = false
@@ -247,7 +247,7 @@ function ENT:OnTouch(ent)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
 	if status == "PostDamage" then
 		-- self:Manhack_Displacement(100, nil, nil, dmginfo:GetInflictor() or dmginfo:GetAttacker())
@@ -267,7 +267,7 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 		self.DisableWandering = true
 		local id = self.Manhack_HitID
 		timer.Simple(math.Rand(0.4, 0.7), function()
-			if IsValid(self) && self.Manhack_HitID == id then
+			if IsValid(self) and self.Manhack_HitID == id then
 				self.Manhack_HasHit = false
 				self.DisableChasingEnemy = false
 				self.DisableWandering = false
@@ -275,7 +275,7 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 		end)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self.IdleLoop1:Stop()
 	self.IdleLoop2:Stop()

@@ -9,7 +9,7 @@ ENT.Model = "models/vj_hlr/hl2/strider.mdl"
 ENT.StartHealth = 500
 ENT.HullType = HULL_LARGE
 ENT.VJ_ID_Boss = true
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 
 ENT.BloodColor = VJ.BLOOD_COLOR_WHITE
@@ -101,7 +101,7 @@ ENT.SoundTbl_Death = {
 
 ENT.MinigunDelay = 0.1
 ENT.MinigunSpread = 15
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	-- self:SetCollisionBounds(Vector(35, 35, 42), Vector(-35, -35, -500)) // For default strider model
 	self:SetCollisionBounds(Vector(35, 35, 500), Vector(-35, -35, 0))
@@ -129,7 +129,7 @@ function ENT:Init()
 
 	self:SetStepHeight(168)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "step" then
 		self:PlayFootstepSound()
@@ -138,10 +138,10 @@ function ENT:OnInput(key, activator, caller, data)
 		self:ExecuteMeleeAttack()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	if !self.VJ_Controlled then
-		if IsValid(self:GetEnemy()) && self:GetEnemy():Visible(self) then
+		if IsValid(self:GetEnemy()) and self:GetEnemy():Visible(self) then
 			self.LastSawEnemyPosition = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 			self.DisableChasingEnemy = true
 			if CurTime() > self.NextRandMoveT then
@@ -166,7 +166,7 @@ function ENT:OnThink()
 		self.DisableChasingEnemy = false
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:DoTrace(tPos)
 	local tracedata = {}
 	tracedata.start = self:GetAttachment(self:LookupAttachment("WarpCannon")).Pos
@@ -174,7 +174,7 @@ function ENT:DoTrace(tPos)
 	tracedata.filter = {self}
 	return util.TraceLine(tracedata).HitPos
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:WarpCannon(tPos)
 	local attackpos = self:DoTrace(tPos)
 
@@ -225,10 +225,10 @@ function ENT:WarpCannon(tPos)
 		end
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:StartWarpCannon(doLastPos)
 	self.NextFireT = CurTime() +4
-	self.NextWarpT = CurTime() +(self:Health() <= self:GetMaxHealth() *0.5 && math.Rand(8, 15) or (doLastPos && math.Rand(8, 15) or math.Rand(20, 40)))
+	self.NextWarpT = CurTime() +(self:Health() <= self:GetMaxHealth() *0.5 and math.Rand(8, 15) or (doLastPos and math.Rand(8, 15) or math.Rand(20, 40)))
 	VJ.CreateSound(self, "npc/strider/charging.wav", 110)
 
 	local muz = ents.Create("env_sprite")
@@ -273,7 +273,7 @@ function ENT:StartWarpCannon(doLastPos)
 		targetPos = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 	end
 	if doLastPos then
-		targetPos = self.LastSawEnemyPosition && self.LastSawEnemyPosition or self:GetPos() +self:GetForward() *800
+		targetPos = self.LastSawEnemyPosition and self.LastSawEnemyPosition or self:GetPos() +self:GetForward() *800
 	end
 	sound.EmitHint(SOUND_DANGER, targetPos, 500, SoundDuration("npc/strider/charging.wav") +1, self)
 
@@ -285,23 +285,23 @@ function ENT:StartWarpCannon(doLastPos)
 				targetPos = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 			end
 			if doLastPos then
-				targetPos = self.LastSawEnemyPosition && self.LastSawEnemyPosition or self:GetPos() +self:GetForward() *800
+				targetPos = self.LastSawEnemyPosition and self.LastSawEnemyPosition or self:GetPos() +self:GetForward() *800
 			end
 			self:WarpCannon(targetPos)
 		end
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:ControllAI(enemy, dist, cos)
 	local rmb = self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2)
 	local space = self.VJ_Controller:GetPlayer():KeyDown(IN_JUMP)
-	if enemy:Visible(self) && cos then
+	if enemy:Visible(self) and cos then
 		if rmb then
 			if CurTime() > self.NextFireT then
 				if self.Shots == 15 then
 					self.NextFireT = CurTime() +2
 					self.Shots = 0
-					self.MinigunDelay = math.random(1, 3) == 1 && 0.08 or 0.1
+					self.MinigunDelay = math.random(1, 3) == 1 and 0.08 or 0.1
 					return
 				end
 				local bullet = {}
@@ -360,7 +360,7 @@ function ENT:ControllAI(enemy, dist, cos)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	local controlled = self.VJ_Controlled
 	local dist = self.EnemyData.DistanceNearest
@@ -369,13 +369,13 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		self:ControllAI(enemy, dist, cos)
 		return
 	end
-	if dist <= self.LimitChaseDistance_Max && dist >= self.LimitChaseDistance_Min then
-		if enemy:Visible(self) && cos then
+	if dist <= self.LimitChaseDistance_Max and dist >= self.LimitChaseDistance_Min then
+		if enemy:Visible(self) and cos then
 			if CurTime() > self.NextFireT then
 				if self.Shots == 15 then
 					self.NextFireT = CurTime() +2
 					self.Shots = 0
-					self.MinigunDelay = math.random(1, 3) == 1 && 0.08 or 0.1
+					self.MinigunDelay = math.random(1, 3) == 1 and 0.08 or 0.1
 					return
 				end
 				local bullet = {}
@@ -426,11 +426,11 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 
 				self.NextFireT = CurTime() +self.MinigunDelay
 			end
-			if CurTime() > self.NextWarpT && math.random(1, 100) == 1 then
+			if CurTime() > self.NextWarpT and math.random(1, 100) == 1 then
 				self:StartWarpCannon()
 			end
-		elseif !enemy:Visible(self) && cos then
-			if CurTime() > self.NextWarpT && math.random(1, 20) == 1 && (self:GetEnemyLastKnownPos() != defPos) then
+		elseif !enemy:Visible(self) and cos then
+			if CurTime() > self.NextWarpT and math.random(1, 20) == 1 and (self:GetEnemyLastKnownPos() != defPos) then
 				self:StartWarpCannon(true)
 			end
 		end

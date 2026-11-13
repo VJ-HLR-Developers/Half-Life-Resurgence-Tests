@@ -10,7 +10,7 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Float", 0, "FireTime")
 end
 
-if CLIENT && GetConVar("vj_hlr2_combine_eyeglow"):GetInt() == 1 then
+if CLIENT and GetConVar("vj_hlr2_combine_eyeglow"):GetInt() == 1 then
 	local mat = Material("sprites/light_glow02_add")
 	local size = 12
 	local col = Color(255, 0, 0)

@@ -6,7 +6,7 @@
 EFFECT.Distortion = Material("effects/strider_pinch_dudv")
 EFFECT.BlueExplosive = Material("effects/bluemuzzle")
 EFFECT.BlueElectricity = Material("vj_hl/hl2/effects/lgtning")
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function EFFECT:Init(data)
 	self.StartPos = data:GetStart()
 	self.EndPos = data:GetOrigin()
@@ -23,7 +23,7 @@ function EFFECT:Init(data)
 	self.TracerTime = math.min(1, self.StartPos:Distance(self.EndPos) /10000)
 	self.Length = 0.2
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function EFFECT:Think()
 	if !IsValid(self.Ent) then return false end
 	self.StartPos = self.Ent:GetAttachment(self.Att).Pos
@@ -78,7 +78,7 @@ function EFFECT:Think()
 	end
 	return true
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function EFFECT:Render()
 	render.SetMaterial(self.Distortion)
 	render.DrawBeam(self.StartPos, self.EndPos, 30, math.Rand(0, 1), math.Rand(0, 1) +((self.StartPos -self.EndPos):Length() /128), Color(255, 255, 255, (50 /((self.DieTime -0.5) -CurTime()))))

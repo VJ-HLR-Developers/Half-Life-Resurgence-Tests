@@ -50,7 +50,7 @@ ENT.SoundTbl_Death = "vj_hlr/src/npc/cremator/crem_die.wav"
 
 ENT.Cremator_FlameRange = 370
 ENT.Cremator_FlameDamage = 2
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self.IsFlameActive = false
 	self.IdleLoopStatus = 0
@@ -65,13 +65,13 @@ function ENT:Init()
 	self.FireLoop = CreateSound(self, "vj_hlr/src/npc/cremator/plasma_shoot.wav")
 	self.FireLoop:SetSoundLevel(80)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Controller_Initialize(ply, controlEnt)
 	function controlEnt:OnThink()
 		self.VJC_BullseyeTracking = self:GetNPC():GetIdealActivity() == ACT_RUN
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	-- print(key)
 	if key == "step" then
@@ -109,11 +109,11 @@ function ENT:OnInput(key, activator, caller, data)
 		VJ.EmitSound(self, "physics/metal/weapon_impact_soft" .. math.random(1, 3) .. ".wav", 70)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjPos(projectile)
 	return self:GetAttachment(self:LookupAttachment("muzzle")).Pos
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnChangeActivity(act)
 	if self.IsFlameActive then
 		self.IsFlameActive = false
@@ -124,15 +124,15 @@ function ENT:OnChangeActivity(act)
 		SafeRemoveEntity(self.FireLight)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local dmgType = bit.bor(DMG_BURN, DMG_DISSOLVE, DMG_ENERGYBEAM)
 --
 function ENT:OnThinkActive()
-	if self.Alerted && self.IdleLoopStatus == 0 then
+	if self.Alerted and self.IdleLoopStatus == 0 then
 		self.IdleLoop:Stop()
 		self.AlertLoop:Play()
 		self.IdleLoopStatus = 1
-	elseif !self.Alerted && self.IdleLoopStatus == 1 then
+	elseif !self.Alerted and self.IdleLoopStatus == 1 then
 		self.AlertLoop:Stop()
 		self.IdleLoop:Play()
 		self.IdleLoopStatus = 0
@@ -142,7 +142,7 @@ function ENT:OnThinkActive()
 		local att = self:GetAttachment(self:LookupAttachment("muzzle"))
 		local pos, ang = att.Pos, att.Ang
 		sound.EmitHint(SOUND_DANGER, pos +ang:Forward() *(self.Cremator_FlameRange /2), self.Cremator_FlameRange *2, 0.2, self)
-		VJ.ApplyRadiusDamage(self, self, (self:GetPos() +(self:GetForward() *self:OBBMaxs().y)), self.Cremator_FlameRange, self.Cremator_FlameDamage, dmgType, true, false, {UseConeDegree=35, UseConeDirection=ang:Forward()},
+		VJ.ApplyRadiusDamage(self, self, self:GetPos() +(self:GetForward() *self:OBBMaxs().y), self.Cremator_FlameRange, self.Cremator_FlameDamage, dmgType, true, false, {UseConeDegree=35, UseConeDirection=ang:Forward()},
 		function(ent)
 			if (ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot() or ent.VJ_ID_Prop) then
 				if ent:IsPlayer() then
@@ -159,7 +159,7 @@ function ENT:OnThinkActive()
 	-- self.HasRangeAttack = self:GetIdealActivity() == ACT_RUN
 	self.ConstantlyFaceEnemy = self:GetIdealActivity() == ACT_RUN
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 -- function ENT:TranslateActivity(act)
 -- 	if act == ACT_IDLE then
 -- 		if self.Alerted then
@@ -168,22 +168,22 @@ end
 -- 	end
 -- 	return act
 -- end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnEat(status, statusData)
 	if status == "CheckFood" then
-		return statusData.owner.BloodData && statusData.owner.BloodData.Color != "Oil"
+		return statusData.owner.BloodData and statusData.owner.BloodData.Color != "Oil"
 	elseif status == "BeginEating" then
 		return select(2, self:PlayAnim(ACT_RANGE_ATTACK2, true, false))
 	elseif status == "Eat" then
 		return 999
 	elseif status == "StopEating" then
-		if statusData != "Dead" && self.EatingData.AnimStatus != "None" then
+		if statusData != "Dead" and self.EatingData.AnimStatus != "None" then
 			return 0
 		end
 	end
 	return 0
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:ResetEatingBehavior(statusData)
 	local eatingData = self.EatingData
 	self:SetState(VJ_STATE_NONE)
@@ -203,7 +203,7 @@ function ENT:ResetEatingBehavior(statusData)
 	end
 	self.EatingData = {Target = NULL, NextCheck = eatingData.NextCheck, AnimStatus = "None", OrgIdle = nil}
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	VJ.STOPSOUND(self.IdleLoop)
 	VJ.STOPSOUND(self.AlertLoop)

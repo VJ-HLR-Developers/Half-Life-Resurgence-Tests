@@ -22,7 +22,7 @@ hook.Add("Move","VJ.HLR.AdvisorPsychicPull",function(ply,mv)
 	local current = mv:GetOrigin()
 	local delta = goal -current
 	local held = ply:GetNW2Bool("VJ.HLR.Advisor.TongueHeld",false)
-	local step = held && delta or (delta:Length() > 0.1 && delta:GetNormalized() *math.min(delta:Length(),advisor:GetPullSpeed() *engine.TickInterval()) or zeroVelocity)
+	local step = held and delta or (delta:Length() > 0.1 and delta:GetNormalized() *math.min(delta:Length(),advisor:GetPullSpeed() *engine.TickInterval()) or zeroVelocity)
 	local center = current +ply:OBBCenter()
 	local tr = util.TraceLine({
         start = center,
@@ -30,7 +30,7 @@ hook.Add("Move","VJ.HLR.AdvisorPsychicPull",function(ply,mv)
         mask = MASK_SOLID_BRUSHONLY
     })
 	if !tr.StartSolid then
-		mv:SetOrigin(current +step *(tr.Hit && math.max(tr.Fraction -0.02,0) or 1))
+		mv:SetOrigin(current +step *(tr.Hit and math.max(tr.Fraction -0.02,0) or 1))
 	end
 	mv:SetVelocity(zeroVelocity)
 	mv:SetForwardSpeed(0)
@@ -51,7 +51,7 @@ function ENT:GetTongueHoldPos(target)
             mouth = attachment.Pos
         end
 	end
-	return mouth +self:GetForward() *(target:IsPlayer() && 70 or math.Clamp(target:BoundingRadius() *0.8,50,120)) -target:OBBCenter()
+	return mouth +self:GetForward() *(target:IsPlayer() and 70 or math.Clamp(target:BoundingRadius() *0.8,50,120)) -target:OBBCenter()
 end
 
 if !CLIENT then return end
@@ -113,7 +113,7 @@ hook.Add("PostDrawTranslucentRenderables", "VJ.HLR.AdvisorRender", function(dept
         if IsValid(victim) then
             local tongue = advisor:GetPos() +advisor:GetForward() *66
             local index = advisor:LookupAttachment("tongue_end")
-            if index && index > 0 then
+            if index and index > 0 then
                 local attachment = advisor:GetAttachment(index)
                 if attachment then
                     tongue = attachment.Pos

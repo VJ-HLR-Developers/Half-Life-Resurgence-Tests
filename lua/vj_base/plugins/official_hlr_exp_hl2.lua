@@ -89,9 +89,9 @@ VJ.AddNPC("Ichthyosaur", "npc_vj_hlr2_ichthyosaur", spawnCategory, {SubCategory 
 -- NPC Weapons
 VJ.AddNPCWeapon("VJ_HL2B_HMG1", "weapon_vj_hlr2b_hmg1", spawnCategory)
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
------- Particles ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+------ Particles --------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 VJ.AddParticle("particles/advisor.pcf", {})
 VJ.AddParticle("particles/advisor_fx.pcf", {})
 VJ.AddParticle("particles/vj_hlr_flechette_projectile.pcf", {"hunter_flechette_trail", "hunter_projectile_explosion_1"})
@@ -113,19 +113,19 @@ if CLIENT then
 			if (!IsValid(ent)) then return end
 
 			local parent = ent:GetParent()
-			local checkEnt = IsValid(parent) && parent or ent
-			ent.Mat_cloakfactor = ent.Mat_cloakfactor or (IsValid(parent) && parent.Mat_cloakfactor or 0)
+			local checkEnt = IsValid(parent) and parent or ent
+			ent.Mat_cloakfactor = ent.Mat_cloakfactor or (IsValid(parent) and parent.Mat_cloakfactor or 0)
 			local curValue = ent.Mat_cloakfactor
 			local finalResult = curValue or 0
 			if checkEnt.HLR_UsesCloakSystem then
 				if checkEnt:GetCloaked() then
-					finalResult = checkEnt:IsNPC() && (checkEnt:GetVelocity():Length() > 60 && 0.97 or checkEnt:GetFireTime() > CurTime() && 0.92) or 0.997
+					finalResult = checkEnt:IsNPC() and (checkEnt:GetVelocity():Length() > 60 and 0.97 or checkEnt:GetFireTime() > CurTime() and 0.92) or 0.997
 				else
 					finalResult = 0
 				end
 			end
 			ent.Mat_cloakfactor = Lerp(FrameTime() *0.3, curValue, finalResult)
-			self.CloakColorTint = LerpVector(FrameTime() *0.3, self.CloakColorTint, math_abs(curValue -finalResult) > 0.1 && blueFX or whiteFX)
+			self.CloakColorTint = LerpVector(FrameTime() *0.3, self.CloakColorTint, math_abs(curValue -finalResult) > 0.1 and blueFX or whiteFX)
 			mat:SetVector("$cloakcolortint", self.CloakColorTint)
 			mat:SetFloat(self.Result, ent.Mat_cloakfactor)
 		end

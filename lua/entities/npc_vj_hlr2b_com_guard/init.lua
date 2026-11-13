@@ -17,7 +17,7 @@ ENT.ControllerParams = {
 	FirstP_Offset = Vector(0, 0, 5),
 	FirstP_ShrinkBone = true
 }
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 
 ENT.Bleeds = false
@@ -113,26 +113,26 @@ ENT.SoundTbl_MeleeAttackExtra = "VJ.Impact.Metal_Crush"
 ENT.MainSoundPitch = 100
 ENT.DisableFootStepSoundTimer = true
 ENT.HasExtraMeleeAttackSounds = true
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(20, 20, 90), Vector(-20, -20, 0))
 
 	self.NextKnockdownT = 0
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
-	if act == ACT_IDLE && self.Alerted then
+	if act == ACT_IDLE and self.Alerted then
 		return ACT_IDLE_ANGRY
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnMeleeAttackExecute(status, ent, isProp)
-	if status == "PreDamage" && ent:IsPlayer() then
+	if status == "PreDamage" and ent:IsPlayer() then
 		ent:ViewPunch(Angle(-20, -100, 0))
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "step" then
 		self:PlayFootstepSound()
@@ -145,19 +145,19 @@ function ENT:OnInput(key, activator, caller, data)
 		self:WarpCannon(targetPos)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnRangeAttack(status, enemy)
 	if status == "PostInit" then
 		self:PlayAnim(ACT_RANGE_ATTACK1, true, false, false)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnRangeAttackExecute(status, enemy, projectile)
 	if status == "Init" then
 		return true
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local bit_band = bit.band
 --
 function ENT:OnDamaged(dmginfo, hitgroup, status)
@@ -180,7 +180,7 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 			particle:Fire("Kill", nil, 0.1)
 		else
 			if dmginfo:IsBulletDamage() then
-				if self.HasSounds && self.HasImpactSounds then
+				if self.HasSounds and self.HasImpactSounds then
 					VJ.EmitSound(self, "VJ.Impact.Armor")
 				end
 				if math.random(1, 3) == 1 then
@@ -198,8 +198,8 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 		end
 	elseif status == "PostDamage" then
 		local explosion = dmginfo:IsExplosionDamage()
-		if self:Health() > 0 && (explosion or bit_band(dmginfo:GetDamageType(), DMG_VEHICLE) == DMG_VEHICLE) && CurTime() > self.NextKnockdownT then
-			local dmgAng = ((explosion && dmginfo:GetDamagePosition() or dmginfo:GetAttacker():GetPos()) -self:GetPos()):Angle()
+		if self:Health() > 0 and (explosion or bit_band(dmginfo:GetDamageType(), DMG_VEHICLE) == DMG_VEHICLE) and CurTime() > self.NextKnockdownT then
+			local dmgAng = ((explosion and dmginfo:GetDamagePosition() or dmginfo:GetAttacker():GetPos()) -self:GetPos()):Angle()
 			dmgAng.p = 0
 			dmgAng.r = 0
 			self:TaskComplete()
@@ -218,11 +218,11 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Init" then
 		local explosion = dmginfo:IsExplosionDamage()
-		if (explosion or bit_band(dmginfo:GetDamageType(), DMG_VEHICLE) == DMG_VEHICLE) && CurTime() > self.NextKnockdownT then
+		if (explosion or bit_band(dmginfo:GetDamageType(), DMG_VEHICLE) == DMG_VEHICLE) and CurTime() > self.NextKnockdownT then
 			self.HasDeathAnimation = true
 			self.AnimTbl_Death = "physfall"
 			self.DeathDelayTime = VJ.AnimDurationEx(self, "physfall", false) + VJ.AnimDurationEx(self, "physdeath", false) - 1
@@ -236,7 +236,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 		self:SetBodygroup(1, 1)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:DoTrace(tPos)
 	local tracedata = {}
 	tracedata.start = self:GetAttachment(self:LookupAttachment("muzzle")).Pos
@@ -244,7 +244,7 @@ function ENT:DoTrace(tPos)
 	tracedata.filter = {self}
 	return util.TraceLine(tracedata).HitPos
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:WarpCannon(tPos)
 	local attackpos = self:DoTrace(tPos)
 
@@ -295,7 +295,7 @@ function ENT:WarpCannon(tPos)
 		end
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:StartWarpCannon(doLastPos)
 	VJ.CreateSound(self, "^npc/strider/charging.wav", 110)
 
@@ -341,7 +341,7 @@ function ENT:StartWarpCannon(doLastPos)
 		targetPos = self:GetEnemy():GetPos() +self:GetEnemy():OBBCenter()
 	end
 	if doLastPos then
-		targetPos = self.EnemyData && self.EnemyData.VisiblePos or self:GetPos() +self:GetForward() *1250
+		targetPos = self.EnemyData and self.EnemyData.VisiblePos or self:GetPos() +self:GetForward() *1250
 	end
 	sound.EmitHint(SOUND_DANGER, targetPos, 500, 1, self)
 

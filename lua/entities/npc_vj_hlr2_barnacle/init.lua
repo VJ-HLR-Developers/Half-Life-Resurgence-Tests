@@ -17,7 +17,7 @@ ENT.StartHealth = 30
 ENT.MovementType = VJ_MOVETYPE_STATIONARY
 ENT.CanTurnWhileStationary = false
 ENT.HullType = HULL_SMALL_CENTERED
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_XEN"}
 ENT.BloodColor = VJ.BLOOD_COLOR_RED
 ENT.HasBloodPool = false
@@ -55,7 +55,7 @@ ENT.Barnacle_CurEnt = NULL
 ENT.Barnacle_CurEntMoveType = MOVETYPE_WALK
 ENT.Barnacle_Status = 0
 ENT.Barnacle_NextPullSoundT = 0
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, corpse)
 	corpse:DrawShadow(false)
 	corpse:SetPoseParameter("tongue_height", self.Barnacle_LastHeight)
@@ -63,11 +63,11 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, corpse)
 	corpse:ResetSequence("Death")
 	corpse:SetCycle(1)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(18, 18, 10), Vector(-18, -18, -50))
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	//print(key)
 	if key == "melee_attack" then
@@ -86,14 +86,14 @@ function ENT:OnInput(key, activator, caller, data)
 		self:CreateGibEntity("obj_vj_gib", "models/vj_hlr/gibs/hgib_legbone.mdl", {CollisionDecal = "VJ_HLR1_Blood_Red", Pos = self:LocalToWorld(Vector(0, 0, -25))})
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 hook.Add("SetupMove", "VJ_Barnacle_SetupMove", function(ply, mv)
 	-- Make the player not be able to walk
 	if ply.Barnacle_Grabbed == true then
     	mv:SetMaxClientSpeed(0)
 	end
 end)
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Barnacle_CalculateTongue()
 	-- print(self:GetBoneController(0))
 	-- print(self.Barnacle_LastHeight)
@@ -110,7 +110,7 @@ function ENT:Barnacle_CalculateTongue()
 	self.Barnacle_LastHeight = math.Clamp(height, 128, 1024)
 	self:SetPoseParameter("tongue_height", -math.Clamp(height, -128, 1024))
 
-	if IsValid(trent) && (trent:IsNPC() or trent:IsPlayer()) && self:CheckRelationship(trent) == D_HT && trent.VJ_ID_Boss != true then
+	if IsValid(trent) and (trent:IsNPC() or trent:IsPlayer()) and self:CheckRelationship(trent) == D_HT and trent.VJ_ID_Boss != true then
 		-- If the grabbed enemy is a new enemy then reset the enemy values
 		if self.Barnacle_CurEnt != trent then
 			self:Barnacle_ResetEnt()
@@ -150,32 +150,32 @@ function ENT:Barnacle_CalculateTongue()
 	-- self:SetBoneController(0, -(self:GetPos():Distance(trpos + self:GetUp()*193)))
 	return false
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Barnacle_ResetEnt()
 	if !IsValid(self.Barnacle_CurEnt) then return end
 	self.Barnacle_CurEnt.Barnacle_Grabbed = false
 	self.Barnacle_CurEnt:SetMoveType(self.Barnacle_CurEntMoveType) -- Reset the enemy's move type
 	self.Barnacle_CurEnt = NULL
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	if self.Dead then return end
 	local calc = self:Barnacle_CalculateTongue()
-	if calc == true && self.Barnacle_Status != 1 then
+	if calc == true and self.Barnacle_Status != 1 then
 		self.Barnacle_Status = 1
 		self.NextIdleStandTime = 0
 		self.AnimTbl_IdleStand = ACT_BARNACLE_PULL
-	elseif calc == false && self.Barnacle_Status != 0 then
+	elseif calc == false and self.Barnacle_Status != 0 then
 		self.Barnacle_Status = 0
 		self.NextIdleStandTime = 0
 		self.AnimTbl_IdleStand = ACT_IDLE
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnKilledEnemy(ent, inflictor, wasLast)
 	VJ.EmitSound(self, "vj_hlr/gsrc/npc/barnacle/bcl_bite3.wav")
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Init" then
 		self:Barnacle_ResetEnt()
@@ -183,7 +183,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 		self:SetPos(self:GetPos() + self:GetUp()*-4)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:HandleGibOnDeath(dmginfo, hitgroup)
 	self.HasDeathSounds = false
 	if self.HasGibOnDeathEffects then
@@ -218,7 +218,7 @@ function ENT:HandleGibOnDeath(dmginfo, hitgroup)
 	self:PlaySoundSystem("Gib", "vj_base/gib/splat.wav")
 	return true, {AllowSound = true}
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self:Barnacle_ResetEnt()
 end

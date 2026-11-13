@@ -20,7 +20,7 @@ if CLIENT then
 
         local hookName = "VJ_HLR2_ZombieAssassinScream_" .. ply:EntIndex()
         hook.Add("RenderScreenspaceEffects", hookName, function()
-            if !IsValid(ply) or (IsValid(ply) && (ply:Health() <= 0 or ply.VJ_HLR2_ZombieAssassinScreamT < CurTime())) then
+            if !IsValid(ply) or (IsValid(ply) and (ply:Health() <= 0 or ply.VJ_HLR2_ZombieAssassinScreamT < CurTime())) then
                 hook.Remove("RenderScreenspaceEffects", hookName)
                 ply.VJ_HLR2_ZombieAssassinRing:ChangeVolume(0)
                 ply.VJ_HLR2_ZombieAssassinRing:Stop()

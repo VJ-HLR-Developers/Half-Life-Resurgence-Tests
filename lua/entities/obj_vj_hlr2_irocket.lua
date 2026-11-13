@@ -10,7 +10,7 @@ ENT.Base = "obj_vj_projectile_base"
 ENT.PrintName = "Combine Rocket"
 ENT.Author = "DrVrej"
 ENT.Contact = "http://steamcommunity.com/groups/vrejgaming"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 if (CLIENT) then
 	VJ.AddKillIcon("obj_vj_hlr2_irocket", ENT.PrintName, VJ.KILLICON_PROJECTILE)
 
@@ -30,7 +30,7 @@ if (CLIENT) then
 		end
 	end
 end
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 if !SERVER then return end
 
 ENT.Model = "models/weapons/w_missile_launch.mdl"
@@ -46,28 +46,28 @@ ENT.SoundTbl_OnCollide = "ambient/explosions/explode_8.wav"
 
 -- Custom
 ENT.Rocket_Follow = true
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	//ParticleEffectAttach("vj_rocket_idle1_smoke", PATTACH_ABSORIGIN_FOLLOW, self, 0)
 	//ParticleEffectAttach("vj_rocket_idle2_smoke2", PATTACH_ABSORIGIN_FOLLOW, self, 0)
 	ParticleEffectAttach("electrical_arc_01_system", PATTACH_POINT_FOLLOW, self, 0)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	local owner = self:GetOwner()
 	local phys = self:GetPhysicsObject()
-	if IsValid(owner) && IsValid(phys) then
+	if IsValid(owner) and IsValid(phys) then
 		local pos = self:GetPos() + self:GetForward() * 200
-		if owner:IsNPC() && IsValid(owner:GetEnemy()) then
+		if owner:IsNPC() and IsValid(owner:GetEnemy()) then
 			pos = owner:GetEnemy():GetPos() + owner:GetEnemy():OBBCenter()
-		elseif (owner:IsPlayer()) && self.Rocket_Follow == true then
+		elseif (owner:IsPlayer()) and self.Rocket_Follow == true then
 			pos = self:GetOwner():GetEyeTrace().HitPos
 		end
 		phys:SetVelocity(self:CalculateProjectile("Line", self:GetPos(), pos, 2000))
 		self:SetAngles((pos - self:GetPos()):Angle())
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDestroy(data, phys)
 	util.ScreenShake(data.HitPos, 16, 200, 1, 3000)
 

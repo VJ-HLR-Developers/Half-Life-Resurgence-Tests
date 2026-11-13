@@ -13,7 +13,7 @@ ENT.HealthRegenParams = {
 	Delay = VJ.SET(0.1, 0.1),
 }
 ENT.HullType = HULL_HUMAN
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_PLAYER_ALLY"}
 ENT.AlliedWithPlayerAllies = true
 ENT.BloodColor = VJ.BLOOD_COLOR_RED
@@ -52,7 +52,7 @@ ENT.WeaponsList = {
 		"weapon_vj_crossbow"
 	},
 }
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self.NextWeaponSwitchT = CurTime() + math.Rand(2, 4)
 
@@ -64,14 +64,14 @@ function ENT:Init()
 
 	self:DoChangeWeapon(VJ.PICK(self.WeaponsList["Normal"]), true)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
-	if math.random(1, 2) == 1 && ent:IsNPC() && ent.VJ_ID_Headcrab then
+	if math.random(1, 2) == 1 and ent:IsNPC() and ent.VJ_ID_Headcrab then
 		self:DoChangeWeapon("weapon_vj_crowbar", true)
 		return
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	local ent = self:GetEnemy()
 	local dist = self.EnemyData.DistanceNearest
@@ -80,22 +80,22 @@ function ENT:OnThinkActive()
 		local selectType = false
 		if dist > 2200 then
 			selectType = "Far"
-		elseif dist <= 2200 && dist > 650 then
+		elseif dist <= 2200 and dist > 650 then
 			selectType = "Normal"
 		else
 			selectType = "Close"
 		end
 
-		if selectType != false && !self:IsBusy() && CurTime() > self.NextWeaponSwitchT && math.random(1, wep:Clip1() > 0 && (wep:Clip1() <= wep:GetMaxClip1() *0.35) && 1 or (selectType == "Close" && 20 or 150)) == 1 then
+		if selectType != false and !self:IsBusy() and CurTime() > self.NextWeaponSwitchT and math.random(1, wep:Clip1() > 0 and (wep:Clip1() <= wep:GetMaxClip1() *0.35) and 1 or (selectType == "Close" and 20 or 150)) == 1 then
 			self:DoChangeWeapon(VJ.PICK(self.WeaponsList[selectType]), true)
 			wep = self:GetActiveWeapon()
 			self.NextWeaponSwitchT = CurTime() + math.Rand(6, math.Round(math.Clamp(wep:Clip1() *0.5, 1, wep:Clip1())))
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnGrenadeAttackExecute(status, grenade, overrideEnt, landDir, landingPos)
-	if status == "PostSpawn" && !IsValid(overrideEnt) then
+	if status == "PostSpawn" and !IsValid(overrideEnt) then
 		-- Glow and trail are both based on the original: https://github.com/ValveSoftware/source-sdk-2013/blob/master/src/game/server/hl2/grenade_frag.cpp#L158
 		local redGlow = ents.Create("env_sprite")
 		redGlow:SetKeyValue("model", "sprites/redglow1.vmt")
@@ -117,12 +117,12 @@ function ENT:OnGrenadeAttackExecute(status, grenade, overrideEnt, landDir, landi
 		grenade.IdleSoundPitch = VJ.SET(100, 100)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
 	if status == "PreDamage" then
 		-- Absorb bullet damage
 		if dmginfo:IsBulletDamage() then
-			if self.HasSounds && self.HasImpactSounds then VJ.EmitSound(self, "VJ.Impact.Armor") end
+			if self.HasSounds and self.HasImpactSounds then VJ.EmitSound(self, "VJ.Impact.Armor") end
 			if math.random(1, 3) == 1 then
 				dmginfo:ScaleDamage(0.50)
 				local spark = ents.Create("env_spark")
@@ -142,7 +142,7 @@ function ENT:OnDamaged(dmginfo, hitgroup, status)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Finish" then
 		local myCenterPos = self:GetPos() + self:OBBCenter()
@@ -153,7 +153,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 				e:SetAngles(self:GetAngles())
 				e:Spawn()
 				local phys = e:GetPhysicsObject()
-				if ((IsValid(dmginfo:GetInflictor()) && dmginfo:GetInflictor():GetClass() == "prop_combine_ball") or (!IsValid(dmginfo:GetInflictor()))) && IsValid(phys) then
+				if ((IsValid(dmginfo:GetInflictor()) and dmginfo:GetInflictor():GetClass() == "prop_combine_ball") or (!IsValid(dmginfo:GetInflictor()))) and IsValid(phys) then
 					phys:SetMass(60)
 					phys:ApplyForceCenter(dmginfo:GetDamageForce())
 				end
@@ -164,7 +164,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 		e:SetAngles(self:GetAngles())
 		e:Spawn()
 		local phys = e:GetPhysicsObject()
-		if ((IsValid(dmginfo:GetInflictor()) && dmginfo:GetInflictor():GetClass() == "prop_combine_ball") or (!IsValid(dmginfo:GetInflictor()))) && IsValid(phys) then
+		if ((IsValid(dmginfo:GetInflictor()) and dmginfo:GetInflictor():GetClass() == "prop_combine_ball") or (!IsValid(dmginfo:GetInflictor()))) and IsValid(phys) then
 			phys:SetMass(60)
 			phys:ApplyForceCenter(dmginfo:GetDamageForce())
 		end
@@ -173,7 +173,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 		e:SetAngles(self:GetAngles())
 		e:Spawn()
 		local phys = e:GetPhysicsObject()
-		if ((IsValid(dmginfo:GetInflictor()) && dmginfo:GetInflictor():GetClass() == "prop_combine_ball") or (!IsValid(dmginfo:GetInflictor()))) && IsValid(phys) then
+		if ((IsValid(dmginfo:GetInflictor()) and dmginfo:GetInflictor():GetClass() == "prop_combine_ball") or (!IsValid(dmginfo:GetInflictor()))) and IsValid(phys) then
 			phys:SetMass(60)
 			phys:ApplyForceCenter(dmginfo:GetDamageForce())
 		end

@@ -36,7 +36,7 @@ ENT.SoundTbl_Death = "npc/combine_gunship/gunship_explode2.wav"
 ENT.AlertSoundLevel = 150
 ENT.PainSoundLevel = 150
 ENT.DeathSoundLevel = 150
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(140, 140, 100), Vector(-140, -140, -75))
 	self:SetPos(self:GetPos() +Vector(0, 0, 400))
@@ -70,11 +70,11 @@ function ENT:Init()
 
 	self:CreateBoneFollowers()
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:BarrageFire()
 	local i = 0
 	timer.Create("vj_timer_fire_" .. self:EntIndex(), 0.1, 20, function()
-		if IsValid(self:GetEnemy()) && !self.Dead then
+		if IsValid(self:GetEnemy()) and !self.Dead then
 			i = i +1
 			local att = self:GetAttachment(1)
 			sound.EmitHint(SOUND_DANGER, self:GetEnemy():GetPos(), 250, 0.25, self)
@@ -122,24 +122,24 @@ function ENT:BarrageFire()
 		end
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	local dist = self.EnemyData.DistanceNearest
-	if dist <= 4000 && self:Visible(self:GetEnemy()) && CurTime() > self.NextFireT then
+	if dist <= 4000 and self:Visible(self:GetEnemy()) and CurTime() > self.NextFireT then
 		self:BarrageFire()
 		VJ.CreateSound(self, "npc/combine_gunship/attack_start2.wav", 100)
 		self.NextFireT = CurTime() +8
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:BellyCannon(ent)
 	self:StartWarpCannon()
 end
 
 ENT.ConstantlyFaceEnemy = true
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
-	if self.CarpetBombing && CurTime() > self.NextBombT then
+	if self.CarpetBombing and CurTime() > self.NextBombT then
 		if !IsValid(self:GetEnemy()) then
 			self.CarpetBombing = false
 			return
@@ -160,7 +160,7 @@ function ENT:OnThink()
 		self:SetLayerPriority(gesture, 1)
 		self:SetLayerPlaybackRate(gesture, 0.5)
 	elseif IsValid(self:GetEnemy()) then
-		if CurTime() > self.NextBombT && !self.CarpetBombing then
+		if CurTime() > self.NextBombT and !self.CarpetBombing then
 			-- local tr = util.TraceHull({
 				-- start = self:GetPos(),
 				-- endpos = (self:GetPos() +self:GetUp() *-15000),
@@ -168,7 +168,7 @@ function ENT:OnThink()
 				-- maxs = self:OBBMaxs(),
 				-- filter = {self}
 			-- })
-			-- if IsValid(tr.Entity) && self:Disposition(tr.Entity) == D_HT then
+			-- if IsValid(tr.Entity) and self:Disposition(tr.Entity) == D_HT then
 			if math.random(1, 80) == 1 then
 				self.CarpetBombing = true
 			end
@@ -188,9 +188,9 @@ function ENT:OnThink()
 			-- self.PP_Accel = 0
 			-- return
 		-- end
-		-- self.PP_Vert = self:MovingUp() && 35 or self:MovingDown() && -35 or self.PP_Vert +math.Rand(-5, 5)
-		-- self.PP_Horz = self:MovingLeft() && -35 or self:MovingRight() && 35 or self.PP_Horz +math.Rand(-5, 5)
-		-- self.PP_Accel = self:MovingForward() && 1 or self:MovingBackward() && -1 or self.PP_Accel +math.Rand(-0.1, 0.1)
+		-- self.PP_Vert = self:MovingUp() and 35 or self:MovingDown() and -35 or self.PP_Vert +math.Rand(-5, 5)
+		-- self.PP_Horz = self:MovingLeft() and -35 or self:MovingRight() and 35 or self.PP_Horz +math.Rand(-5, 5)
+		-- self.PP_Accel = self:MovingForward() and 1 or self:MovingBackward() and -1 or self.PP_Accel +math.Rand(-0.1, 0.1)
 	-- else
 		-- self.PP_Vert = math.Clamp(self.PP_Vert +math.Rand(-5, 5), -12, 12)
 		-- self.PP_Horz = math.Clamp(self.PP_Horz +math.Rand(-5, 5), -12, 12)
@@ -212,7 +212,7 @@ function ENT:OnThink()
 		self.FireLP:Stop()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Init" then
 		local deathCorpse = ents.Create("prop_vj_animatable")
@@ -247,11 +247,11 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 			util.BlastDamage(ent, ent, pos, 200, 40)
 			util.ScreenShake(pos, 100, 200, 1, 2500)
 			ParticleEffect("vj_explosion2", pos, Angle(), nil)
-			if math.random(1, 4) == 1 && ent:GetClass() != "prop_ragdoll" then VJ.CreateSound(ent, "npc/combine_gunship/gunship_pain.wav", 90, math.random(95, 110)) end
+			if math.random(1, 4) == 1 and ent:GetClass() != "prop_ragdoll" then VJ.CreateSound(ent, "npc/combine_gunship/gunship_pain.wav", 90, math.random(95, 110)) end
 		end
 
 		function deathCorpse:Think()
-			if CurTime() > self.NextExpT && math.random(1, 3) == 1 then
+			if CurTime() > self.NextExpT and math.random(1, 3) == 1 then
 				self.NextExpT = CurTime() + math.Rand(0.2, 0.5)
 				local expPos = self:GetPos() + Vector(math.Rand(-150, 150), math.Rand(-150, 150), math.Rand(-150, -50))
 				Explode(deathCorpse, expPos)
@@ -315,7 +315,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 			local corpse = self.Corpse
 			for i = 1, 6 do
 				timer.Simple(i *math.Rand(0.25, 0.45), function()
-					if IsValid(corpse) && math.random(1, 2) == 1 then
+					if IsValid(corpse) and math.random(1, 2) == 1 then
 						local expPos = corpse:GetPos() + Vector(math.Rand(-150, 150), math.Rand(-150, 150), math.Rand(-150, -50))
 						Explode(corpse, expPos)
 					end
@@ -326,7 +326,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:DoTrace()
 	local tracedata = {}
 	tracedata.start = self:GetAttachment(self:LookupAttachment("bellygun")).Pos
@@ -334,7 +334,7 @@ function ENT:DoTrace()
 	tracedata.filter = {self}
 	return util.TraceLine(tracedata).HitPos
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:WarpCannon()
 	local attackpos = self:DoTrace()
 
@@ -386,7 +386,7 @@ function ENT:WarpCannon()
 		end
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:StartWarpCannon()
 	VJ.CreateSound(self, "npc/strider/charging.wav", 110)
 
@@ -432,7 +432,7 @@ function ENT:StartWarpCannon()
 		end
 	end)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self.IdleLP1:Stop()
 	self.IdleLP2:Stop()

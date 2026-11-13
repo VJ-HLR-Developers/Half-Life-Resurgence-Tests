@@ -7,7 +7,7 @@ ENT.Category = "Half-Life Resurgence"
 
 if CLIENT then
 	function ENT:Think()
-		self.RPM = self.RPM && self.RPM +(1500 *FrameTime()) or 0
+		self.RPM = self.RPM and self.RPM +(1500 *FrameTime()) or 0
 		local Rot1 = Angle(self.RPM, 0, 0)
 		local Rot2 = Angle(0, 0, self.RPM)
 		local Rot3 = Angle(0, 0, self.RPM)

@@ -13,7 +13,7 @@ ENT.Aerial_FlyingSpeed_Calm = 180
 ENT.Aerial_FlyingSpeed_Alerted = 250
 ENT.Aerial_AnimTbl_Calm = ACT_IDLE
 ENT.Aerial_AnimTbl_Alerted = "mortar_forward"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 ENT.BloodColor = VJ.BLOOD_COLOR_BLUE
 
@@ -55,7 +55,7 @@ ENT.SoundTbl_Death = "vj_hlr/src/npc/waste_scanner/grenade_fire.wav"
 
 ENT.BreathSoundLevel = 75
 ENT.AlertSoundLevel = 90
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(33, 33, 26), Vector(-33, -33, -30))
 
@@ -72,15 +72,15 @@ function ENT:Init()
 	-- glowFX:Fire("SetParentAttachment", "2", 0)
 	self:DeleteOnRemove(glowFX)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjPos(projectile)
 	return self:GetPos() + self:GetUp() * 10 + self:GetForward() * -20
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjVel(projectile)
 	return self:CalculateProjectile("Curve", projectile:GetPos(), self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1200)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnFlinch(dmginfo, hitgroup, status)
 	if status == "Init" then
 		local dmgtype = dmginfo:GetDamageType()
@@ -91,7 +91,7 @@ function ENT:OnFlinch(dmginfo, hitgroup, status)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Init" then
 		ParticleEffect("explosion_turret_break", self:GetPos(), Angle(), nil)

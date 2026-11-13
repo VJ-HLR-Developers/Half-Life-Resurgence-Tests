@@ -61,7 +61,7 @@ ENT.SoundTbl_Pain = {
 	"npc/scanner/scanner_pain1.wav",
 	"npc/scanner/scanner_pain2.wav"
 }
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(12, 12, 15), Vector(-12, -12, -15))
 
@@ -76,7 +76,7 @@ function ENT:Init()
 	self.EyeSprite:SetKeyValue("spawnflags", "1")
 	self.EyeSprite:SetParent(self)
 	self.EyeSprite:SetOwner(self)
-	self.EyeSprite:Fire("SetParentAttachment", self:LookupAttachment("eye") > 0 && "eye" or "eyes", 0)
+	self.EyeSprite:Fire("SetParentAttachment", self:LookupAttachment("eye") > 0 and "eye" or "eyes", 0)
 	self.EyeSprite:Spawn()
 	self:DeleteOnRemove(self.EyeSprite)
 
@@ -146,19 +146,19 @@ function ENT:Init()
 -- flex_vert: 0.5 ( -20, 20 )
 -- flex_horz: 0.5 ( -20, 20 )
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	-- local vel = self:GetVelocity()
 	-- self:SetPoseParameter("flex_vert", vel.z)
 	-- self:SetPoseParameter("flex_horz", -vel.x)
 	-- self:SetPoseParameter("tail_control", vel.y)
 	self:SetPoseParameter("dynamo_wheel", Lerp(FrameTime() *3, self:GetPoseParameter("dynamo_wheel"), self:GetPoseParameter("dynamo_wheel") +1))
-	self:SetPoseParameter("alert_control", IsValid(self:GetEnemy()) && Lerp(FrameTime() *5, self:GetPoseParameter("alert_control"), 1) || Lerp(FrameTime() *3, self:GetPoseParameter("alert_control"), 0))
+	self:SetPoseParameter("alert_control", IsValid(self:GetEnemy()) and Lerp(FrameTime() *5, self:GetPoseParameter("alert_control"), 1) or Lerp(FrameTime() *3, self:GetPoseParameter("alert_control"), 0))
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	local dist = self.EnemyData.DistanceNearest
-	if dist <= self.LimitChaseDistance_Max && CurTime() > self.NextCameraAttackT && !self.DoingCameraAttack && math.random(1, 20) == 1 then
+	if dist <= self.LimitChaseDistance_Max and CurTime() > self.NextCameraAttackT and !self.DoingCameraAttack and math.random(1, 20) == 1 then
 		self.DoingCameraAttack = true
 		VJ.CreateSound(self, "npc/scanner/scanner_blip1.wav", 75)
 		if !self.HLR_IsClawScanner then
@@ -187,7 +187,7 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		else
 			VJ.CreateSound(self, "npc/scanner/scanner_photo1.wav", 75)
 			for _, v in pairs(ents.FindByClass("npc_vj_hlr2_com_strider")) do
-				if v:CheckRelationship(v) == D_LI && !IsValid(v:GetEnemy()) && !v:IsBusy() then
+				if v:CheckRelationship(v) == D_LI and !IsValid(v:GetEnemy()) and !v:IsBusy() then
 					v:ForceSetEnemy(self, true)
 					v:SCHEDULE_ALERT_CHASE(true)
 				end
@@ -213,24 +213,24 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	self.ScanLoop:Stop()
 	self.ScanLoop:Play()
 	if self.HLR_IsClawScanner then
 		for _, v in pairs(ents.FindByClass("npc_vj_hlr2_com_strider")) do
-			if v:CheckRelationship(v) == D_LI && !IsValid(v:GetEnemy()) && !v:IsBusy() then
+			if v:CheckRelationship(v) == D_LI and !IsValid(v:GetEnemy()) and !v:IsBusy() then
 				v:ForceSetEnemy(self, true)
 				v:SCHEDULE_ALERT_CHASE(true)
 			end
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnResetEnemy()
 	self.ScanLoop:Stop()
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDeath(dmginfo, hitgroup, status)
 	if status == "Init" then
 		ParticleEffect("explosion_turret_break", self:GetPos(), Angle(), nil)
@@ -239,7 +239,7 @@ function ENT:OnDeath(dmginfo, hitgroup, status)
 		VJ.EmitSound(self, "npc/scanner/scanner_electric2.wav", 80)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self.ScanLoop:Stop()
 end

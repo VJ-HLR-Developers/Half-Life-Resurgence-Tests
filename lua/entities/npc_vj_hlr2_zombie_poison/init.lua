@@ -40,7 +40,7 @@ ENT.SoundTbl_MeleeAttackExtra = {"npc/zombie/claw_strike1.wav", "npc/zombie/claw
 ENT.SoundTbl_MeleeAttackMiss = {"npc/zombie/claw_miss1.wav", "npc/zombie/claw_miss2.wav"}
 
 ENT.HeadcrabClass = "npc_vj_hlr2_headcrab_poison"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:SetSlump(doSlump)
 	if doSlump then
 		self:SetState(VJ_STATE_ONLY_ANIMATION_NOATTACK)
@@ -58,15 +58,15 @@ function ENT:SetSlump(doSlump)
 		self.SoundTbl_Breath = self.SoundTbl_DefBreath
 	end
 	self.IsSlumped = doSlump
-	self.CanFlinch = doSlump && 0 or 1
+	self.CanFlinch = doSlump and 0 or 1
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	if self.IsSlumped then
 		self:SetSlump(false)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	local zType = self.ZombieType or math.random(1, 8)
 	self.SlumpAnimation = ACT_IDLE
@@ -83,10 +83,10 @@ function ENT:Init()
 
 	if self.ZombieType != 69 then
 		if zType != 4 then -- 4 skin is normal poison zombie
-			local hp = self.StartHealth *((zType == 1 && zType == 3) && 1.2 or (zType >= 5 && zType <= 7) && 1.5 or zType == 8 && 2 or 1)
+			local hp = self.StartHealth *((zType == 1 and zType == 3) and 1.2 or (zType >= 5 and zType <= 7) and 1.5 or zType == 8 and 2 or 1)
 			self:SetHealth(hp)
 			self:SetMaxHealth(hp)
-			if (zType == 1 && zType == 3) or (zType >= 5 && zType <= 7) then
+			if (zType == 1 and zType == 3) or (zType >= 5 and zType <= 7) then
 				self.DeathLoot = "weapon_frag"
 				self.DeathLootChance = 12
 			elseif zType == 8 then
@@ -95,7 +95,7 @@ function ENT:Init()
 			end
 			if zType == 3 then
 				self.SoundTbl_FootStepAdd = {"vj_hlr/src/npc/zolice/gear1.wav", "vj_hlr/src/npc/zolice/gear2.wav", "vj_hlr/src/npc/zolice/gear3.wav"}
-			elseif zType >= 5 && zType <= 8 then
+			elseif zType >= 5 and zType <= 8 then
 				self.SoundTbl_FootStepAdd = {"vj_hlr/src/npc/zombine/gear1.wav", "vj_hlr/src/npc/zombine/gear2.wav", "vj_hlr/src/npc/zombine/gear3.wav"}
 			end
 		end
@@ -111,7 +111,7 @@ function ENT:Init()
 	self.ReleasedHeadcrabs = {}
 	self.NextThrowT = CurTime() +math.Rand(1, 3)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:ThrowHeadcrab(pos)
 	local current = self.Headcrabs
 	if current == 0 then return end
@@ -146,7 +146,7 @@ function ENT:ThrowHeadcrab(pos)
 	-- 	undo.Finish()
 	-- end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "step" then
 		VJ.EmitSound(self, self.SoundTbl_FootStep, self.FootstepSoundLevel)
@@ -163,16 +163,16 @@ function ENT:OnInput(key, activator, caller, data)
 		end
 	elseif key == "throw" then
 		local ent = self:GetEnemy()
-		self:ThrowHeadcrab(IsValid(ent) && ent:GetPos() +ent:OBBCenter() or self:GetPos() +self:GetForward() *400 +self:OBBCenter())
+		self:ThrowHeadcrab(IsValid(ent) and ent:GetPos() +ent:OBBCenter() or self:GetPos() +self:GetForward() *400 +self:OBBCenter())
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkAttack(isAttacking, enemy)
 	local eneData = self.EnemyData
 	local dist = eneData.DistanceNearest
 	local headcrabs = self.Headcrabs
 
-	if headcrabs > 0 && ((self.VJ_Controlled && self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2)) or (!self.VJ_Controlled && dist <= 700 && dist > 250 && math.random(1, 50) == 1 && eneData.Visible && CurTime() > self.NextThrowT && !self:IsBusy())) then
+	if headcrabs > 0 and ((self.VJ_Controlled and self.VJ_Controller:GetPlayer():KeyDown(IN_ATTACK2)) or (!self.VJ_Controlled and dist <= 700 and dist > 250 and math.random(1, 50) == 1 and eneData.Visible and CurTime() > self.NextThrowT and !self:IsBusy())) then
 		if dist <= 350 then
 			self:PlayAnim("headcrab2Leap", true, false, true)
 		else
@@ -189,19 +189,19 @@ function ENT:OnThinkAttack(isAttacking, enemy)
 		self.NextThrowT = CurTime() + math.random(8, 12)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	if self.IsSlumped then
 		self.IdleSoundBlockTime = CurTime() +math.random(4, 8)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnBleed(dmginfo, hitgroup)
 	if self.IsSlumped then
 		self:SetSlump(false)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 	if self:GetBodygroup(1) == 0 then
 		return false
@@ -225,13 +225,13 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 	local dmgtype = dmginfo:GetDamageType()
 	if hitgroup == HITGROUP_HEAD then
 		ent:SetBodygroup(1, 0)
-		local mdl = self.HeadcrabClass == "npc_vj_hlr2b_headcrab_poison" && "models/vj_hlr/hl2b/headcrab_poison.mdl" or "models/headcrabblack.mdl"
+		local mdl = self.HeadcrabClass == "npc_vj_hlr2b_headcrab_poison" and "models/vj_hlr/hl2b/headcrab_poison.mdl" or "models/headcrabblack.mdl"
 		self:CreateExtraDeathCorpse(
 			"prop_ragdoll",
 			mdl,
 			{Pos = self:GetAttachment(self:LookupAttachment("headcrab1")).Pos or self:EyePos()})
 	else
-		if math.random(1, (dmgtype == DMG_CLUB or dmgtype == DMG_SLASH or DMG_BLAST) && 1 or 3) == 1 then
+		if math.random(1, (dmgtype == DMG_CLUB or dmgtype == DMG_SLASH or DMG_BLAST) and 1 or 3) == 1 then
 			ent:SetBodygroup(1, 0)
 			local crab = ents.Create(self.HeadcrabClass or "npc_vj_hlr2_headcrab_poison")
 			crab:SetPos(self:GetAttachment(self:LookupAttachment("headcrab1")).Pos or self:EyePos())
@@ -246,18 +246,18 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
 	if act == ACT_IDLE then
 		if self.IsSlumped then
 			return self.SlumpAnimation
 		end
-	elseif (act == ACT_RUN or act == ACT_WALK) && self:IsOnFire() then
+	elseif (act == ACT_RUN or act == ACT_WALK) and self:IsOnFire() then
 		return ACT_WALK_ON_FIRE
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	if !self.Dead then
 		for _, v in pairs(self.ReleasedHeadcrabs) do

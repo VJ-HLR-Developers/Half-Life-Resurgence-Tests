@@ -12,7 +12,7 @@ ENT.MovementType = VJ_MOVETYPE_STATIONARY
 ENT.TurningSpeed = 2
 
 ENT.VJ_NPC_Class = {"CLASS_HYDRA"}
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.BloodColor = VJ.BLOOD_COLOR_BLUE
 
 ENT.HasMeleeAttack = true
@@ -66,7 +66,7 @@ ENT.SoundTbl_Pain = {
 	-- Enumerations --
 -- CHAIN_LINKS = 32
 -- BONE_COUNT = 47
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(20, 20, 250), Vector(-20, -20, 0))
 	self.HeartBeatSnd = "vj_hlr/src/npc/hydra/hydra_heartloop" .. math.random(1, 2) .. ".wav"
@@ -93,7 +93,7 @@ function ENT:Init()
 	-- end
 	-- self:CalcChain(self:GetPos(), self.tbl_HydraBones)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CalcChain(pos, bones)
 	local tblData = {}
 	local doRun = false
@@ -126,7 +126,7 @@ function ENT:CalcChain(pos, bones)
 			local dx = dt
 			if dist +dt >= bones[i].Length then
 				local s = (dx -(dt -(len -dist))) / dx
-				if (s < 0 || s > 1) then
+				if (s < 0 or s > 1) then
 					s = 0
 				end
 				-- Catmull_Rom_Spline( chain[(i<CHAIN_LINKS-1)?i+1:CHAIN_LINKS-1], chain[i], chain[(i>0)?i-1:0], chain[(i>1)?i-2:0], s, pos[j] );
@@ -150,7 +150,7 @@ function ENT:CalcChain(pos, bones)
 	return tblData
 end
 local lerp = 0
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:MoveHead(pos, rate, bones)
 	if CurTime() > self.NextRefreshRate then
 		for i = 0, #bones do
@@ -170,13 +170,13 @@ function ENT:MoveHead(pos, rate, bones)
 		self.NextRefreshRate = CurTime() +rate
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key)
 	if key == "melee" then
 		self:ExecuteMeleeAttack()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	if CurTime() > self.NextHeartBeatT then
 		self.HeartBeat:Stop()
@@ -207,5 +207,5 @@ function ENT:OnThink()
 	-- local pos, ang = self:GetBonePosition(47)
 	-- self:ManipulateBonePosition(47, pos +self:GetForward() *0.1)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove() self.HeartBeat:Stop() end

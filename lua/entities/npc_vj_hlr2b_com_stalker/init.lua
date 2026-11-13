@@ -8,7 +8,7 @@ include("shared.lua")
 ENT.Model = "models/vj_hlr/hl2b/stalker.mdl"
 ENT.StartHealth = 50
 ENT.HullType = HULL_HUMAN
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_COMBINE"}
 ENT.BloodColor = VJ.BLOOD_COLOR_RED
 ENT.BloodParticle = "blood_impact_red_01_mist"
@@ -83,7 +83,7 @@ ENT.SoundTbl_Death = {
 }
 
 ENT.MainSoundPitch = 100
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(20, 20, 65), Vector(-20, -20, 0))
 	self.Laser = CreateSound(self, "vj_hlr/src/npc/beta_stalker/laser_burn.wav")
@@ -91,7 +91,7 @@ function ENT:Init()
 	self.NextLAnimT = 0
 	self.NextRunAwayT = 0
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "step" then
 		self:PlayFootstepSound()
@@ -99,7 +99,7 @@ function ENT:OnInput(key, activator, caller, data)
 		self:ExecuteMeleeAttack()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:FireLaser()
 	if IsValid(self:GetEnemy()) then
 		local startpos =  self:GetAttachment(1).Pos
@@ -122,7 +122,7 @@ function ENT:FireLaser()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:LaserReset()
 	self.IsLaserAttacking = false
 	self.Laser:Stop()
@@ -134,7 +134,7 @@ function ENT:LaserReset()
 		self.EyeGlow = nil
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	if self.IsLaserAttacking then
 		if CurTime() > self.NextLAnimT then
@@ -163,7 +163,7 @@ function ENT:OnThink()
 	if !self.VJ_Controlled then
 		local ent = self:GetEnemy()
 		if IsValid(ent) then
-			if self:Visible(ent) && (CurTime() > self.NextRunAwayT) && ent:GetPos():Distance(self:GetPos()) < self.LimitChaseDistance_Max && ent:GetPos():Distance(self:GetPos()) > self.LimitChaseDistance_Min then
+			if self:Visible(ent) and (CurTime() > self.NextRunAwayT) and ent:GetPos():Distance(self:GetPos()) < self.LimitChaseDistance_Max and ent:GetPos():Distance(self:GetPos()) > self.LimitChaseDistance_Min then
 				if !self.IsLaserAttacking then
 					self.IsLaserAttacking = true
 					VJ.EmitSound(self, "vj_hlr/src/npc/beta_stalker/laser_start.wav", 70, 100)
@@ -186,17 +186,17 @@ function ENT:OnThink()
 			end
 		end
 	end
-	if !IsValid(self:GetEnemy()) || IsValid(self:GetEnemy()) && self:GetEnemy():Health() <= 0 && self.IsLaserAttacking then
+	if !IsValid(self:GetEnemy()) or IsValid(self:GetEnemy()) and self:GetEnemy():Health() <= 0 and self.IsLaserAttacking then
 		self:LaserReset()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self.Laser:Stop()
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDamaged(dmginfo, hitgroup, status)
-	if status == "PostDamage" && CurTime() > self.NextRunAwayT && !self.VJ_Controlled then
+	if status == "PostDamage" and CurTime() > self.NextRunAwayT and !self.VJ_Controlled then
 		self:LaserReset()
 		VJ.CreateSound(self, self.SoundTbl_Scramble, 80, 100)
 		self:SCHEDULE_COVER_ENEMY("TASK_RUN_PATH", function(x) x.RunCode_OnFail = function() self.NextRunAwayT = 0 end end)

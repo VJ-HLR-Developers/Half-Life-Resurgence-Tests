@@ -61,11 +61,11 @@ ENT.MainSoundPitch = VJ.SET(75, 85)
 ENT.InvestigateSoundPitch = VJ.SET(75, 80)
 
 ENT.AnimationSet = 0
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self.NextScreamT = 0
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "step" then
 		VJ.EmitSound(self, self.SoundTbl_FootStep, 60)
@@ -75,19 +75,19 @@ function ENT:OnInput(key, activator, caller, data)
 		self:ExecuteMeleeAttack()
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
 	local controlled = self.VJ_Controlled
 	local set = self.AnimationSet
 	local enemy = self:GetEnemy()
-	if IsValid(enemy) && !controlled then
+	if IsValid(enemy) and !controlled then
 		local dist = self.EnemyData.DistanceNearest
-		if CurTime() > self.NextScreamT && math.random(1, 15) == 1 && dist < 200 then
+		if CurTime() > self.NextScreamT and math.random(1, 15) == 1 and dist < 200 then
 			VJ.CreateSound(self, "^npc/stalker/go_alert2a.wav", 100, 65)
 			util.ScreenShake(self:GetPos(), 10, 120, 2, 400)
 			sound.EmitHint(SOUND_DANGER, self:GetPos(), 400, 1.5, self)
 			for _, v in pairs(ents.FindInSphere(self:GetPos(), 400)) do
-				if v:IsPlayer() && self:CheckRelationship(v) == D_HT then
+				if v:IsPlayer() and self:CheckRelationship(v) == D_HT then
 					local time = ((400 /self:GetPos():Distance(v:GetPos())) -1) *1.5
 					self:DoMeleeAttackPlayerSpeed(v, 70, 90, time)
 					net.Start("VJ_HLR2_ZombieAssassinScream")
@@ -97,7 +97,7 @@ function ENT:OnThinkActive()
 			end
 			self.NextScreamT = CurTime() +math.Rand(10, 25)
 		end
-		if !(enemy:GetForward():Dot((self:GetPos() -enemy:GetPos()):GetNormalized()) > math.cos(math.rad(60))) && dist > 600 then
+		if !(enemy:GetForward():Dot((self:GetPos() -enemy:GetPos()):GetNormalized()) > math.cos(math.rad(60))) and dist > 600 then
 			if set != 1 then
 				self.AnimTbl_Run = ACT_WALK
 				self.AnimationSet = 1
@@ -115,7 +115,7 @@ function ENT:OnThinkActive()
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 	if self:GetBodygroup(0) == 1 then
 		return false
@@ -134,7 +134,7 @@ function ENT:OnCreateDeathCorpse(dmginfo, hitgroup, ent)
 			end
 		)
 	else
-		if math.random(1, (dmgtype == DMG_CLUB or dmgtype == DMG_SLASH or DMG_BLAST) && 1 or 3) == 1 then
+		if math.random(1, (dmgtype == DMG_CLUB or dmgtype == DMG_SLASH or DMG_BLAST) and 1 or 3) == 1 then
 			ent:SetBodygroup(0, 1)
 			local crab = ents.Create("npc_vj_hlr2b_headcrab")
 			crab:SetPos(self:EyePos())

@@ -8,7 +8,7 @@ include("shared.lua")
 ENT.Model = "models/gman.mdl"
 ENT.StartHealth = 999999
 ENT.HullType = HULL_HUMAN
----------------------------------------------------------------------------------------------------------------------------------------------
+
 ENT.VJ_NPC_Class = {"CLASS_PLAYER_ALLY"}
 ENT.Behavior = VJ_BEHAVIOR_PASSIVE
 ENT.Passive_RunOnTouch = false
@@ -28,7 +28,7 @@ ENT.DisableFootStepSoundTimer = true
 -- ENT.SoundTbl_UnFollowPlayer = "vo/gman_misc/gman_04.wav"
 
 ENT.MainSoundPitch = 100
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:AddFlags(FL_NOTARGET)
 	self.AnimTbl_Run = ACT_WALK
@@ -36,7 +36,7 @@ function ENT:Init()
 	self.NextDialogueTreeT = CurTime()
 	self.NextTeleportT = CurTime() +5
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 local dur1 = SoundDuration("vo/gman_misc/gman_riseshine.wav")
 local dur2 = SoundDuration("vo/gman_misc/gman_02.wav")
 local dur3 = SoundDuration("vo/gman_misc/gman_03.wav")
@@ -48,19 +48,19 @@ function ENT:FreemanSpeech(ent)
 		self.Dialogue1 = VJ.CreateSound(self, "vo/gman_misc/gman_riseshine.wav", 75)
 		self:PlayAnim({"vjges_G_tiefidget", "vjges_G_lefthand_palmout", "vjges_G_lefthand_punct"}, false, false, false)
 		timer.Simple(dur1, function()
-			if IsValid(self) && IsValid(ent) then
+			if IsValid(self) and IsValid(ent) then
 				self.Dialogue2 = VJ.CreateSound(self, "vo/gman_misc/gman_02.wav", 75)
 				self:PlayAnim({"vjges_G_tiefidget", "vjges_G_lefthand_palmout", "vjges_G_lefthand_punct"}, false, false, false)
 				timer.Simple(dur2, function()
-					if IsValid(self) && IsValid(ent) then
+					if IsValid(self) and IsValid(ent) then
 						self.Dialogue3 = VJ.CreateSound(self, "vo/gman_misc/gman_03.wav", 75)
 						self:PlayAnim({"vjges_G_tiefidget", "vjges_G_lefthand_palmout", "vjges_G_lefthand_punct"}, false, false, false)
 						timer.Simple(dur3, function()
-							if IsValid(self) && IsValid(ent) then
+							if IsValid(self) and IsValid(ent) then
 								self.Dialogue4 = VJ.CreateSound(self, "vo/gman_misc/gman_04.wav", 75)
 								self:PlayAnim({"vjges_G_tiefidget", "vjges_G_lefthand_palmout", "vjges_G_lefthand_punct"}, false, false, false)
 								timer.Simple(dur4, function()
-									if IsValid(self) && IsValid(ent) then
+									if IsValid(self) and IsValid(ent) then
 										self.Freeman = NULL
 									end
 								end)
@@ -73,17 +73,17 @@ function ENT:FreemanSpeech(ent)
 		self.NextDialogueTreeT = CurTime() +(dur1 +dur2 +dur3 +dur4) +math.Rand(5, 15)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnMaintainRelationships(ent, calculatedDisp, entDist)
 	if ent.VJ_HLR_Freeman then
 		self:FreemanSpeech(ent)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnPlayerSight(ent)
 	self:FreemanSpeech(ent)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	local freeman = self.Freeman
 	if IsValid(freeman) then
@@ -103,7 +103,7 @@ function ENT:OnThink()
 			self:SetTurnTarget(vector_origin)
 		end
 	end
-	if CurTime() > self.NextTeleportT && !IsValid(self.Freeman) && game.GetGlobalState("gordon_precriminal") == 0 then
+	if CurTime() > self.NextTeleportT and !IsValid(self.Freeman) and game.GetGlobalState("gordon_precriminal") == 0 then
 		local tpPos = self:FindSpawnPos(self:GetPos())
 		if #tpPos == 0 then return end
 		tpPos = tpPos[math.random(1,#tpPos)]
@@ -113,15 +113,15 @@ function ENT:OnThink()
 		self.NextTeleportT = CurTime() +math.Rand(15, 30)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:FindSpawnPos(pos)
  	local goodPositions = {}
-	local nodes = (VJ_Nodegraph && VJ_Nodegraph.Data && VJ_Nodegraph.Data.Nodes) or {}
+	local nodes = (VJ_Nodegraph and VJ_Nodegraph.Data and VJ_Nodegraph.Data.Nodes) or {}
 	for _, node in ipairs(nodes) do
-		if node.pos:Distance(pos) <= 4096 && node.pos:Distance(pos) >= 1024 then
+		if node.pos:Distance(pos) <= 4096 and node.pos:Distance(pos) >= 1024 then
 			local isValid = true
 			for _, v in ipairs(ents.GetAll()) do
-				if (v:IsNPC() && v != self or (v:IsPlayer() && !VJ_CVAR_IGNOREPLAYERS)) && !v:IsFlagSet(FL_NOTARGET) then
+				if (v:IsNPC() and v != self or (v:IsPlayer() and !VJ_CVAR_IGNOREPLAYERS)) and !v:IsFlagSet(FL_NOTARGET) then
 					if v:VisibleVec(node.pos) or self:Visible(v) then
 						isValid = false
 						break
@@ -135,7 +135,7 @@ function ENT:FindSpawnPos(pos)
 	end
 	return goodPositions
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	VJ.STOPSOUND(self.Dialogue1)
 	VJ.STOPSOUND(self.Dialogue2)

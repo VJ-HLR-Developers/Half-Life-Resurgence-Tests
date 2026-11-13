@@ -15,18 +15,18 @@ ENT.RadiusDamageType = DMG_DISSOLVE
 ENT.CollisionDecal = "Scorch"
 ENT.SoundTbl_Idle = "vj_hlr/src/npc/combot/cbot_energyball_loop1.wav"
 ENT.SoundTbl_OnCollide = "vj_hlr/src/npc/mortarsynth/grenade_fire.wav"
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThink()
 	ParticleEffectAttach("electrical_arc_01_system", PATTACH_POINT_FOLLOW, self, 0)
 	sound.EmitHint(SOUND_DANGER, self:GetPos() +self:GetVelocity(), self.RadiusDamageRadius, 1, self)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	-- ParticleEffectAttach("electrical_arc_01_system", PATTACH_POINT_FOLLOW, self, 0)
 	self:SetNoDraw(true)
 	self:DrawShadow(false)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDealDamage(data, phys, hitEnts)
 	if hitEnts then
 		for _, v in pairs(hitEnts) do
@@ -44,7 +44,7 @@ function ENT:OnDealDamage(data, phys, hitEnts)
 						zapEnt:EmitSound("Weapon_StunStick.Activate")
 					end
 				end)
-				if v:IsPlayer() && IsValid(v:GetActiveWeapon()) then
+				if v:IsPlayer() and IsValid(v:GetActiveWeapon()) then
 					local wep = v:GetActiveWeapon()
 					v:DropWeapon(wep)
 					local zapWep = wep
@@ -59,7 +59,7 @@ function ENT:OnDealDamage(data, phys, hitEnts)
 							zapWep:EmitSound("Weapon_StunStick.Activate")
 						end
 					end)
-				elseif v:IsNPC() && v.IsVJBaseSNPC && IsValid(v:GetActiveWeapon()) && math.random(1, 3) == 1 then
+				elseif v:IsNPC() and v.IsVJBaseSNPC and IsValid(v:GetActiveWeapon()) and math.random(1, 3) == 1 then
 					local class = v:GetActiveWeapon():GetClass()
 					local ent = ents.Create(class)
 					ent:SetPos(v:GetActiveWeapon():GetPos())
@@ -86,7 +86,7 @@ function ENT:OnDealDamage(data, phys, hitEnts)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnDestroy(data, phys)
 	for i = 1, 5 do
 		ParticleEffect("vj_aurora_shockwave", self:GetPos(), Angle(), nil)

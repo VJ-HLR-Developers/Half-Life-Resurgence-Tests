@@ -81,19 +81,19 @@ ENT.SoundTbl_Death = {
 }
 
 ENT.Antlion_StartedLeapAttack = false
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnLeapAttack(status, enemy)
 	if status == "Jump" then
 		self.Antlion_StartedLeapAttack = true
 		return self:CalculateProjectile("Curve", self:GetPos(), self:GetAimPosition(enemy, self:GetPos(), 1, 1100), 1100)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:RangeAttackProjVel(projectile)
 	local projPos = projectile:GetPos()
 	return self:CalculateProjectile("Curve", projPos, self:GetAimPosition(self:GetEnemy(), projPos, 1, 1100) +(VectorRand() *28), 1100)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:IsDirt(pos)
 	local tr = util.TraceLine({
 		start = pos,
@@ -102,11 +102,11 @@ function ENT:IsDirt(pos)
 		mask = MASK_NPCWORLDSTATIC
 	})
 	local mat = tr.MatType
-	return tr.HitWorld && (mat == MAT_SAND || mat == MAT_DIRT || mat == MAT_FOLIAGE || mat == MAT_SLOSH || mat == 85)
+	return tr.HitWorld and (mat == MAT_SAND or mat == MAT_DIRT or mat == MAT_FOLIAGE or mat == MAT_SLOSH or mat == 85)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Dig(ignoreDirt)
-	if !ignoreDirt && self:IsDirt(self:GetPos()) or ignoreDirt then
+	if !ignoreDirt and self:IsDirt(self:GetPos()) or ignoreDirt then
 		self:SetNoDraw(true)
 		self.IsDigging = true
 		timer.Simple(0.02, function()
@@ -123,12 +123,12 @@ function ENT:Dig(ignoreDirt)
 		end)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:Init()
 	self:SetCollisionBounds(Vector(20, 20, 64), Vector(-20, -20, 0))
 	self:SetSkin(math.random(0, 3))
 	self.DefaultDamage = self.MeleeAttackDamage
-	if self:GetSkin() > 0 && !self.HasDeathAnimation then
+	if self:GetSkin() > 0 and !self.HasDeathAnimation then
 		local mul = self:GetSkin()
 		if self:GetSkin() == 1 then
 			mul = 2
@@ -147,9 +147,9 @@ function ENT:Init()
 		self.HasDeathCorpse = false
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnThinkActive()
-	if self.Antlion_StartedLeapAttack && self:OnGround() then
+	if self.Antlion_StartedLeapAttack and self:OnGround() then
 		self.Antlion_StartedLeapAttack = false
 		self:PlayAnim("jump_stop", true, false, false)
 	end
@@ -161,7 +161,7 @@ function ENT:OnThinkActive()
 		self:SetBodygroup(1, 0)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnAlert(ent)
 	if self.IsDiging == true then return end
 	if math.random(1, 6) == 1 then
@@ -169,7 +169,7 @@ function ENT:OnAlert(ent)
 		self:PlayAnim(tbl, true, VJ.AnimDuration(self, tbl), false)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:OnInput(key, activator, caller, data)
 	if key == "melee" then
 		self.MeleeAttackDamage = self.DefaultDamage
@@ -177,7 +177,7 @@ function ENT:OnInput(key, activator, caller, data)
 	elseif key == "melee_pounce" then
 		self.MeleeAttackDamage = self.DefaultDamage *1.5
 		self:ExecuteMeleeAttack()
-	elseif key == "step" || key == "step_light" then
+	elseif key == "step" or key == "step_light" then
 		self:PlayFootstepSound()
 	elseif key == "scream" then
 		VJ.EmitSound(self, "npc/antlion/antlion_preburst_scream" .. math.random(1, 2) .. ".wav", 75, 100)
@@ -200,14 +200,14 @@ function ENT:OnInput(key, activator, caller, data)
 		VJ.EmitSound(self, "npc/antlion/land1.wav", 75, 100)
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:TranslateActivity(act)
-	if act == ACT_IDLE && self.Antlion_StartedLeapAttack then
+	if act == ACT_IDLE and self.Antlion_StartedLeapAttack then
 		return ACT_GLIDE
 	end
 	return act
 end
----------------------------------------------------------------------------------------------------------------------------------------------
+
 function ENT:CustomOnRemove()
 	self.FlyLoop:Stop()
 end
