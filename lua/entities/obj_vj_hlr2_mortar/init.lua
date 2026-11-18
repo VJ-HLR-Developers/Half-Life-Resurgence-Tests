@@ -18,7 +18,7 @@ ENT.SoundTbl_OnCollide = "vj_hlr/src/npc/mortarsynth/grenade_fire.wav"
 
 function ENT:OnThink()
 	ParticleEffectAttach("electrical_arc_01_system", PATTACH_POINT_FOLLOW, self, 0)
-	sound.EmitHint(SOUND_DANGER, self:GetPos() +self:GetVelocity(), self.RadiusDamageRadius, 1, self)
+	sound.EmitHint(SOUND_DANGER, self:GetPos() + self:GetVelocity(), self.RadiusDamageRadius, 1, self)
 end
 
 function ENT:Init()

@@ -57,7 +57,7 @@ function ENT:OnCollisionPersist(data, phys)
 				dmgInfo:SetInflictor(self)
 				dmgInfo:SetDamagePosition(dmgPos)
 				VJ.DamageSpecialEnts(owner, hitEnt, dmgInfo)
-				hitEnt:TakeDamageInfo(dmgInfo, self)
+				hitEnt:TakeDamageInfo(dmgInfo)
 			end
 		else
 			local dmgInfo = DamageInfo()
@@ -67,7 +67,7 @@ function ENT:OnCollisionPersist(data, phys)
 			dmgInfo:SetInflictor(self)
 			dmgInfo:SetDamagePosition(dmgPos)
 			VJ.DamageSpecialEnts(self, hitEnt, dmgInfo)
-			hitEnt:TakeDamageInfo(dmgInfo, self)
+			hitEnt:TakeDamageInfo(dmgInfo)
 		end
 		self:Destroy(data, phys)
 	else
